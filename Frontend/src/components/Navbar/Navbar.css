@@ -1,0 +1,147 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+/* Navbar Container */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 55px;
+  width: 100vw; /* Ensure full viewport width */
+  background: white;
+  /* box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1); */
+  position: fixed; /* Fix it at the top */
+  top: 0;
+  left: 0; /* Ensure it starts from the very left */
+  z-index: 1000;
+}
+
+
+
+
+/* Logo */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color:  #ff6600;
+  text-decoration: none;
+}
+.link {
+  color: #ff6600;
+}
+
+
+
+
+/* Navigation Links */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: all 0.3s ease-in-out;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #ff6600;
+  font-size: 16px;
+  font-weight: 600;
+  transition: color 0.3s ease-in-out;
+}
+.nav-links a {
+  transform: scale(1.1);
+}
+/* Navbar Scrolled Styles */
+/* .navbar.scrolled .nav-links a {
+  color: black;
+} */
+
+.navbar.scrolled .logo {
+  color: black;
+}
+
+/* Mobile Menu Button */
+.menu-toggle {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #ff6600;
+}
+.link .sign{
+  border: #ff6600 solid 2px;
+  border-radius: 9px;
+  padding: 5px 10px  5px 10px;
+}
+.link .sign:hover {
+  transform: scale(1.1); /* Increases size on hover */
+ 
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .menu-toggle {
+      display: block;
+      transition: transform 1s ease-in-out;
+  }
+
+  .nav-links {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100vw;
+      background: white;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 10px 0;
+      transform: translateY(-100%);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  }
+
+  .nav-links.show {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: all;
+  }
+
+  .nav-links a {
+      padding: 12px;
+      font-size: 18px;
+      text-align: center;
+      width: 100%;
+      transition: background 0.3s ease-in-out;
+  }
+
+  .nav-links a:hover {
+      background: rgba(0, 128, 0, 0.1);
+  }
+}
+
+/* Mobile View */
+@media (max-width: 480px) {
+  .logo {
+      font-size: 20px;
+  }
+
+  .nav-links a {
+      font-size: 16px;
+      padding: 10px;
+  }
+
+  .menu-toggle {
+      font-size: 26px;
+  }
+}
+
+/* Ensure navbar menu is full width when shown */
+.nav-links.show {
+  background: white;
+  width: 100vw;
+}

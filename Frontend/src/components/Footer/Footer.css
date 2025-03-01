@@ -1,0 +1,85 @@
+/* Ensure the parent container (e.g., body or a wrapper) takes full height */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+/* Wrapper to push footer to the bottom */
+#root { /* Replace #root with your app's root element if different */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Main content area */
+.main-content {
+  flex: 1; /* This makes the main content take up remaining space */
+}
+
+/* Footer styles */
+.footer-container {
+  background-color: #1e1e1e;
+  color: white;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  text-align: left;
+  overflow: hidden;
+}
+
+.footer__logo {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer__logo img {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.footer__links {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer__links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer__links ul li {
+  margin-bottom: 8px;
+}
+
+.footer__links ul li a {
+  text-decoration: none;
+  color: white;
+}
+
+.footer__links ul li a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer__logo {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer__logo {
+    margin-bottom: 20px;
+  }
+}
