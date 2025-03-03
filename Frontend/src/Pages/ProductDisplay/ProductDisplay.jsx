@@ -1,7 +1,8 @@
 import React from "react";
 import "./ProductDisplay.css";
-import { categories, products } from "../Tempdata.js";
+import { categories, products } from "../../Tempdata.js";
 import { Link } from "react-router-dom";
+import SorceCategory from "../../components/SorceCategory/SorceCategory.jsx";
 
 const ProductDisplay = () => {
   return (
@@ -17,21 +18,7 @@ const ProductDisplay = () => {
 
         {/* Category Section */}
 
-        <div className="category-container">
-          <h2>Source by category</h2>
-          <div className="category-grid">
-            {categories.map((category) => (
-              <div key={category.id} className="category-card">
-                <img
-                  src={category.image}
-                  alt={category.name}
-                  className="category-image"
-                />
-                <p className="category-name">{category.name}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        <SorceCategory/>
       </div>
 
       <Link className="links" to="/productdetails">

@@ -5,7 +5,7 @@ import "./App.css";
 import { useState } from "react";
 import Login from "../src/components/Login/Login";
 import { Routes, Route } from "react-router-dom";
-import ProductDisplay from "./ProductDisplay/ProductDisplay";
+import ProductDisplay from "./Pages/ProductDisplay/ProductDisplay";
 function App() {
   const [showLogin, setShowLogin] = useState(false);
 
