@@ -1,14 +1,17 @@
 import React from 'react';
 import './Footer.css';
+// import UpperFooter from '../UpperFooter/UpperFooter';
 
 function App() {
   return (
     <div id="root">
       {/* Main content */}
-      <div className="main-content">
+      {/* <div className="main-content">
         {/* <h1>Welcome to MarketSetu</h1>
         <p>This is the main content of the page.</p> */}
-      </div>
+        {/* <UpperFooter/>
+      </div> */ }
+     {/* } */}
 
       {/* Footer */}
       <footer className="footer-container">
