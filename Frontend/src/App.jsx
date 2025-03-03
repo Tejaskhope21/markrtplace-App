@@ -1,29 +1,29 @@
-import Navbar from '../src/components/Navbar/Navbar'
-import Footer from '../src/components/Footer/Footer'
-import Home from '../src/Pages/Home/Home'
-import './App.css'
-import { useState } from 'react'
-import Login from '../src/components/Login/Login'
-import{Routes,Route} from 'react-router-dom'
+import Navbar from "../src/components/Navbar/Navbar";
+import Footer from "../src/components/Footer/Footer";
+import Home from "../src/Pages/Home/Home";
+import "./App.css";
+import { useState } from "react";
+import Login from "../src/components/Login/Login";
+import { Routes, Route } from "react-router-dom";
+import ProductDisplay from "./ProductDisplay/ProductDisplay";
 function App() {
-const [showLogin,setShowLogin]=useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
   return (
-    <>
-    {showLogin?<Login/>:null}
-    <Navbar/>
-    {showLogin && <Login setShowLogin={setShowLogin} />}
+    <div id="root">
+      {showLogin ? <Login /> : null}
       <Navbar setShowLogin={setShowLogin} />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-       </Routes>
+      <div className="main-content">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="productdisplay" element={<ProductDisplay />} />
+        </Routes>
+      </div>
 
-  
-   
-    <Footer/>
-    </>
-  )
+      <Footer />
+    </div>
+  );
 }
 
-export default App
+export default App;
