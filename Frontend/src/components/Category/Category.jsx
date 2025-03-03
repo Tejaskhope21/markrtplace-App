@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import './Category.css'; // Import the CSS file
+import React from "react";
+import { Link } from "react-router-dom";
+import "./Category.css"; // Import the CSS file
 
 function Category() {
   return (
@@ -8,7 +8,7 @@ function Category() {
       <div className="category-container">
         <h1>Explore millions of offerings tailored to your business needs</h1>
         <div className="category-grid">
-          <Link className="link" to="/consumer-electronics">
+          <Link className="link" to="/productdisplay">
             <div className="category-card">
               <span className="icon">
                 <i className="fa-solid fa-headphones"></i>

@@ -1,85 +1,59 @@
-/* Ensure the parent container (e.g., body or a wrapper) takes full height */
-html, body {
-  height: 100%;
-  margin: 0;
+/* General Footer Styling */
+.footer {
+  background-color: #2c3e50; /* Dark background color */
+  color: #ffffff; /* White text color */
+  padding: 40px 20px; /* Padding for top/bottom and left/right */
+  font-family: Arial, sans-serif; /* Font family */
+  margin-top: 100px;
 }
 
-/* Wrapper to push footer to the bottom */
-#root { /* Replace #root with your app's root element if different */
+.footer-content {
   display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* Main content area */
-.main-content {
-  flex: 1; /* This makes the main content take up remaining space */
-}
-
-/* Footer styles */
-.footer-container {
-  background-color: #1e1e1e;
-  color: white;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
-  text-align: left;
-  overflow: hidden;
+  justify-content: space-between; /* Space between columns */
+  max-width: 1200px; /* Maximum width of the footer content */
+  margin: 0 auto; /* Center the footer content */
 }
 
-.footer__logo {
-  flex: 1;
-  min-width: 200px;
+.footer-column {
+  flex: 1; /* Each column takes equal space */
+  min-width: 200px; /* Minimum width for responsiveness */
+  margin: 10px 20px; /* Margin between columns */
 }
 
-.footer__logo img {
-  display: block;
-  margin-bottom: 10px;
+.footer-column h4 {
+  font-size: 18px; /* Heading font size */
+  margin-bottom: 15px; /* Space below the heading */
+  color: #ffffff; /* White color for headings */
+  text-transform: uppercase; /* Uppercase headings */
 }
 
-.footer__links {
-  flex: 1;
-  min-width: 200px;
+.footer-column ul {
+  list-style: none; /* Remove default list styling */
+  padding: 0; /* Remove default padding */
 }
 
-.footer__links ul {
-  list-style: none;
-  padding: 0;
+.footer-column ul li {
+  margin-bottom: 10px; /* Space between list items */
 }
 
-.footer__links ul li {
-  margin-bottom: 8px;
+.footer-column ul li a {
+  color: #bdc3c7; /* Light gray color for links */
+  text-decoration: none; /* Remove underline from links */
+  font-size: 14px; /* Font size for links */
+  transition: color 0.3s ease; /* Smooth color transition on hover */
 }
 
-.footer__links ul li a {
-  text-decoration: none;
-  color: white;
+.footer-column ul li a:hover {
+  color: #ffffff; /* White color on hover */
+  text-decoration: underline; /* Underline on hover */
 }
 
-.footer__links ul li a:hover {
-  text-decoration: underline;
-}
-
-/* Responsive styles */
-@media (max-width: 768px) {
-  .footer-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .footer__logo {
-    margin-bottom: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .footer-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .footer__logo {
-    margin-bottom: 20px;
-  }
+.footer-bottom {
+  text-align: center; /* Center-align the bottom text */
+  margin-top: 30px; /* Space above the bottom text */
+  padding-top: 20px; /* Padding above the bottom text */
+  border-top: 1px solid #34495e; /* Border line above the bottom text */
+  font-size: 14px; /* Font size for bottom text */
+  color: #bdc3c7; /* Light gray color for bottom text */
 }
