@@ -8,6 +8,11 @@ ProductDisplay.css
   margin-left: -20px;
 }
 
+.links {
+  text-decoration: none;
+  color: black;
+}
+
 /* Hero Section */
 .hero-section {
   background: url("https://images.pexels.com/photos/1495580/pexels-photo-1495580.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2") no-repeat center center/cover;
@@ -41,6 +46,7 @@ ProductDisplay.css
 .category-container h2 {
   font-size: 20px;
   margin-bottom: 10px;
+  text-decoration: none;
 }
 
 .category-grid {
@@ -48,6 +54,7 @@ ProductDisplay.css
   justify-content: center;
   gap: 15px;
   flex-wrap: wrap;
+  text-decoration: none;
 }
 
 .category-card {
@@ -58,6 +65,7 @@ ProductDisplay.css
   cursor: pointer;
   transition: transform 0.3s ease-in-out;
   width: 100px;
+  text-decoration: none;
 }
 
 .category-card:hover {
