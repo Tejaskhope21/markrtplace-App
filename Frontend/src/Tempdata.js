@@ -79,3 +79,94 @@ export const categories = [
     },
   ];
   
+  const TempData = {
+    ElectricalMaterialBulk: [
+      {
+        id: 1,
+        name: "Hot Single Core Copper PVC House Wire",
+        category: "Electrical Wire",
+        price_per_meter: {
+          "10-999": 16.91,
+          "1000-9999": 16.02,
+          ">=10000": 15.13,
+        },
+        MOQ: 10,
+        colors: ["Red", "Blue", "Yellow", "Green"],
+        length: "1m",
+        number_of_cores: "Single-Core",
+        images: [
+          "https://images.pexels.com/photos/1361081/pexels-photo-1361081.jpeg",
+          "https://images.pexels.com/photos/2955378/pexels-photo-2955378.jpeg",
+          "https://images.pexels.com/photos/1808457/pexels-photo-1808457.jpeg",
+          "https://images.pexels.com/photos/1036617/pexels-photo-1036617.jpeg",
+        ],
+        supplier: {
+          name: "Guangdong Guozhong Wire And Cable Co., Ltd.",
+          location: "Mumbai, India",
+        },
+        shipping: {
+          free_shipping_above: 1000,
+          cost: "Negotiable",
+        },
+      },
+      {
+        id: 2,
+        name: "Multi-Strand Electrical Copper Wire",
+        category: "Electrical Wire",
+        price_per_meter: {
+          "10-999": 20.5,
+          "1000-9999": 18.75,
+          ">=10000": 17.60,
+        },
+        MOQ: 10,
+        colors: ["Black", "White", "Red", "Blue"],
+        length: "1m",
+        number_of_cores: "Multi-Core",
+        images: [
+          "https://images.pexels.com/photos/2909611/pexels-photo-2909611.jpeg",
+          "https://images.pexels.com/photos/1055691/pexels-photo-1055691.jpeg",
+          "https://images.pexels.com/photos/270320/pexels-photo-270320.jpeg",
+          "https://images.pexels.com/photos/994517/pexels-photo-994517.jpeg",
+        ],
+        supplier: {
+          name: "Delhi Wire & Cables",
+          location: "Delhi, India",
+        },
+        shipping: {
+          free_shipping_above: 2000,
+          cost: 500,
+        },
+      },
+      {
+        id: 3,
+        name: "High-Voltage Industrial Power Cable",
+        category: "Power Cable",
+        price_per_meter: {
+          "50-499": 250,
+          "500-1999": 230,
+          "2000+": 210,
+        },
+        MOQ: 50,
+        colors: ["Black", "Gray"],
+        length: "1m",
+        number_of_cores: "Three-Core",
+        images: [
+          "https://images.pexels.com/photos/7679455/pexels-photo-7679455.jpeg",
+          "https://images.pexels.com/photos/5686846/pexels-photo-5686846.jpeg",
+          "https://images.pexels.com/photos/982612/pexels-photo-982612.jpeg",
+          "https://images.pexels.com/photos/373564/pexels-photo-373564.jpeg",
+        ],
+        supplier: {
+          name: "Ahmedabad Power Solutions",
+          location: "Ahmedabad, India",
+        },
+        shipping: {
+          free_shipping_above: 5000,
+          cost: 1000,
+        },
+      },
+    ],
+  };
+  
+  export default TempData;
+  
