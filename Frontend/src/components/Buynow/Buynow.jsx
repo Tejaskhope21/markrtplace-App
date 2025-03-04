@@ -109,8 +109,9 @@ const Buynow = () => {
 
         {/* Action Buttons */}
         <div className="buttons">
+          <button className="inquiry">Buy Now</button>
           <button className="inquiry">Send Inquiry</button>
-          <button className="chat">Chat Now</button>
+          <button className="inquiry">Call Now</button>
         </div>
       </div>
     </div>
