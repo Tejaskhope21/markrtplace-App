@@ -6,6 +6,7 @@ import { useState } from "react";
 import Login from "../src/components/Login/Login";
 import { Routes, Route } from "react-router-dom";
 import ProductDisplay from "./Pages/ProductDisplay/ProductDisplay";
+import Buynow from "./components/Buynow/Buynow";
 function App() {
   const [showLogin, setShowLogin] = useState(false);
 
@@ -17,7 +18,10 @@ function App() {
       <div className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/productdisplay" element={<ProductDisplay />} />
+
+          <Route path="productdisplay" element={<ProductDisplay />} />
+          <Route path="/seller" element={<Buynow />} />
+
         </Routes>
       </div>
 
