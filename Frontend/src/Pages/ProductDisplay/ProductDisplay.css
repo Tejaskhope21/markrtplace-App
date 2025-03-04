@@ -6,7 +6,12 @@ ProductDisplay.css
   padding: 20px;
   text-align: center;
   margin-left: -20px;
+ 
 }
+.electronics-page {
+flex: 1;
+}
+
 
 .links {
   text-decoration: none;

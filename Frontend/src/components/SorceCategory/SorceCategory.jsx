@@ -1,23 +1,17 @@
-import React from 'react'
+import React from "react";
 
-function SorceCategory() {
+function SorceCategory({ items }) {
   return (
     <div className="category-container">
-    <h2>Source by category</h2>
-    <div className="category-grid">
-      {categories.map((category) => (
-        <div key={category.id} className="category-card">
-          <img
-            src={category.image}
-            alt={category.name}
-            className="category-image"
-          />
-          <p className="category-name">{category.name}</p>
-        </div>
-      ))}
+    <h2>Source by category  dslsdnm;v;s'v, s;'vd Lorem ipsum dolor sit amet consectetur, adipisicing elit. Asperiores magnam dicta pariatur iure sint consequuntur, magni officiis doloribus possimus iste esse impedit dolorem assumenda, excepturi et eligendi molestiae vitae corporis.</h2>
     </div>
-  </div>
-  )
+  );
 }
 
-export default SorceCategory
+export default SorceCategory;
+
+
+{/* 
+{items.map((item, index) => (
+  <h3 key={item.id || index}>{item.category}</h3>
+))} */}

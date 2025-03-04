@@ -1,46 +1,31 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
 import "./ProductDisplay.css";
-import { categories, products } from "../../Tempdata.js";
-import { Link } from "react-router-dom";
 import SorceCategory from "../../components/SorceCategory/SorceCategory.jsx";
+import ShowCategory from "../../components/ShowCategory/ShowCategory.jsx";
 
-const ProductDisplay = () => {
+const ProductDisplay = ({items}) => {
+  const location = useLocation();
+  const  item = location.state || { items: [] }; // Access passed data
+
+  // Ensure items is not empty and extract the category name
+  const categoryName = item.length > 0 ? item[0].category : "Unknown Category";
+
   return (
     <div className="electronics-page">
-      <h2>Electronics Deals</h2>
+      {/* Display the category name */}
+      <h2>{categoryName}</h2>
 
       <div className="electrical-page">
-        {/* Background Section */}
         <div className="hero-section">
           <h1>Electrical Equipment & Supplies</h1>
           <p>Discover new and trending products</p>
         </div>
-
-        {/* Category Section */}
-
-        <SorceCategory/>
       </div>
 
-      <Link className="links" to="/productdetails">
-        <div className="product-grid">
-          {products.map((product) => (
-            <div key={product.id} className="product-card">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="product-image"
-              />
-              <h3 className="product-name">{product.name}</h3>
-              <p className="product-price">
-                <span className="current-price">₹{product.price}</span>
-              </p>
-              <p className="product-rating">
-                ⭐ {product.rating} ({product.reviews})
-              </p>
-            </div>
-          ))}
-        </div>
-      </Link>
+      {/* Pass the items to SorceCategory */}
+      <SorceCategory items={items} />
+      <ShowCategory />
     </div>
   );
 };

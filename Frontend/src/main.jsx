@@ -3,10 +3,11 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import './index.css'
+import StoreContextProvider from "./components/context/StoreProvider";
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
     <BrowserRouter>
+ <StoreContextProvider>
       <App />
+    </StoreContextProvider>
     </BrowserRouter>
-  </React.StrictMode>
 );
