@@ -1,4 +1,6 @@
-import React from "react";
+
+
+            import React from "react";
 import { item_list, menu_list } from "../../assets/data";
 import { Link } from "react-router-dom";
 import "./Category.css";
@@ -11,9 +13,6 @@ function Category() {
         const filteredItems = item_list.filter(
           (item) => item.category.toLowerCase() === menuItem.menu_item.toLowerCase()
         );
-
-        console.log("Menu Item:", menuItem.menu_item);
-        console.log("Filtered Items:", filteredItems);
 
         return (
           <div key={index} className="card">
@@ -29,7 +28,10 @@ function Category() {
               <Link
                 to={{
                   pathname: "/productdisplay",
-                  state: { items: filteredItems }, // Pass data as state
+                  state: {
+                    items: filteredItems,
+                    category: menuItem.menu_item, // Pass the category name
+                  },
                 }}
               >
                 View Products

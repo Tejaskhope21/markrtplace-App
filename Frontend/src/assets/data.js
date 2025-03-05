@@ -413,4 +413,6 @@ export const item_list = [
     },
   },
 ]
+
+
 export default { menu_list, item_list };
