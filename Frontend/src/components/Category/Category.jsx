@@ -9,10 +9,25 @@ function Category() {
   return (
     <div className="category-container">
       {menu_list.map((menuItem, index) => {
-        // Filter items based on the current menu item
-        const filteredItems = item_list.filter(
-          (item) => item.category.toLowerCase() === menuItem.menu_item.toLowerCase()
-        );
+        let filteredItems = [];
+
+
+        // Use if-else condition to switch categories
+        if (menuItem.menu_item === "Electrical Material") {
+          filteredItems = item_list.filter(
+            (item) => item.category.toLowerCase() === "electrical material"
+          );
+        } else if (menuItem.menu_item === "Industrial Material") {
+          filteredItems = item_list.filter(
+            (item) => item.category.toLowerCase() === "industrial material"
+          );
+        } else if (menuItem.menu_item === "Fabric") {
+          filteredItems = item_list.filter(
+            (item) => item.category.toLowerCase() === "fabric"
+          );
+        } else {
+          console.log("Unknown category: ", menuItem.menu_item);
+        }
 
         return (
           <div key={index} className="card">
@@ -23,15 +38,13 @@ function Category() {
             />
             <h2 className="card-heading">{menuItem.menu_item}</h2>
 
-            {/* Render Link only if there are items in the category */}
             {filteredItems.length > 0 ? (
               <Link
                 to={{
                   pathname: "/productdisplay",
-                  state: {
-                    items: filteredItems,
-                    category: menuItem.menu_item, // Pass the category name
-                  },
+
+                  state: { items: filteredItems },
+
                 }}
               >
                 View Products

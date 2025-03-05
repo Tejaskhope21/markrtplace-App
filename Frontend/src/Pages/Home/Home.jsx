@@ -1,12 +1,14 @@
-import React from "react"
+import React from "react";
 import Hero from "../../components/Hero/Hero";
 import Category from "../../components/Category/Category";
-function Home(){
-  return(
+import HomeFabric from "../../components/HomeFabric/HomeFabric";
+function Home() {
+  return (
     <div>
-     <Hero/>
-     <Category/>
+      <Hero />
+      <Category />
+      <HomeFabric />
     </div>
-  )
+  );
 }
 export default Home;
