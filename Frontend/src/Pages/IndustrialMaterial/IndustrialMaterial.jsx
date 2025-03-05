@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { menu_list, item_list } from "../../assets/data.js";
-import "./ProductDisplay.css";
+import "./IndustrialMaterial.css";
 
-export default function ProductDisplay() {
+export default function IndustrialMaterial() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedSubCategory, setSelectedSubCategory] = useState("");
 
-  // Filter only Electrical Material products
+  // Filter only Industrial Material products
   const filteredItems = item_list.filter(
     (item) =>
-      item.category === "Electrical Material" && // Ensure only Electrical Material products are shown
+      item.category === "Industrial Material" &&
       (!selectedCategory || item.category === selectedCategory) &&
       (!selectedSubCategory || item.product_category === selectedSubCategory)
   );
@@ -30,7 +30,7 @@ export default function ProductDisplay() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Electrical Material Products</h1>
+      <h1 className="text-2xl font-bold mb-4">Industrial Material Products</h1>
       <div className="flex flex-col md:flex-row gap-4 mb-4">
         <select
           className="p-2 border rounded"
@@ -42,7 +42,7 @@ export default function ProductDisplay() {
         >
           <option value="">All Categories</option>
           {menu_list
-            .filter((menu) => menu.menu_item === "Electrical Material") // Show only Electrical Material category
+            .filter((menu) => menu.menu_item === "Industrial Material")
             .map((menu) => (
               <option key={menu.menu_item} value={menu.menu_item}>
                 {menu.menu_item}
@@ -85,7 +85,7 @@ export default function ProductDisplay() {
           ))
         ) : (
           <p className="text-center text-gray-500">
-            No Electrical Material products found.
+            No Industrial Material products found.
           </p>
         )}
       </div>
