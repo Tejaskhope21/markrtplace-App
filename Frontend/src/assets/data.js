@@ -1,10 +1,10 @@
 export const menu_list = [
   {
-    menu_item: "Electrical Material",
+    menu_item: "ElectricalMaterial",
     menu_img: "https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg"
   },
   {
-    menu_item: "Industrial Material",
+    menu_item: "IndustrialMaterial",
     menu_img: "https://images.pexels.com/photos/5371455/pexels-photo-5371455.jpeg"
   },
   {
@@ -17,7 +17,7 @@ export const item_list = [
   {
     id: 1,
     name: "Industrial Copper Wires",
-    category: "Electrical Material",
+    category: "ElectricalMaterial",
     product_category: "Wires", // Added product_category
     price_per_piece: {
       "50-499": 2000,
@@ -48,7 +48,7 @@ export const item_list = [
   {
     id: 2,
     name: "LED Panel Lights",
-    category: "Electrical Material",
+    category: "ElectricalMaterial",
     product_category: "Lights", // Added product_category
     price_per_piece: {
       "20-199": 850,
@@ -79,7 +79,7 @@ export const item_list = [
   {
     id: 3,
     name: "Circuit Breakers (MCB)",
-    category: "Electrical Material",
+    category: "ElectricalMaterial",
     product_category: "Switchboards", // Added product_category
     price_per_piece: {
       "10-99": 600,
@@ -110,7 +110,7 @@ export const item_list = [
   {
     id: 4,
     name: "Industrial Extension Cords",
-    category: "Electrical Material",
+    category: "ElectricalMaterial",
     product_category: "Cables", // Added product_category
     price_per_piece: {
       "50-499": 1200,
@@ -141,7 +141,7 @@ export const item_list = [
   {
     id: 5,
     name: "Electric Motors (3-Phase)",
-    category: "Electrical Material",
+    category: "ElectricalMaterial",
     product_category: "Motors", // Added product_category
     price_per_piece: {
       "5-49": 15000,
@@ -172,7 +172,7 @@ export const item_list = [
   {
     id: 6, // Changed from 1 to 6
     name: "Galvanized Steel Sheets",
-    category: "Industrial Material",
+    category: "IndustrialMaterial",
     price_per_piece: {
       "50-499": 2500,
       "500-1999": 2300,
@@ -199,7 +199,7 @@ export const item_list = [
   {
     id: 7, // Changed from 2 to 7
     name: "High-Strength Industrial Bolts",
-    category: "Industrial Material",
+    category: "IndustrialMaterial",
     price_per_piece: {
       "100-999": 50,
       "1000-4999": 40,
@@ -226,7 +226,7 @@ export const item_list = [
   {
     id: 8, // Changed from 3 to 8
     name: "Industrial-Grade Hydraulic Pipes",
-    category: "Industrial Material",
+    category: "IndustrialMaterial",
     price_per_piece: {
       "20-199": 1500,
       "200-999": 1300,
@@ -253,7 +253,7 @@ export const item_list = [
   {
     id: 9, // Changed from 4 to 9
     name: "Heat-Resistant Industrial Gloves",
-    category: "Industrial Material",
+    category: "IndustrialMaterial",
     price_per_piece: {
       "50-499": 250,
       "500-1999": 225,
@@ -280,7 +280,7 @@ export const item_list = [
   {
     id: 10, // Changed from 5 to 10
     name: "Concrete Mix (Bulk Bags)",
-    category: "Industrial Material",
+    category: "IndustrialMaterial",
     price_per_piece: {
       "10-99": 1200,
       "100-499": 1100,

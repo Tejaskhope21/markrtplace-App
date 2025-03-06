@@ -5,10 +5,7 @@ import "./App.css";
 import { useState } from "react";
 import Login from "../src/components/Login/Login";
 import { Routes, Route } from "react-router-dom";
-import ProductDisplay from "./Pages/ProductDisplay/ProductDisplay";
-import Buynow from "./components/Buynow/Buynow";
-import Fabric from "./Pages/Fabric/Fabric";
-import IndustrialMaterial from "./Pages/IndustrialMaterial/IndustrialMaterial";
+import Cart from "./Pages/Cart/Cart";
 function App() {
   const [showLogin, setShowLogin] = useState(false);
 
@@ -20,12 +17,7 @@ function App() {
       <div className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
-
-          <Route path="/productdisplay" element={<ProductDisplay />} />
-          <Route path="/seller" element={<Buynow />} />
-
-          <Route path="/fabric" element={<Fabric />} />
-          <Route path="/industrialmaterial" element={<IndustrialMaterial />} />
+          <Route path="/cart"  element={<Cart/>}/>
         </Routes>
       </div>
 
