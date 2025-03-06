@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import "./Navbar.css";
+import 
 
-const Navbar = ({setShowLogin}) => { // Correct prop name
+ function Navbar({setShowLogin}) { // Correct prop name
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -54,6 +55,9 @@ const Navbar = ({setShowLogin}) => { // Correct prop name
         </Link>
         <Link className="link" to="/shopping" onClick={handleLinkClick}>
           Shopping
+        </Link>
+        <Link className="link" to="/cart" onClick={handleLinkClick}>
+          <img src="" alt="" />
         </Link>
         <div className="link" to="/signin">
           <button className="sign" onClick={()=>setShowLogin(true)} >
