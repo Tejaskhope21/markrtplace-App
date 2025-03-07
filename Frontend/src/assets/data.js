@@ -170,9 +170,10 @@ export const item_list = [
     },
   },
   {
-    id: 6, // Changed from 1 to 6
+    id: 6,
     name: "Galvanized Steel Sheets",
     category: "IndustrialMaterial",
+    product_category: "Steel & Metals",
     price_per_piece: {
       "50-499": 2500,
       "500-1999": 2300,
@@ -197,9 +198,10 @@ export const item_list = [
     },
   },
   {
-    id: 7, // Changed from 2 to 7
+    id: 7,
     name: "High-Strength Industrial Bolts",
     category: "IndustrialMaterial",
+    product_category: "Fasteners & Hardware",
     price_per_piece: {
       "100-999": 50,
       "1000-4999": 40,
@@ -224,9 +226,10 @@ export const item_list = [
     },
   },
   {
-    id: 8, // Changed from 3 to 8
+    id: 8,
     name: "Industrial-Grade Hydraulic Pipes",
     category: "IndustrialMaterial",
+    product_category: "Pipes & Tubes",
     price_per_piece: {
       "20-199": 1500,
       "200-999": 1300,
@@ -251,9 +254,10 @@ export const item_list = [
     },
   },
   {
-    id: 9, // Changed from 4 to 9
+    id: 9,
     name: "Heat-Resistant Industrial Gloves",
     category: "IndustrialMaterial",
+    product_category: "Safety & Protection",
     price_per_piece: {
       "50-499": 250,
       "500-1999": 225,
@@ -278,9 +282,10 @@ export const item_list = [
     },
   },
   {
-    id: 10, // Changed from 5 to 10
+    id: 10,
     name: "Concrete Mix (Bulk Bags)",
     category: "IndustrialMaterial",
+    product_category: "Construction Materials",
     price_per_piece: {
       "10-99": 1200,
       "100-499": 1100,
@@ -304,10 +309,12 @@ export const item_list = [
       cost: 1500,
     },
   },
+  
   {
-    id: 11, // Changed from 1 to 11
+    id: 11,
     name: "Men's T-Shirts (100% Cotton)",
     category: "Fabric",
+    product_category: "Men's Clothing",
     price_per_piece: {
       "50-499": 150,
       "500-1999": 135,
@@ -332,9 +339,10 @@ export const item_list = [
     },
   },
   {
-    id: 12, // Changed from 2 to 12
+    id: 12,
     name: "Women's Summer Dresses",
     category: "Fabric",
+    product_category: "Women's Clothing",
     price_per_piece: {
       "20-99": 450,
       "100-499": 400,
@@ -359,9 +367,10 @@ export const item_list = [
     },
   },
   {
-    id: 13, // Changed from 3 to 13
+    id: 13,
     name: "Unisex Hoodies (Fleece Lined)",
     category: "Fabric",
+    product_category: "Unisex Clothing",
     price_per_piece: {
       "30-199": 700,
       "200-999": 650,
@@ -386,9 +395,10 @@ export const item_list = [
     },
   },
   {
-    id: 14, // Changed from 4 to 14
+    id: 14,
     name: "Kids' Cartoon Printed T-Shirts",
     category: "Fabric",
+    product_category: "Kids' Clothing",
     price_per_piece: {
       "100-499": 90,
       "500-1999": 75,
@@ -412,6 +422,7 @@ export const item_list = [
       cost: 300,
     },
   },
+  
 ]
 
 
