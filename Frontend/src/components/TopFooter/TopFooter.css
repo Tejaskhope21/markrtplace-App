@@ -1,0 +1,101 @@
+/* Container for the entire component */
+.topfooter {
+  width: 100%;
+  overflow: hidden; /* Hide overflow to prevent horizontal scroll */
+  background-color: #ff6347; /* Tomato background color */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+  padding: 60px 0; /* Increased padding for better spacing */
+  position: relative; /* For positioning the triangle */
+  margin-top: 50px;
+}
+
+/* Transparent overlay */
+.topfooter::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1); /* Semi-transparent white overlay */
+  pointer-events: none; /* Ensure clicks pass through */
+}
+
+/* Triangle shape at the bottom */
+.topfooter::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  border-bottom: 30px solid #f9f9f9; /* Match the background color of the next section */
+}
+
+/* Content container */
+.topfooter-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative; /* Ensure content is above the overlay */
+  z-index: 1; /* Bring content above the overlay */
+}
+
+/* Heading styles */
+.topfooter-heading h1 {
+  font-size: 2.5rem; /* Larger font size */
+  margin: 0;
+  color: #fff; /* White text color */
+  font-weight: bold; /* Bold text */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Text shadow for better visibility */
+}
+
+/* Container for brand logos */
+.topfooter-brand-img {
+  display: flex;
+  overflow: hidden; /* Hide overflow to prevent horizontal scroll */
+  white-space: nowrap; /* Prevent logos from wrapping to the next line */
+  padding: 40px 0; /* Increased padding for better spacing */
+}
+
+/* Individual brand logo styles */
+.brand-logo {
+  height: 100px; /* Updated height */
+  width: 100px; /* Added width */
+  margin: 0 20px; /* Add spacing between logos */
+  animation: slideRightToLeft 20s linear infinite; /* Animation for each logo */
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3)); /* Add shadow to logos */
+}
+
+/* Keyframes for the animation */
+@keyframes slideRightToLeft {
+  0% {
+    transform: translateX(1000%); /* Start from the right */
+  }
+  100% {
+    transform: translateX(-100%); /* Move to the left */
+  }
+}
+
+/* Pause animation on hover */
+.topfooter-brand-img:hover .brand-logo {
+  animation-play-state: paused;
+}
+
+/* Responsive design for smaller
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .brand-logo {
+    height: 80px; /* Smaller logos for mobile */
+    width: 80px; /* Smaller logos for mobile */
+    margin: 0 10px; /* Less spacing between logos */
+  }
+
+  .topfooter-heading h1 {
+    font-size: 2rem; /* Smaller font size for mobile */
+  }
+}
