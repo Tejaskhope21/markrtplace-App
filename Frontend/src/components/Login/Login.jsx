@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Login.css";
-
+import cross from "../../../public/cross_icon.png";
 
 function Login({ setShowLogin }) {
   const [currstate, setCurrstate] = useState("Login");
@@ -14,7 +14,7 @@ function Login({ setShowLogin }) {
       <form className="login-popup-container">
         <div className="login-pupup-title">
           <h1>{currstate}</h1>
-          <p onClick={handle}  >X</p>
+          <p onClick={handle}>X</p>
         </div>
 
         <div className="login-popup-inputs">
