@@ -1,31 +1,60 @@
 .b2ccategory {
+  text-align: center;
+  padding: 20px;
+  background-color: #f8f9fa;
+}
+
+.b2ccategory h1 {
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.category-container {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 20px;
-  padding: 20px;
+  padding: 10px;
 }
 
 .category-card {
-  border: 1px solid #ccc;
+  width: 220px;
+  padding: 15px;
   border-radius: 10px;
-  padding: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .category-card:hover {
   transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .category-image {
-  width: 150px;
-  height: 150px;
+  width: 100%;
+  height: 140px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.category-card:hover .category-image {
+  transform: scale(1.1);
 }
 
 .category-title {
   margin-top: 10px;
-  font-size: 1.2rem;
+  font-size: 18px;
+  font-weight: 600;
+  color: #555;
+  transition: color 0.3s ease;
+}
+
+.category-card:hover .category-title {
+  color: #007bff;
 }

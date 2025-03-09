@@ -1,0 +1,10 @@
+.section {
+    padding: 40px 20px;
+    background-color: #f9f9f9; /* Light background for differentiation */
+  }
+  
+  .separator {
+    height: 20px; /* Space between sections */
+    background-color: transparent; /* Keeps it blank */
+  }
+  
