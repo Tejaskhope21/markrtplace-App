@@ -1,84 +1,145 @@
-/* TradingSteps.css */
+.trading-steps-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px 20px;
+  background-color: #3A190B;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  cursor: pointer;
+  width: 100vw;
+}
 
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.step-card {
+  flex: 0 0 auto;
+  width: 300px;
+  padding: 30px 20px;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.1));
+  border-radius: 15px;
+  text-align: center;
+  color: #ffffff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.step-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(145deg, rgba(255, 98, 0, 0.2), rgba(255, 165, 0, 0.3)); /* Orange gradient on hover */
+}
+
+.step-icon {
+  margin-bottom: 20px;
+}
+
+.step-icon i {
+  font-size: 36px;
+  color: #ffffff;
+  opacity: 0.8;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.step-card:hover .step-icon i {
+  opacity: 1;
+  color: #ff6200; /* Orange icon on hover */
+}
+
+.step-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  line-height: 1.3;
+  text-transform: capitalize;
+  transition: color 0.3s ease;
+}
+
+.step-card:hover .step-title {
+  color: #ffffff; /* White text on hover for contrast */
+}
+
+.step-description {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.5;
+  opacity: 0.9;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.step-card:hover .step-description {
+  color: #ffffff;
+  opacity: 1; /* Full opacity on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .trading-steps-container {
+    gap: 15px;
+    padding: 30px 15px;
   }
-  
-  .title {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 2rem;
-  }
-  
-  .steps-container {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    gap: 1rem;
-  }
-  
+
   .step-card {
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 1.5rem;
-    width: 30%;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
+    width: 260px;
+    padding: 25px 15px;
   }
-  
-  .step-card.active {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
-  
-  .step-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
-  
-  .card-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .icon-image {
-    width: 50px;
-    height: 50px;
-    margin-bottom: 1rem;
-  }
-  
+
   .step-title {
-    font-size: 1.25rem;
-    color: #444;
-    margin-bottom: 0.5rem;
+    font-size: 18px;
   }
-  
+
   .step-description {
-    font-size: 1rem;
-    color: #666;
+    font-size: 14px;
   }
-  
-  .register-button {
-    margin-top: 2rem;
-    padding: 0.75rem 2rem;
-    font-size: 1rem;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+
+  .step-icon i {
+    font-size: 32px;
   }
-  
-  .register-button:hover {
-    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .trading-steps-container {
+    flex-wrap: wrap;
+    overflow-x: hidden;
+    justify-content: center;
   }
+
+  .step-card {
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 20px;
+  }
+
+  .step-title {
+    font-size: 16px;
+  }
+
+  .step-description {
+    font-size: 13px;
+  }
+
+  .step-icon i {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .trading-steps-container {
+    padding: 20px 10px;
+  }
+
+  .step-card {
+    padding: 20px 10px;
+  }
+
+  .step-title {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .step-description {
+    font-size: 12px;
+  }
+
+  .step-icon i {
+    font-size: 24px;
+  }
+}
