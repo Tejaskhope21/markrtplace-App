@@ -9,46 +9,48 @@
   display: flex;
   max-width: 1200px;
   width: 100%;
+  gap: 20px; /* Add gap between image and details sections */
 }
 
 .buy-b2c-images {
   display: flex;
-  flex-direction: column;
-  width: 50%;
+  flex-direction: row; /* Change to row for horizontal layout */
+  gap: 10px; /* Add gap between main image and thumbnails */
+  width: 60%; /* Adjust width as needed */
 }
 
 .thumbnail-gallery {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
+  flex-direction: column; /* Thumbnails in a vertical column */
+  gap: 10px; /* Add gap between thumbnails */
 }
 
 .thumbnail {
-  width: 60px;
-  height: 60px;
+  width: 80px; /* Adjust thumbnail size */
+  height: 80px;
   cursor: pointer;
   border: 2px solid #ddd;
   border-radius: 5px;
+  object-fit: cover; /* Ensure images fit properly */
 }
 
 .thumbnail.active {
-  border-color: #007bff;
+  border-color: #007bff; /* Highlight selected thumbnail */
 }
 
 .main-image-container {
-  width: 100%;
+  flex: 1; /* Take remaining space */
 }
 
 .main-image {
   width: 100%;
-  max-width: 500px;
+  max-width: 500px; /* Adjust main image size */
   height: auto;
   border-radius: 10px;
 }
 
 .buy-b2c-details {
-  width: 50%;
+  width: 40%; /* Adjust width as needed */
   padding-left: 20px;
 }
 

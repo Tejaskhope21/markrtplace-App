@@ -12,7 +12,8 @@ const Category = () => {
 
   return (
     <div className="category-container">
-      <h1>B2B order now</h1>
+      <div className="heading"><h1>B2B order now</h1></div>
+      <div className="category-menu">
       {menu_list.map((menu) => (
         <div
           key={menu.menu_item}
@@ -27,6 +28,7 @@ const Category = () => {
           <h2 className="category-title">{menu.menu_item}</h2>
         </div>
       ))}
+    </div>
     </div>
   );
 };

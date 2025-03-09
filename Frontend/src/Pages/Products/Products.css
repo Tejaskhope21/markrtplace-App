@@ -85,14 +85,24 @@
 }
 
 /* Buy button styling */
-.buy-button {
-  width: 100%;
+/* .buy-button { */
+  /* width: 100%;
   padding: 10px;
   background-color: #007bff;
   color: white;
-  border: none;
-
+  border-radius: none !important;
+ border: none;
   font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease; */
+/* } */
+#buy-btn{
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin: 5px;
+  font-size: 1rem;
+  background-color: tomato;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }

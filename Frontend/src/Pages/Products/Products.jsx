@@ -70,7 +70,7 @@ const Products = () => {
                 Supplier: {product.supplier.name}, {product.supplier.location}
               </p>
               <button
-                className="buy-button"
+                className="buy-button" id="buy-btn"
                 onClick={() => handleCategoryClick(product.id)}
               >
                 Buy Product
