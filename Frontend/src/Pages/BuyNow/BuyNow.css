@@ -215,6 +215,29 @@
     font-size: 1.2rem;
     color: #7f8c8d;
   }
+  .quantity-section {
+    margin: 20px 0;
+  }
+  
+  .quantity-section h3 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+  }
+  
+  .quantity-input {
+    padding: 8px;
+    width: 100px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .total-price {
+    margin-top: 10px;
+    font-size: 1.1rem;
+    color: #2c3e50;
+    font-weight: bold;
+  }
   
   /* Responsive Design */
   @media (max-width: 768px) {
