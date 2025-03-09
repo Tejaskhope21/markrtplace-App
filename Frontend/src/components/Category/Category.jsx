@@ -12,6 +12,7 @@ const Category = () => {
 
   return (
     <div className="category-container">
+      <h1>B2B order now</h1>
       {menu_list.map((menu) => (
         <div
           key={menu.menu_item}

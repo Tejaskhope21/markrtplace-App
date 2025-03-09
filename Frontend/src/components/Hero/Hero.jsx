@@ -1,10 +1,10 @@
 import React from "react";
 import "./Hero.css";
-import HeroImage from "../../assets/Header_img.jpg";
+import img from "../../assets/img.png"
 function Hero() {
   return (
     <div className="hero">
-      <img src={HeroImage} alt="Hero" />
+      <img src={img} alt="Hero" />
       <div className="hero-container">
         <p>eB2B platform for business and shop-woner</p>
         <div className="hero-serch">

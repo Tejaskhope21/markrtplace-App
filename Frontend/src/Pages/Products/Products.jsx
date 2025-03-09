@@ -1,9 +1,16 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { item_list } from "../../assets/data.js";
+import { useNavigate } from "react-router-dom";
 import "./Products.css";
 
 const Products = () => {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (id) => {
+    navigate(`/buy?id=${id}`); // Pass only the ID
+  };
+
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const selectedCategory = queryParams.get("category");
@@ -59,6 +66,7 @@ const Products = () => {
             <p>
               Supplier: {product.supplier.name}, {product.supplier.location}
             </p>
+            <button onClick={()=>{handleCategoryClick(product.id)}}>Buy product</button>
           </div>
         ))}
       </div>

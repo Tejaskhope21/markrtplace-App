@@ -15,7 +15,7 @@ export const menu_list = [
 
 export const item_list = [
   {
-    id: 1,
+    id: 1111,
     name: "Industrial Copper Wires",
     category: "ElectricalMaterial",
     product_category: "Wires", // Added product_category
@@ -46,7 +46,7 @@ export const item_list = [
     },
   },
   {
-    id: 2,
+    id: 2453,
     name: "LED Panel Lights",
     category: "ElectricalMaterial",
     product_category: "Lights", // Added product_category
@@ -77,7 +77,7 @@ export const item_list = [
     },
   },
   {
-    id: 3,
+    id: 33234,
     name: "Circuit Breakers (MCB)",
     category: "ElectricalMaterial",
     product_category: "Switchboards", // Added product_category
@@ -86,7 +86,7 @@ export const item_list = [
       "100-499": 500,
       "500+": 400,
     },
-    MOQ: 10,
+    MOQ: 10564,
     specifications: {
       type: ["Single Pole", "Double Pole", "Three Pole"],
       rated_current: ["6A", "10A", "16A", "32A"],
@@ -108,7 +108,7 @@ export const item_list = [
     },
   },
   {
-    id: 4,
+    id: 4895,
     name: "Industrial Extension Cords",
     category: "ElectricalMaterial",
     product_category: "Cables", // Added product_category
@@ -139,7 +139,7 @@ export const item_list = [
     },
   },
   {
-    id: 5,
+    id: 50987,
     name: "Electric Motors (3-Phase)",
     category: "ElectricalMaterial",
     product_category: "Motors", // Added product_category
@@ -170,7 +170,7 @@ export const item_list = [
     },
   },
   {
-    id: 6,
+    id: 6234,
     name: "Galvanized Steel Sheets",
     category: "IndustrialMaterial",
     product_category: "Steel & Metals",
@@ -198,7 +198,7 @@ export const item_list = [
     },
   },
   {
-    id: 7,
+    id: 77876,
     name: "High-Strength Industrial Bolts",
     category: "IndustrialMaterial",
     product_category: "Fasteners & Hardware",
@@ -226,7 +226,7 @@ export const item_list = [
     },
   },
   {
-    id: 8,
+    id: 88890,
     name: "Industrial-Grade Hydraulic Pipes",
     category: "IndustrialMaterial",
     product_category: "Pipes & Tubes",
@@ -254,7 +254,7 @@ export const item_list = [
     },
   },
   {
-    id: 9,
+    id: 9678,
     name: "Heat-Resistant Industrial Gloves",
     category: "IndustrialMaterial",
     product_category: "Safety & Protection",
@@ -282,7 +282,7 @@ export const item_list = [
     },
   },
   {
-    id: 10,
+    id: 10454,
     name: "Concrete Mix (Bulk Bags)",
     category: "IndustrialMaterial",
     product_category: "Construction Materials",
@@ -311,7 +311,7 @@ export const item_list = [
   },
   
   {
-    id: 11,
+    id: 11346,
     name: "Men's T-Shirts (100% Cotton)",
     category: "Fabric",
     product_category: "Men's Clothing",
@@ -367,7 +367,7 @@ export const item_list = [
     },
   },
   {
-    id: 13,
+    id: 13334,
     name: "Unisex Hoodies (Fleece Lined)",
     category: "Fabric",
     product_category: "Unisex Clothing",
@@ -395,7 +395,7 @@ export const item_list = [
     },
   },
   {
-    id: 14,
+    id: 142354,
     name: "Kids' Cartoon Printed T-Shirts",
     category: "Fabric",
     product_category: "Kids' Clothing",

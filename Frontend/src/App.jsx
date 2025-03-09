@@ -8,25 +8,30 @@ import { Routes, Route } from "react-router-dom";
 import Products from "./Pages/Products/Products";
 
 import Cart from "./Pages/Cart/Cart";
+import ShoppingProduct from "./Pages/ShoppingProduct/ShoppingProduct";
+import BuyNow from "./Pages/BuyNow/BuyNow";
 function App() {
   const [showLogin, setShowLogin] = useState(false);
 
   return (
-    <div id="root">
+    <>
       {showLogin ? <Login /> : null}
-      <Navbar setShowLogin={setShowLogin} />
 
       <div className="main-content">
+      <Navbar setShowLogin={setShowLogin} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/shop" element={<ShoppingProduct />} />
+          <Route path="/buy" element={<BuyNow />} />
         </Routes>
+      <Footer />
       </div>
 
-      <Footer />
-    </div>
+    </>
   );
 }
 
 export default App;
+// div id="root"div
