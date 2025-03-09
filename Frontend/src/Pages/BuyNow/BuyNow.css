@@ -1,0 +1,302 @@
+/* BuyNow.css */
+.buynow-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 50px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .buynow-content {
+    display: flex;
+    gap: 50px;
+    position: relative; /* For adding a divider */
+  }
+  
+  .buynow-images {
+    flex: 1;
+    display: flex;
+    gap: 15px;
+    position: relative;
+  }
+  
+  /* Add a divider between buynow-images and buynow-details */
+  .buynow-images::after {
+    content: "";
+    position: absolute;
+    right: -15px; /* Half of the gap */
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: #ddd; /* Light gray divider */
+  }
+  
+  .thumbnail-gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 80px;
+  }
+  
+  .thumbnail {
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: border 0.3s ease, transform 0.2s ease;
+  }
+  
+  .thumbnail:hover,
+  .thumbnail.active {
+    border: 2px solid #ff6200;
+    transform: scale(1.05);
+  }
+  
+  .main-image-container {
+    flex: 1;
+    min-width: 0; /* Prevents overflow issues */
+  }
+  
+  .main-image {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: opacity 0.3s ease;
+  }
+  
+  .buynow-details {
+    flex: 1;
+    padding: 20px;
+  }
+  
+  .buynow-title {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  
+  .supplier-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+  }
+  
+  .supplier-name {
+    color: #ff6200;
+    cursor: pointer;
+  }
+  
+  .supplier-name:hover {
+    text-decoration: underline;
+  }
+  
+  .location {
+    color: #333;
+    background: #f5f5f5;
+    padding: 2px 5px;
+    border-radius: 3px;
+  }
+  
+  .reviews {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+  }
+  
+  .price {
+    font-size: 1.8rem;
+    color: #ff6200;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+  
+  .moq {
+    font-size: 0.9rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .specifications {
+    margin-bottom: 20px;
+  }
+  
+  .specifications h3 {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .specifications ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .specifications li {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  
+  .shipping-info h3 {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .shipping-info p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .send-inquiry {
+    background: #ff6200;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .send-inquiry:hover {
+    background: #e55a00;
+  }
+  
+  .chat-now {
+    background: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .chat-now:hover {
+    background: #f5f5f5;
+  }
+  
+  .protections h3 {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .protections p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  
+  .no-product {
+    text-align: center;
+    padding: 50px;
+    background: #f8f9fa;
+    border-radius: 10px;
+  }
+  
+  .no-product p {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .buynow-content {
+      flex-direction: column;
+    }
+  
+    .buynow-images {
+      flex-direction: row; /* Keep thumbnails and main image side by side */
+      width: 100%;
+      gap: 10px;
+      align-items: flex-start; /* Align items at the top */
+      margin-bottom: 20px; /* Add spacing between images and details */
+      padding-bottom: 20px; /* Add padding for separation */
+      border-bottom: 1px solid #ddd; /* Add a horizontal divider */
+    }
+  
+    .buynow-images::after {
+      display: none; /* Remove vertical divider on mobile */
+    }
+  
+    .thumbnail-gallery {
+      flex-direction: column;
+      width: 60px; /* Reduce thumbnail width for mobile */
+    }
+  
+    .thumbnail {
+      width: 60px;
+      height: 60px;
+    }
+  
+    .main-image-container {
+      flex: 1; /* Allow main image to take remaining space */
+      min-width: 0; /* Prevent overflow */
+    }
+  
+    .main-image {
+      max-width: 100%; /* Ensure it scales to available space */
+      width: 100%;
+      height: auto;
+    }
+  
+    .buynow-details {
+      padding: 10px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .buynow-title {
+      font-size: 1.2rem;
+    }
+  
+    .price {
+      font-size: 1.5rem;
+    }
+  
+    .actions {
+      flex-direction: column;
+    }
+  
+    .send-inquiry,
+    .chat-now {
+      width: 100%;
+    }
+  
+    .buynow-images {
+      flex-direction: column; /* Stack on very small screens */
+      align-items: center;
+    }
+  
+    .thumbnail-gallery {
+      flex-direction: row;
+      overflow-x: auto;
+      width: 100%;
+    }
+  
+    .main-image-container {
+      width: 100%;
+      margin-top: 10px; /* Add spacing if stacked */
+    }
+  
+    .main-image {
+      max-width: 100%;
+    }
+  }
