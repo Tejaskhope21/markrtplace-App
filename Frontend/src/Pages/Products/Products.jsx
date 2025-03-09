@@ -32,18 +32,16 @@ const Products = () => {
   );
 
   return (
-    <div className="p-5">
-      <h1 className="text-2xl font-bold">{selectedCategory} Products</h1>
-      <div className="mb-4">
-        <label className="font-semibold">Sort by Subcategory: </label>
+    <div className="products-container">
+      <h1 className="products-title">{selectedCategory} Products</h1>
+      <div className="subcategory-filter">
+        <label className="filter-label">Sort by Subcategory: </label>
         <select
-          className="border p-2 ml-2"
+          className="filter-select"
           value={selectedSubcategory}
           onChange={(e) => setSelectedSubcategory(e.target.value)}
         >
-          <option className="op" value="all">
-            All
-          </option>
+          <option value="all">All</option>
           {uniqueSubcategories.map((sub) => (
             <option key={sub} value={sub}>
               {sub}
@@ -51,22 +49,33 @@ const Products = () => {
           ))}
         </select>
       </div>
-      <div className="grid grid-cols-3 gap-4 mt-4">
+      <div className="product-flex-container">
         {filteredProducts.map((product) => (
-          <div key={product.id} className="border p-4">
+          <div key={product.id} className="product-card">
             <img
               src={product.images[0]}
               alt={product.name}
-              className="w-full h-40 object-cover"
+              className="product-image"
             />
-            <h2 className="font-bold mt-2">{product.name}</h2>
-            <p>Subcategory: {product.product_category}</p>
-            <p>MOQ: {product.MOQ}</p>
-            <p>Starting Price: ₹{Object.values(product.price_per_piece)[0]}</p>
-            <p>
-              Supplier: {product.supplier.name}, {product.supplier.location}
-            </p>
-            <button onClick={()=>{handleCategoryClick(product.id)}}>Buy product</button>
+            <div className="product-details">
+              <h2 className="product-name">{product.name}</h2>
+              <p className="product-subcategory">
+                Subcategory: {product.product_category}
+              </p>
+              <p className="product-moq">MOQ: {product.MOQ}</p>
+              <p className="product-price">
+                Starting Price: ₹{Object.values(product.price_per_piece)[0]}
+              </p>
+              <p className="product-supplier">
+                Supplier: {product.supplier.name}, {product.supplier.location}
+              </p>
+              <button
+                className="buy-button"
+                onClick={() => handleCategoryClick(product.id)}
+              >
+                Buy Product
+              </button>
+            </div>
           </div>
         ))}
       </div>

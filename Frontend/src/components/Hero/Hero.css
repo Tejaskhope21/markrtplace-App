@@ -26,10 +26,11 @@
   padding: 20px;
   border-radius: 10px;
   text-align: left; /* Align text to the left */
-  color: black;
+  color: white;
   width: 90%;
   max-width: 600px;
-  margin-left: 5%; /* Add some margin from the left */
+  margin-left: 5%;
+  font-size:large; /* Add some margin from the left */
   /* background: rgba(255, 255, 255, 0.8); Add a semi-transparent background for better readability */
 }
 

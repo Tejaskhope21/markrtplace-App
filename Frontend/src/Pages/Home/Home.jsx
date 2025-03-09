@@ -11,7 +11,6 @@ function Home() {
       <Hero />
       <Category />
       <B2C_Category />
-      <TopFooter />
       <TradingSteps />
       <TopFooter />
     </div>
