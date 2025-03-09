@@ -8,7 +8,7 @@ function ShoppingProduct() {
   const navigate = useNavigate();
 
   const handleCategoryClick = (id) => {
-    navigate(`/buy?id=${id}`); // Pass only the ID
+    navigate(`/buy_b2c?id=${id}`); // Pass only the ID
   };
 
   const location = useLocation();
