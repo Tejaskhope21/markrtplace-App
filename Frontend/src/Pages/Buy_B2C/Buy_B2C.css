@@ -1,0 +1,143 @@
+/* Buy_B2C.css */
+.buy-b2c-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.buy-b2c-content {
+  display: flex;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.buy-b2c-images {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+.thumbnail-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.thumbnail {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+}
+
+.thumbnail.active {
+  border-color: #007bff;
+}
+
+.main-image-container {
+  width: 100%;
+}
+
+.main-image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 10px;
+}
+
+.buy-b2c-details {
+  width: 50%;
+  padding-left: 20px;
+}
+
+.buy-b2c-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.supplier-info {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.supplier-name {
+  font-weight: bold;
+}
+
+.location {
+  color: #666;
+}
+
+.reviews {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.moq {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.specifications h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.specifications ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.specifications li {
+  margin-bottom: 5px;
+}
+
+.shipping-info h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.send-inquiry {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.send-inquiry:hover {
+  background-color: #0056b3;
+}
+
+.protections h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.protections p {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.no-product {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  color: #666;
+}

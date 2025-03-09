@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import "./BuyNow.css";
-import { item_list } from "../../assets/data"; // Adjust the import path as needed
-import { useLocation } from "react-router-dom";
+import React, { useState } from 'react';
+import './Buy_B2C.css';
+import { useLocation } from 'react-router-dom';
+import { productcategory } from '../../assets/b_to_c_data';
+// Sample data (replace with your actual data import)
 
-function BuyNow() {
+
+function Buy_B2C() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0); // State to track the main image index
 
   const location = useLocation();
@@ -12,7 +14,7 @@ function BuyNow() {
   const productId = Number(selectedCategory) || 0;
 
   // Find the product based on productId
-  const product = item_list.find((item) => item.id === productId);
+  const product = productcategory.find((item) => item.id === productId);
 
   // Handle thumbnail click to update the main image
   const handleThumbnailClick = (index) => {
@@ -28,10 +30,10 @@ function BuyNow() {
   }
 
   return (
-    <div className="buynow-container">
-      <div className="buynow-content">
+    <div className="buy-b2c-container">
+      <div className="buy-b2c-content">
         {/* Left Section: Images */}
-        <div className="buynow-images">
+        <div className="buy-b2c-images">
           <div className="thumbnail-gallery">
             {product.images &&
               product.images.map((img, index) => (
@@ -60,19 +62,14 @@ function BuyNow() {
         </div>
 
         {/* Right Section: Product Details */}
-        <div className="buynow-details">
-          <h1 className="buynow-title">{product.name || "Unnamed Product"}</h1>
+        <div className="buy-b2c-details">
+          <h1 className="buy-b2c-title">{product.name || "Unnamed Product"}</h1>
           <div className="supplier-info">
-            <span className="supplier-name">{product.supplier.name}</span>
-            <span className="location">{product.supplier.location}</span>
+            <span className="supplier-name">{product.supplier?.name}</span>
+            <span className="location">{product.supplier?.location}</span>
           </div>
           <p className="reviews">No reviews yet</p>
-          <p className="price">
-            ₹
-            {product.price_per_piece && product.price_per_piece["50-499"]
-              ? product.price_per_piece["50-499"].toFixed(2)
-              : "N/A"}
-          </p>
+          <p className="price">${product.price.toFixed(2)}</p>
           <p className="moq">MOQ: {product.MOQ} pieces</p>
 
           <div className="specifications">
@@ -87,42 +84,14 @@ function BuyNow() {
                 ))}
               </ul>
             )}
-            {product.dimensions && (
-              <ul>
-                <li>
-                  <strong>DIMENSIONS:</strong> {product.dimensions.join(", ")}
-                </li>
-              </ul>
-            )}
-            {product.thickness && (
-              <ul>
-                <li>
-                  <strong>THICKNESS:</strong> {product.thickness.join(", ")}
-                </li>
-              </ul>
-            )}
-            {product.colors && (
-              <ul>
-                <li>
-                  <strong>COLORS:</strong> {product.colors.join(", ")}
-                </li>
-              </ul>
-            )}
-            {product.sizes && (
-              <ul>
-                <li>
-                  <strong>SIZES:</strong> {product.sizes.join(", ")}
-                </li>
-              </ul>
-            )}
           </div>
 
           <div className="shipping-info">
             <h3>Shipping</h3>
             <p>
-              {product.shipping.free_shipping_above
-                ? `Free shipping above ₹${product.shipping.free_shipping_above}`
-                : `Shipping cost: ₹${product.shipping.cost || 0}`}
+              {product.shipping?.free_shipping_above
+                ? `Free shipping above $${product.shipping.free_shipping_above}`
+                : `Shipping cost: $${product.shipping?.cost || 0}`}
             </p>
           </div>
 
@@ -145,4 +114,4 @@ function BuyNow() {
   );
 }
 
-export default BuyNow;
+export default Buy_B2C;
