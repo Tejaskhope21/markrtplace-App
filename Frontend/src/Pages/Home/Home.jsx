@@ -10,9 +10,9 @@ function Home() {
     <div>
       <Hero />
       <Category />
+      <B2C_Category />
       <TopFooter />
       <TradingSteps />
-      <B2C_Category />
       <TopFooter />
     </div>
   );
