@@ -128,7 +128,7 @@ function BuyNow() {
 
           <div className="actions">
             <button className="send-inquiry">Send inquiry</button>
-            <button className="send-inquiry">Buy Now</button>
+            <button className="send-inquiry"onClick={()=>{}}>Buy Now</button>
           </div>
 
           <div className="protections">
