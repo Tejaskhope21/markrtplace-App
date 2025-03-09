@@ -1,60 +1,86 @@
-.b2ccategory {
-  text-align: center;
-  padding: 20px;
+.b2c-category-container {
+  position: relative;
+  padding: 20px 40px;
   background-color: #f8f9fa;
+  max-width: 1400px;
+  margin: 0 auto;
+  
 }
 
-.b2ccategory h1 {
-  font-size: 26px;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.category-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  padding: 10px;
-}
-
-.category-card {
-  width: 220px;
-  padding: 15px;
-  border-radius: 10px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.b2c-title {
   text-align: center;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.category-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.category-image {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-  border-radius: 8px;
-  transition: transform 0.3s ease;
-}
-
-.category-card:hover .category-image {
-  transform: scale(1.1);
-}
-
-.category-title {
-  margin-top: 10px;
-  font-size: 18px;
-  font-weight: 600;
-  color: #555;
+  font-size: 28px;
+  margin-bottom: 30px;
+  color: #1a1a1a;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   transition: color 0.3s ease;
 }
 
-.category-card:hover .category-title {
-  color: #007bff;
+.b2c-title:hover {
+  color: #ff6200;
+}
+
+.b2c-scroll-wrapper {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 15px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.b2c-scroll-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.b2c-category-card {
+  flex: 0 0 auto;
+  width: 240px;
+  margin: 0 15px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background-color: #ffffff;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.b2c-category-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.b2c-category-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+}
+
+.b2c-category-card:hover .b2c-category-image {
+  transform: scale(1.05);
+}
+
+.b2c-category-title {
+  font-size: 18px;
+  margin-top: 15px;
+  color: #333;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+.b2c-category-card:hover .b2c-category-title {
+  color: #ff6200;
 }
