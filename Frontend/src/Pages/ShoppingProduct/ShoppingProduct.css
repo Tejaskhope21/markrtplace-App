@@ -1,51 +1,155 @@
+/* Container for the entire component */
 .shopping-product {
   padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
 }
 
+/* Title styling */
+.shopping-product h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+}
+
+/* Subcategory filter styling */
 .subcategory-filter {
   margin-bottom: 20px;
-}
-
-.subcategory-filter button {
-  margin-right: 10px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #f0f0f0;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.subcategory-filter button:hover {
-  background-color: #ddd;
-}
-
-.product-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.product-card {
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 10px;
-  width: 200px;
   text-align: center;
 }
 
+.filter-label {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-right: 10px;
+  color: #555;
+}
+
+.filter-select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.filter-select:hover,
+.filter-select:focus {
+  border-color: #999;
+  outline: none;
+}
+
+/* Flex container for product cards */
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Space between cards */
+  justify-content: center; /* Centered alignment to match image */
+}
+
+/* Product card styling */
+.product-card {
+  flex: 1 1 calc(25% - 20px); /* 4 cards per row (25% width minus gap) */
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  max-width: 250px; /* Ensure cards don't exceed 25% width */
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Product image styling */
 .product-image {
   width: 100%;
-  height: 150px;
+  height: 200px;
   object-fit: cover;
-  border-radius: 10px;
+  background-color: #f0f0f0; /* Fallback color for images */
 }
 
-.product-card h2 {
+/* Product details styling */
+.product-details {
+  padding: 16px;
+}
+
+.product-details h2 {
   font-size: 1.2rem;
-  margin: 10px 0;
+  padding: 5px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
 }
 
-.product-card p {
-  margin: 5px 0;
+.product-details p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  padding-top: 10px;
+}
+
+/* Buy button styling */
+.buy-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 0 0 8px 8px; /* Rounded only at bottom to match card */
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.buy-button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 1200px) {
+  .product-card {
+    flex: 1 1 calc(33.33% - 20px); /* 3 cards per row */
+    max-width: calc(33.33% - 20px);
+  }
+}
+
+@media (max-width: 768px) {
+  .product-card {
+    flex: 1 1 calc(50% - 20px); /* 2 cards per row */
+    max-width: calc(50% - 20px);
+  }
+
+  .filter-label {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .filter-select {
+    width: 100%;
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-card {
+    flex: 1 1 100%; /* 1 card per row */
+    max-width: 100%;
+  }
+
+  .shopping-product h1 {
+    font-size: 1.5rem; /* Smaller title on mobile */
+  }
+
+  .filter-select {
+    width: 100%;
+  }
 }

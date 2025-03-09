@@ -1,6 +1,6 @@
 import React from "react";
 import "./Hero.css";
-import img from "../../assets/img.png"
+import img from "../../assets/imgg4.png"
 function Hero() {
   return (
     <div className="hero">
