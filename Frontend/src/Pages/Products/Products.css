@@ -5,6 +5,7 @@
   max-width: 1100px; /* Max width for larger screens */
   margin: 0 auto;
   padding: 20px;
+  cursor: pointer;
 }
 
 .products-title {
