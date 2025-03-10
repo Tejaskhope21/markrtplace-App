@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import "./Navbar.css";
+import { TiShoppingCart } from "react-icons/ti";
 function Navbar({ setShowLogin }) {
   // Correct prop name
   const [menuOpen, setMenuOpen] = useState(false);
@@ -35,7 +36,7 @@ function Navbar({ setShowLogin }) {
     <nav className={`navbar ${isScrolled ? "scrolled" : ""}`}>
       <div className="logo">
         <Link className="link" to="/">
-          <span className="M-class">M</span>arketSetu
+          <span className="M-class">M</span>arket<span className="M-class">S</span>etu
         </Link>
       </div>
 
@@ -55,9 +56,9 @@ function Navbar({ setShowLogin }) {
         <Link className="link" to="/shopping" onClick={handleLinkClick}>
           Shopping
         </Link>
-        {/* <Link className="link" to="/cart" onClick={handleLinkClick}>
-          <img src="" alt="" />
-        </Link> */}
+        <Link className="link" to="/placeorder" onClick={handleLinkClick}>
+          <TiShoppingCart />
+        </Link>
         <div className="link" to="/signin">
           <button className="sign" onClick={() => setShowLogin(true)}>
             Sign in

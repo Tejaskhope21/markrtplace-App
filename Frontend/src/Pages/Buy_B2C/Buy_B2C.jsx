@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import './Buy_B2C.css';
 import { useLocation } from 'react-router-dom';
 import { productcategory } from '../../assets/b_to_c_data';
-// Sample data (replace with your actual data import)
-
 
 function Buy_B2C() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0); // State to track the main image index
+  const [quantity, setQuantity] = useState(1); // State to track the quantity of the product
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -19,6 +18,31 @@ function Buy_B2C() {
   // Handle thumbnail click to update the main image
   const handleThumbnailClick = (index) => {
     setSelectedImageIndex(index);
+  };
+
+  // Handle quantity change
+  const handleQuantityChange = (e) => {
+    const value = Math.max(product.MOQ || 1, Math.min(1000, Number(e.target.value)));
+    setQuantity(value);
+  };
+
+  // Calculate total price based on quantity
+  const calculateTotalPrice = () => {
+    return (product.price * quantity).toFixed(2);
+  };
+
+  // Handle place order
+  const handlePlaceOrder = () => {
+    const totalPrice = calculateTotalPrice();
+    const orderDetails = {
+      productId: product.id,
+      productName: product.name,
+      quantity: quantity,
+      totalPrice: totalPrice,
+    };
+    console.log("Placing order:", orderDetails);
+    // Add your order placement logic here (e.g., API call, add to cart, etc.)
+    alert(`Order placed successfully! Total: $${totalPrice}`);
   };
 
   if (!product) {
@@ -72,6 +96,20 @@ function Buy_B2C() {
           <p className="price">${product.price.toFixed(2)}</p>
           <p className="moq">MOQ: {product.MOQ} pieces</p>
 
+          {/* Quantity Input Section */}
+          <div className="quantity-section">
+            <h3>Quantity</h3>
+            <input
+              type="number"
+              min={product.MOQ || 1}
+              max="1000"
+              value={quantity}
+              onChange={handleQuantityChange}
+              className="quantity-input"
+            />
+            <p className="total-price">Total: ${calculateTotalPrice()}</p>
+          </div>
+
           <div className="specifications">
             <h3>Specifications</h3>
             {product.specifications && (
@@ -97,7 +135,9 @@ function Buy_B2C() {
 
           <div className="actions">
             <button className="send-inquiry">Send inquiry</button>
-            <button className="send-inquiry">Buy Now</button>
+            <button className="place-order" onClick={handlePlaceOrder}>
+              Place Order
+            </button>
           </div>
 
           <div className="protections">

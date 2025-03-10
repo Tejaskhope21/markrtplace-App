@@ -11,6 +11,7 @@ import Cart from "./Pages/Cart/Cart";
 import ShoppingProduct from "./Pages/ShoppingProduct/ShoppingProduct";
 import BuyNow from "./Pages/BuyNow/BuyNow";
 import Buy_B2C from "./Pages/Buy_B2C/Buy_B2C";
+import PlaceOrder from "./Pages/PlaceOrder/PlaceOrder";
 function App() {
   const [showLogin, setShowLogin] = useState(false);
 
@@ -27,6 +28,7 @@ function App() {
           <Route path="/shop" element={<ShoppingProduct />} />
           <Route path="/buy" element={<BuyNow />} />
           <Route path="/buy_b2c" element={<Buy_B2C />} />
+          <Route path="/placeorder" element={<PlaceOrder />} />
         </Routes>
       <Footer />
       </div>

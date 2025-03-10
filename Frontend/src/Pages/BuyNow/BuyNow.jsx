@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "./BuyNow.css";
 import { item_list } from "../../assets/data"; // Adjust the import path as needed
 import { useLocation } from "react-router-dom";
+import { StoreContext } from "../../components/context/StoreProvider";
 
 function BuyNow() {
+  const { cartitem, addToCart, removeFromcart } = useContext(StoreContext);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(""); // Changed from 1 to "" (empty string)
 
@@ -45,6 +47,11 @@ function BuyNow() {
     return quantity !== ""
       ? (pricePerPiece * Number(quantity)).toFixed(2)
       : "0.00";
+  };
+
+  const handleBuyNow = () => {
+    const totalPrice = calculateTotalPrice();
+    addToCart(productId, Number(quantity), Number(totalPrice));
   };
 
   return (
@@ -164,7 +171,18 @@ function BuyNow() {
 
           <div className="actions">
             <button className="send-inquiry">Send inquiry</button>
-            <button className="send-inquiry"onClick={()=>{}}>Buy Now</button>
+            {!cartitem[productId] ? (
+              <button className="send-inquiry" onClick={handleBuyNow}>
+                Buy Now
+              </button>
+            ) : (
+              <button
+                className="send-inquiry"
+                onClick={() => removeFromcart(productId)}
+              >
+                Cancel
+              </button>
+            )}
           </div>
 
           <div className="protections">
