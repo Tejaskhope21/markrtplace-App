@@ -1,3 +1,4 @@
+/* Main Container */
 .trading-steps-container {
   display: flex;
   justify-content: center;
@@ -6,10 +7,12 @@
   background-color: #3A190B;
   flex-wrap: nowrap;
   overflow-x: auto;
-  cursor: pointer;
+  cursor: grab;
+  scroll-snap-type: x mandatory;
   width: 100vw;
 }
 
+/* Make each step snap into place */
 .step-card {
   flex: 0 0 auto;
   width: 300px;
@@ -20,14 +23,17 @@
   color: #ffffff;
   transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  scroll-snap-align: center;
 }
 
+/* Hover Effects */
 .step-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(145deg, rgba(255, 98, 0, 0.2), rgba(255, 165, 0, 0.3)); /* Orange gradient on hover */
+  background: linear-gradient(145deg, rgba(255, 98, 0, 0.2), rgba(255, 165, 0, 0.3)); /* Orange gradient */
 }
 
+/* Step Icons */
 .step-icon {
   margin-bottom: 20px;
 }
@@ -41,9 +47,10 @@
 
 .step-card:hover .step-icon i {
   opacity: 1;
-  color: #ff6200; /* Orange icon on hover */
+  color: #ff6200; /* Orange icon */
 }
 
+/* Step Title */
 .step-title {
   font-size: 20px;
   font-weight: 600;
@@ -54,9 +61,10 @@
 }
 
 .step-card:hover .step-title {
-  color: #ffffff; /* White text on hover for contrast */
+  color: #ffffff;
 }
 
+/* Step Description */
 .step-description {
   font-size: 16px;
   font-weight: 300;
@@ -67,7 +75,7 @@
 
 .step-card:hover .step-description {
   color: #ffffff;
-  opacity: 1; /* Full opacity on hover */
+  opacity: 1;
 }
 
 /* Responsive Design */
@@ -95,17 +103,19 @@
   }
 }
 
+/* Tablet View */
 @media (max-width: 768px) {
   .trading-steps-container {
-    flex-wrap: wrap;
-    overflow-x: hidden;
-    justify-content: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    justify-content: flex-start;
+    padding: 20px 10px;
   }
 
   .step-card {
-    width: 100%;
-    max-width: 300px;
-    margin-bottom: 20px;
+    width: 270px;
+    padding: 20px 15px;
   }
 
   .step-title {
@@ -121,13 +131,20 @@
   }
 }
 
+/* Mobile View */
 @media (max-width: 480px) {
   .trading-steps-container {
     padding: 20px 10px;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
   }
 
   .step-card {
+    flex: 0 0 90%;
     padding: 20px 10px;
+    width: auto;
   }
 
   .step-title {
