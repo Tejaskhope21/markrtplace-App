@@ -2,33 +2,39 @@
 
 .products-container {
   width: 1100px;
+
   margin: 0 auto;
   padding: 20px;
 }
 
 .products-title {
-  font-size: 2rem;
-  text-align: center;
-  margin-bottom: 30px;
-  color: #333;
+
+  font-size: 2.2rem;
   font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+
 }
 
 .subcategory-filter {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 30px;
+
+  text-align: center;
+  margin-bottom: 15px;
 }
 
 .filter-label {
-  font-size: 1.1rem;
-  margin-right: 10px;
-  color: #555;
+  font-size: 1rem;
+  margin-right: 5px;
 }
 
 .filter-select {
-  padding: 8px 12px;
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+
   font-size: 1rem;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -42,109 +48,89 @@
 }
 
 .product-flex-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Adjusted min width */
-  gap: 20px;
-  padding: 0 10px;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center; /* Center cards when fewer items are present */
+  min-height: 200px; /* Ensure container has height even with no products */
+
 }
 
 .product-card {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 400px; /* Ensure consistent height */
-  width: 100%; /* Ensure consistent width */
-}
-
-.product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+  flex: 1 1 calc(33% - 30px); /* Adjusted to account for larger gap */
+  min-width: 250px; /* Minimum width to prevent cards from shrinking too much */
+  max-width: calc(33% - 30px); /* Prevent cards from growing too wide */
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 10px;
+  background-color: #fff;
+>>>>>>> 89211540f0d0db3adfd4d5464e8d7db34733282d
 }
 
 .product-image {
   width: 100%;
-  height: 150px; /* Reduced height to match the image */
+  height: 150px;
+
   object-fit: cover;
   border-bottom: 1px solid #eee;
 }
 
 .product-details {
   padding: 10px;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
 }
 
 .product-name {
-  font-size: 1.1rem; /* Smaller font size */
-  margin: 0 0 8px;
-  color: #333;
-  font-weight: 600;
-  line-height: 1.2;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+>>>>>>> 89211540f0d0db3adfd4d5464e8d7db34733282d
 }
 
 .product-subcategory,
 .product-moq,
 .product-price,
 .product-supplier {
-  font-size: 0.85rem; /* Smaller font size to match the image */
-  margin: 4px 0;
+
+  font-size: 0.9rem;
   color: #666;
+  margin-bottom: 5px;
 }
 
-.product-price {
-  font-weight: 500;
-  color: #2c2c2c;
-}
-
-.product-supplier {
-  font-style: italic;
-  color: #777;
-}
-
-.buy-button {
+/* Buy button styling */
+#buy-btn {
   width: 100%;
   padding: 8px;
-  margin-top: 10px;
-  background-color: #ff5733; /* Changed to match the orange button in the image */
+  background-color: tomato;
   color: white;
   border: none;
   border-radius: 4px;
-  font-size: 0.9rem;
+  font-size: 1rem;
+
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-.buy-button:hover {
-  background-color: #e04e2d;
+
+/* Fallback for no products */
+.product-flex-container:empty::after {
+  content: "No products found for this subcategory.";
+  font-size: 1.2rem;
+  color: #666;
+  text-align: center;
+  padding: 20px;
+  width: 100%;
 }
 
-.buy-button:active {
-  background-color: #c94327;
-}
-
-/* Responsive Design */
+/* Basic responsive design */
 @media (max-width: 768px) {
-  .product-flex-container {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  .product-card {
+    flex: 1 1 calc(50% - 30px); /* 2 cards per row */
+    max-width: calc(50% - 30px);
   }
 
   .products-title {
-    font-size: 1.75rem;
-  }
+    font-size: 1.8rem;
 
-  .product-name {
-    font-size: 1rem;
-  }
-
-  .product-image {
-    height: 140px;
   }
 }
 
@@ -164,6 +150,13 @@
   }
 
   .product-card {
-    min-height: 380px;
+
+    flex: 1 1 100%; /* 1 card per row */
+    max-width: 100%;
+>>>>>>> 89211540f0d0db3adfd4d5464e8d7db34733282d
+  }
+
+  .products-title {
+    font-size: 1.6rem;
   }
 }

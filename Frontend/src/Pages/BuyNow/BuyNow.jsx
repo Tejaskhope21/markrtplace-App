@@ -4,19 +4,27 @@ import { item_list } from "../../assets/data"; // Adjust the import path as need
 import { useLocation } from "react-router-dom";
 
 function BuyNow() {
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0); // State to track the main image index
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [quantity, setQuantity] = useState(""); // Changed from 1 to "" (empty string)
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const selectedCategory = queryParams.get("id");
   const productId = Number(selectedCategory) || 0;
 
-  // Find the product based on productId
   const product = item_list.find((item) => item.id === productId);
 
-  // Handle thumbnail click to update the main image
   const handleThumbnailClick = (index) => {
     setSelectedImageIndex(index);
+  };
+
+  // Handle quantity change
+  const handleQuantityChange = (e) => {
+    const value =
+      e.target.value === ""
+        ? ""
+        : Math.max(product.MOQ || 1, Math.min(1000, Number(e.target.value)));
+    setQuantity(value);
   };
 
   if (!product) {
@@ -26,6 +34,18 @@ function BuyNow() {
       </div>
     );
   }
+
+  // Calculate total price based on quantity
+  const calculateTotalPrice = () => {
+    const pricePerPiece =
+      product.price_per_piece && product.price_per_piece["50-499"]
+        ? product.price_per_piece["50-499"]
+        : 0;
+    // Only calculate if quantity is a valid number
+    return quantity !== ""
+      ? (pricePerPiece * Number(quantity)).toFixed(2)
+      : "0.00";
+  };
 
   return (
     <div className="buynow-container">
@@ -72,8 +92,24 @@ function BuyNow() {
             {product.price_per_piece && product.price_per_piece["50-499"]
               ? product.price_per_piece["50-499"].toFixed(2)
               : "N/A"}
+            <span> per piece</span>
           </p>
           <p className="moq">MOQ: {product.MOQ} pieces</p>
+
+          {/* Quantity Input Section */}
+          <div className="quantity-section">
+            <h3>Quantity</h3>
+            <input
+              type="number"
+              min={product.MOQ || 1}
+              max="1000"
+              value={quantity}
+              onChange={handleQuantityChange}
+              className="quantity-input"
+              placeholder={`Min: ${product.MOQ || 1}`} // Optional: adds placeholder
+            />
+            <p className="total-price">Total: ₹{calculateTotalPrice()}</p>
+          </div>
 
           <div className="specifications">
             <h3>Specifications</h3>
