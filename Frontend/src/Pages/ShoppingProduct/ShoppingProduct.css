@@ -1,7 +1,8 @@
 /* ShoppingProduct.css */
 
 .shopping-product {
-  width: 1100px;
+  width: 100%; /* Full width for better responsiveness */
+  max-width: 1100px; /* Max width for larger screens */
   margin: 0 auto;
   padding: 20px;
 }
@@ -115,11 +116,14 @@
   width: 100%;
 }
 
-/* Basic responsive design */
+/* Responsive Design for Tablet */
 @media (max-width: 768px) {
   .shopping-product {
-    width: 100%;
     padding: 15px;
+  }
+
+  .shopping-product h1 {
+    font-size: 1.8rem; /* Slightly smaller title for tablets */
   }
 
   .product-card {
@@ -127,25 +131,31 @@
     max-width: calc(50% - 30px);
   }
 
-  .shopping-product h1 {
-    font-size: 1.8rem;
+  .product-image {
+    height: 130px; /* Slightly smaller image height */
+  }
+
+  .product-card h2 {
+    font-size: 1.1rem; /* Smaller font size for product names */
+  }
+
+  .product-card p {
+    font-size: 0.85rem; /* Smaller font size for details */
+  }
+
+  .product-card button {
+    font-size: 0.9rem; /* Smaller button font size */
   }
 }
 
+/* Responsive Design for Mobile */
 @media (max-width: 480px) {
   .shopping-product {
-    width: 100%;
     padding: 10px;
   }
 
-  .product-list {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .product-card {
-    flex: 1 1 100%; /* 1 card per row */
-    max-width: 100%;
+  .shopping-product h1 {
+    font-size: 1.6rem; /* Smaller title for mobile */
   }
 
   .subcategory-filter {
@@ -156,11 +166,35 @@
   }
 
   .subcategory-filter button {
-    width: 100%;
-    max-width: 300px;
+    width: 100%; /* Full width for buttons */
+    max-width: 300px; /* Limit max width */
+    margin: 5px 0; /* Add vertical spacing */
   }
 
-  .shopping-product h1 {
-    font-size: 1.6rem;
+  .product-list {
+    flex-direction: column; /* Stack cards vertically */
+    gap: 20px; /* Smaller gap between cards */
+  }
+
+  .product-card {
+    flex: 1 1 100%; /* 1 card per row */
+    max-width: 100%; /* Full width for cards */
+    min-width: auto; /* Remove min-width restriction */
+  }
+
+  .product-image {
+    height: 120px; /* Smaller image height */
+  }
+
+  .product-card h2 {
+    font-size: 1rem; /* Smaller font size for product names */
+  }
+
+  .product-card p {
+    font-size: 0.8rem; /* Smaller font size for details */
+  }
+
+  .product-card button {
+    font-size: 0.85rem; /* Smaller button font size */
   }
 }
