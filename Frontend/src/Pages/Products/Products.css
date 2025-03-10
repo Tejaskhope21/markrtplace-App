@@ -65,7 +65,7 @@
   border-radius: 4px;
   padding: 10px;
   background-color: #fff;
->>>>>>> 89211540f0d0db3adfd4d5464e8d7db34733282d
+
 }
 
 .product-image {
@@ -84,7 +84,6 @@
   font-size: 1.2rem;
   font-weight: bold;
   margin-bottom: 5px;
->>>>>>> 89211540f0d0db3adfd4d5464e8d7db34733282d
 }
 
 .product-subcategory,
@@ -153,7 +152,7 @@
 
     flex: 1 1 100%; /* 1 card per row */
     max-width: 100%;
->>>>>>> 89211540f0d0db3adfd4d5464e8d7db34733282d
+
   }
 
   .products-title {
