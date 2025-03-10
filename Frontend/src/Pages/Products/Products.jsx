@@ -51,7 +51,11 @@ const Products = () => {
       </div>
       <div className="product-flex-container">
         {filteredProducts.map((product) => (
-          <div key={product.id} className="product-card">
+          <div
+            key={product.id}
+            className="product-card"
+            onClick={() => handleCategoryClick(product.id)} // Added onClick here
+          >
             <img
               src={product.images[0]}
               alt={product.name}
@@ -70,8 +74,8 @@ const Products = () => {
                 Supplier: {product.supplier.name}, {product.supplier.location}
               </p>
               <button
-                id="buy-btn" // Removed className="buy-button" since styling is via ID
-                onClick={() => handleCategoryClick(product.id)}
+                id="buy-btn"
+                onClick={(e) => e.stopPropagation()} // Prevent button click from triggering card click
               >
                 Buy Product
               </button>
