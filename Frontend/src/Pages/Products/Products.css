@@ -1,8 +1,8 @@
 /* Products.css */
 
 .products-container {
-  width: 100%; /* Full width for better responsiveness */
-  max-width: 1100px; /* Max width for larger screens */
+  width: 100%;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 20px;
   cursor: pointer;
