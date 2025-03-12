@@ -1,0 +1,80 @@
+/* Register.css */
+.register-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #ffffff; /* White background */
+  padding: 20px;
+}
+
+/* Style for the login form container */
+.login-container {
+  background-color: #f9f9f9; /* Light gray background for the form */
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Style for the form heading */
+.login-container h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333; /* Dark gray text */
+}
+
+/* Style for input fields */
+.login-container input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd; /* Light gray border */
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.login-container input:focus {
+  border-color: #007bff; /* Blue border on focus */
+}
+
+/* Style for the submit button */
+.login-container button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff; /* Blue background */
+  color: #fff; /* White text */
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-container button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Style for links (e.g., "Forgot Password?") */
+.login-container a {
+  color: #007bff; /* Blue link */
+  text-decoration: none;
+  font-size: 14px;
+  display: block;
+  margin-top: 10px;
+}
+
+.login-container a:hover {
+  text-decoration: underline; /* Underline on hover */
+}
+
+/* Style for error messages (if any) */
+.login-container .error-message {
+  color: #dc3545; /* Red error text */
+  font-size: 14px;
+  margin-bottom: 15px;
+}

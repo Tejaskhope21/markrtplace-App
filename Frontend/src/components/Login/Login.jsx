@@ -1,51 +1,124 @@
 import React, { useState } from "react";
-import "./Login.css";
-import cross from "../../../public/cross_icon.png";
+import "./Login.css"; // Ensure you have this CSS file
 
-function Login({ setShowLogin }) {
-  const [currstate, setCurrstate] = useState("Login");
+function Login() {
+  const [step, setStep] = useState(1); // Step 1: Mobile Number, Step 2: OTP, Step 3: Registration Form
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [otp, setOtp] = useState("");
+  const [shopName, setShopName] = useState("");
+  const [businessType, setBusinessType] = useState("");
+  const [pincode, setPincode] = useState("");
 
-  const handle = () => {
-    setShowLogin(false);
+  // Handle mobile number submission
+  const handleMobileSubmit = (e) => {
+    e.preventDefault();
+    // Simulate OTP generation and send to the user
+    console.log("OTP sent to:", mobileNumber);
+    setStep(2); // Move to OTP verification step
+  };
+
+  // Handle OTP verification
+  const handleOtpSubmit = (e) => {
+    e.preventDefault();
+    // Simulate OTP verification
+    if (otp === "123456") {
+      // Replace with actual OTP verification logic
+      console.log("OTP verified");
+      setStep(3); // Move to registration form step
+    } else {
+      alert("Invalid OTP. Please try again.");
+    }
+  };
+
+  // Handle shop registration form submission
+  const handleRegistrationSubmit = (e) => {
+    e.preventDefault();
+    // Simulate registration logic
+    const shopDetails = {
+      mobileNumber,
+      shopName,
+      businessType,
+      pincode,
+    };
+    console.log("Shop Registered:", shopDetails);
+    alert("Shop registration successful!");
+    // Reset the form
+    setStep(1);
+    setMobileNumber("");
+    setOtp("");
+    setShopName("");
+    setBusinessType("");
+    setPincode("");
   };
 
   return (
-    <div className="login-popup">
-      <form className="login-popup-container">
-        <div className="login-pupup-title">
-          <h1>{currstate}</h1>
-          <p onClick={handle}>X</p>
-        </div>
+    <div className="shop-registration">
+      <h1>Shop Registration</h1>
+      {step === 1 && (
+        <form onSubmit={handleMobileSubmit} className="registration-form">
+          <label htmlFor="mobileNumber">Mobile Number</label>
+          <input
+            type="tel"
+            id="mobileNumber"
+            value={mobileNumber}
+            onChange={(e) => setMobileNumber(e.target.value)}
+            placeholder="Enter your mobile number"
+            required
+          />
+          <button type="submit">Get OTP</button>
+        </form>
+      )}
 
-        <div className="login-popup-inputs">
-          {currstate === "Signup" && (
-            <input type="text" placeholder="Your name" required />
-          )}
-          <input type="email" placeholder="Your email" required />
-          <input type="password" placeholder="Password" required />
-        </div>
+      {step === 2 && (
+        <form onSubmit={handleOtpSubmit} className="registration-form">
+          <label htmlFor="otp">Enter OTP</label>
+          <input
+            type="text"
+            id="otp"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            placeholder="Enter OTP"
+            required
+          />
+          <button type="submit">Verify OTP</button>
+        </form>
+      )}
 
-        <button className="login-btn">
-          {currstate === "Signup" ? "Create Account" : "Login"}
-        </button>
+      {step === 3 && (
+        <form onSubmit={handleRegistrationSubmit} className="registration-form">
+          <label htmlFor="shopName">Shop Name</label>
+          <input
+            type="text"
+            id="shopName"
+            value={shopName}
+            onChange={(e) => setShopName(e.target.value)}
+            placeholder="Enter shop name"
+            required
+          />
 
-        <div className="login-poup-condition">
-          <input type="checkbox" required />
-          <p>By continuing, I agree to the terms of use & privacy policy</p>
+          <label htmlFor="businessType">Business Type</label>
+          <input
+            type="text"
+            id="businessType"
+            value={businessType}
+            onChange={(e) => setBusinessType(e.target.value)}
+            placeholder="Enter business type"
+            required
+          />
 
-          {currstate === "Login" ? (
-            <p>
-              Create a new account?
-              <span onClick={() => setCurrstate("Signup")}>Click here</span>
-            </p>
-          ) : (
-            <p>
-              Already have an account?
-              <span onClick={() => setCurrstate("Login")}>Login here</span>
-            </p>
-          )}
-        </div>
-      </form>
+          <label htmlFor="pincode">Pincode</label>
+          <input
+            type="text"
+            id="pincode"
+            value={pincode}
+            onChange={(e) => setPincode(e.target.value)}
+            placeholder="Enter pincode"
+            required
+          />
+
+          <button type="submit">Register Shop</button>
+        </form>
+      )}
     </div>
   );
 }
