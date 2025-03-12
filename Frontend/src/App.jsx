@@ -43,9 +43,5 @@ function App() {
   );
 }
 
-<<<<<<< HEAD
 export default App;
-// div id="root"div
-=======
-export default App;
->>>>>>> f8883983267dc62c2fd9fe9e543847f926dd6ae3
+
