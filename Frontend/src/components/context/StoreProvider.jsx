@@ -4,19 +4,28 @@ import { product, productcategory } from "../../assets/b_to_c_data";
 
 export const StoreContext = createContext(null);
 
-const StoreContextProvider = (props) => {
+const StoreContextProvider = ({ children }) => {
   const [cartitem, setCartitem] = useState({});
 
-  const addToCart = (itemId, quantity, totalPrice) => {
-    setCartitem((prev) => ({
-      ...prev,
-      [itemId]: {
-        quantity: (prev[itemId]?.quantity || 0) + quantity,
-        totalPrice: (prev[itemId]?.totalPrice || 0) + totalPrice,
-      },
-    }));
+  // ✅ Add to Cart Function (Fixed Type Handling)
+  const addToCart = (itemId, quantity = 1, price = 0) => {
+    if (!itemId || quantity <= 0 || price <= 0) return;
+
+    setCartitem((prev) => {
+      const currentQuantity = prev[itemId]?.quantity || 0;
+      const currentTotalPrice = prev[itemId]?.totalPrice || 0;
+
+      return {
+        ...prev,
+        [itemId]: {
+          quantity: currentQuantity + quantity,
+          totalPrice: currentTotalPrice + quantity * price,
+        },
+      };
+    });
   };
 
+  // ✅ Remove from Cart Function
   const removeFromcart = (itemId) => {
     setCartitem((prev) => {
       const updatedCart = { ...prev };
@@ -26,10 +35,10 @@ const StoreContextProvider = (props) => {
   };
 
   const contextValue = {
-    item_list,
-    menu_list,
-    product,
-    productcategory,
+    item_list: item_list || [], // Ensure fallback if undefined
+    menu_list: menu_list || [],
+    product: product || [],
+    productcategory: productcategory || [],
     addToCart,
     removeFromcart,
     cartitem,
@@ -37,7 +46,7 @@ const StoreContextProvider = (props) => {
 
   return (
     <StoreContext.Provider value={contextValue}>
-      {props.children}
+      {children}
     </StoreContext.Provider>
   );
 };
