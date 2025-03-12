@@ -1,121 +1,102 @@
-/* General Styles */
-.login-popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
+/* Login.css */
 
-.login-popup-container {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  position: relative;
-}
-
-.login-popup-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.login-popup-title h1 {
-  font-size: 24px;
-  margin: 0;
-}
-
-.close-icon {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-}
-
-.login-popup-inputs {
+/* General styles for the shop registration page */
+.shop-registration {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #ffffff; /* White background */
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.shop-registration h1 {
+  font-size: 28px;
+  color: #333; /* Dark gray text */
   margin-bottom: 20px;
 }
 
-.login-popup-inputs input {
-  padding: 10px;
-  border: 1px solid #ccc;
+/* Styles for the registration form */
+.registration-form {
+  background-color: #f9f9f9; /* Light gray background */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+.registration-form label {
+  display: block;
+  font-size: 16px;
+  color: #555; /* Medium gray text */
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.registration-form input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd; /* Light gray border */
   border-radius: 5px;
   font-size: 16px;
-}
-
-.login-popup-inputs input:focus {
   outline: none;
-  border-color: #007bff;
+  transition: border-color 0.3s ease;
 }
 
-  .login-btn{
+.registration-form input:focus {
+  border-color: #007bff; /* Blue border on focus */
+}
+
+.registration-form button {
   width: 100%;
-  padding: 10px;
-  background: tomato;
-  color: white;
+  padding: 12px;
+  background-color: #007bff; /* Blue background */
+  color: #fff; /* White text */
   border: none;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-} 
-
-button:hover {
-  background: tomato;
+  transition: background-color 0.3s ease;
 }
 
-.login-popup-condition {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 20px;
+.registration-form button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
 }
 
-.login-popup-condition input {
-  cursor: pointer;
-}
-
-.login-popup-condition p {
+/* Styles for the OTP step */
+.registration-form .otp-instruction {
   font-size: 14px;
-  margin: 0;
+  color: #777; /* Light gray text */
+  margin-bottom: 20px;
 }
 
-.login-popup-condition span {
-  color: #007bff;
-  cursor: pointer;
-  text-decoration: underline;
+/* Styles for the registration form step */
+.registration-form .shop-details {
+  text-align: left;
 }
 
-/* Responsive Styles */
+/* Responsive design */
 @media (max-width: 480px) {
-  .login-popup-container {
-    width: 90%;
-    padding: 15px;
+  .registration-form {
+    padding: 20px;
   }
 
-  .login-popup-title h1 {
-    font-size: 20px;
+  .shop-registration h1 {
+    font-size: 24px;
   }
 
-  .login-popup-inputs input {
+  .registration-form input {
+    padding: 10px;
     font-size: 14px;
   }
 
-  button {
+  .registration-form button {
+    padding: 10px;
     font-size: 14px;
-  }
-
-  .login-popup-condition p {
-    font-size: 12px;
   }
 }
