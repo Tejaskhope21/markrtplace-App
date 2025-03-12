@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import './Buy_B2C.css';
-import { useLocation } from 'react-router-dom';
-import { productcategory } from '../../assets/b_to_c_data';
+import React, { useState } from "react";
+import "./Buy_B2C.css";
+import { useLocation } from "react-router-dom";
+import { productcategory } from "../../assets/b_to_c_data";
 
 function Buy_B2C() {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0); // State to track the main image index
@@ -22,7 +22,10 @@ function Buy_B2C() {
 
   // Handle quantity change
   const handleQuantityChange = (e) => {
-    const value = Math.max(product.MOQ || 1, Math.min(1000, Number(e.target.value)));
+    const value = Math.max(
+      product.MOQ || 1,
+      Math.min(1000, Number(e.target.value))
+    );
     setQuantity(value);
   };
 

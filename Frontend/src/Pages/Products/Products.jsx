@@ -1,14 +1,19 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { item_list } from "../../assets/data.js";
-import { useNavigate } from "react-router-dom";
 import "./Products.css";
 
 const Products = () => {
   const navigate = useNavigate();
 
-  const handleCategoryClick = (id) => {
-    navigate(`/buy?id=${id}`); // Pass only the ID
+  const handleCardClick = (id) => {
+    navigate(`/buy?id=${id}`); // Navigate to product details page
+  };
+
+  const handleButtonClick = (e, id) => {
+    e.stopPropagation(); // Stop the event from propagating to the parent card
+    console.log(`Buy button clicked for product ID: ${id}`);
+    // You can add other button-specific logic here (e.g., adding to cart)
   };
 
   const location = useLocation();
@@ -54,7 +59,7 @@ const Products = () => {
           <div
             key={product.id}
             className="product-card"
-            onClick={() => handleCategoryClick(product.id)} // Added onClick here
+            onClick={() => handleCardClick(product.id)} // Handle card click
           >
             <img
               src={product.images[0]}
@@ -68,14 +73,16 @@ const Products = () => {
               </p>
               <p className="product-moq">MOQ: {product.MOQ}</p>
               <p className="product-price">
-                Starting Price: ₹{Object.values(product.price_per_piece)[0]}
+                Starting Price: ₹
+                {Object.values(product.price_per_piece)[0] || "N/A"}
               </p>
               <p className="product-supplier">
                 Supplier: {product.supplier.name}, {product.supplier.location}
               </p>
+              {/* Fix: Stop propagation here */}
               <button
                 id="buy-btn"
-                onClick={(e) => e.stopPropagation()} // Prevent button click from triggering card click
+                onClick={(e) => handleButtonClick(e, product.id)}
               >
                 Buy Product
               </button>

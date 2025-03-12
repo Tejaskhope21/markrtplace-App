@@ -20,7 +20,7 @@ function App() {
       {showLogin ? <Login /> : null}
 
       <div className="main-content">
-      <Navbar setShowLogin={setShowLogin} />
+        <Navbar setShowLogin={setShowLogin} />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/cart" element={<Cart />} />
@@ -30,9 +30,8 @@ function App() {
           <Route path="/buy_b2c" element={<Buy_B2C />} />
           <Route path="/placeorder" element={<PlaceOrder />} />
         </Routes>
-      <Footer />
+        <Footer />
       </div>
-
     </>
   );
 }

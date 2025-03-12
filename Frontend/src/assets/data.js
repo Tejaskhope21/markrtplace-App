@@ -31,10 +31,10 @@ export const item_list = [
       wire_gauge: ["10 AWG", "12 AWG", "14 AWG"],
     },
     images: [
-      "https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg",
-      "https://images.pexels.com/photos/569163/pexels-photo-569163.jpeg",
-      "https://images.pexels.com/photos/256428/pexels-photo-256428.jpeg",
-      "https://images.pexels.com/photos/3353208/pexels-photo-3353208.jpeg",
+      "https://content.jdmagicbox.com/quickquotes/images_main/18-gauge-pvc-insulated-copper-wire-2000mm-drum-801665479-x9se0kz4.jpg?impolicy=queryparam&im=Resize=(360,360),aspect=fit",
+      "https://m.media-amazon.com/images/I/41vhU5RNYiL._AC_UF1000,1000_QL80_.jpg",
+      "https://m.media-amazon.com/images/I/31lxWyW8fIL._AC_UF1000,1000_QL80_.jpg",
+      "https://www.paradisespecialitycables.com/wp-content/uploads/2020/08/Paradise-13-25sqmm-x-1-FRFRLS-Black.png",
     ],
     supplier: {
       name: "Mumbai Electricals Ltd.",

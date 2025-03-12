@@ -10,8 +10,10 @@ const Category = () => {
   const [isLeftDisabled, setIsLeftDisabled] = useState(true);
   const [isRightDisabled, setIsRightDisabled] = useState(false);
 
+  // ✅ Scroll to top after navigation
   const handleCategoryClick = (category) => {
     navigate(`/products?category=${category}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const scroll = (direction) => {
@@ -53,7 +55,6 @@ const Category = () => {
   }, []);
 
   return (
-
     <>
       <h3 className="title">B2B Order Now</h3>
       <div className="category-container">
@@ -61,7 +62,6 @@ const Category = () => {
           className="nav-arrow left"
           onClick={() => scroll("left")}
           disabled={isLeftDisabled}
-
         >
           <i className="fa-regular fa-circle-left"></i>
         </button>
@@ -83,7 +83,6 @@ const Category = () => {
           ))}
         </div>
 
-
         <button
           className="nav-arrow right"
           onClick={() => scroll("right")}
@@ -93,7 +92,6 @@ const Category = () => {
         </button>
       </div>
     </>
-
   );
 };
 
