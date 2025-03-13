@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import "./Login.css"; // Ensure you have this CSS file
 
 function Login() {
-  const [step, setStep] = useState(1); // Step 1: Mobile Number, Step 2: OTP, Step 3: Registration Form
+  const [step, setStep] = useState(1); // Step 1: Mobile Number, Step 2: OTP, Step 3: Category Selection, Step 4: Registration Form
   const [mobileNumber, setMobileNumber] = useState("");
   const [otp, setOtp] = useState("");
+  const [category, setCategory] = useState(""); // B2B or B2C
   const [shopName, setShopName] = useState("");
   const [businessType, setBusinessType] = useState("");
   const [pincode, setPincode] = useState("");
@@ -24,9 +25,19 @@ function Login() {
     if (otp === "123456") {
       // Replace with actual OTP verification logic
       console.log("OTP verified");
-      setStep(3); // Move to registration form step
+      setStep(3); // Move to category selection step
     } else {
       alert("Invalid OTP. Please try again.");
+    }
+  };
+
+  // Handle category selection
+  const handleCategorySelect = (e) => {
+    e.preventDefault();
+    if (category) {
+      setStep(4); // Move to registration form step
+    } else {
+      alert("Please select a category.");
     }
   };
 
@@ -36,6 +47,7 @@ function Login() {
     // Simulate registration logic
     const shopDetails = {
       mobileNumber,
+      category,
       shopName,
       businessType,
       pincode,
@@ -46,6 +58,7 @@ function Login() {
     setStep(1);
     setMobileNumber("");
     setOtp("");
+    setCategory("");
     setShopName("");
     setBusinessType("");
     setPincode("");
@@ -85,6 +98,23 @@ function Login() {
       )}
 
       {step === 3 && (
+        <form onSubmit={handleCategorySelect} className="registration-form">
+          <label htmlFor="category">Select Category</label>
+          <select
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+          >
+            <option value="">Select</option>
+            <option value="B2B">B2B</option>
+            <option value="B2C">B2C</option>
+          </select>
+          <button type="submit">Next</button>
+        </form>
+      )}
+
+      {step === 4 && (
         <form onSubmit={handleRegistrationSubmit} className="registration-form">
           <label htmlFor="shopName">Shop Name</label>
           <input
