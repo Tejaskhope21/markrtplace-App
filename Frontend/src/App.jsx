@@ -3,14 +3,13 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import Navbar from "../src/components/Navbar/Navbar";
 import Footer from "../src/components/Footer/Footer";
 import Home from "../src/Pages/Home/Home";
-import Login from "../src/components/Login/Login";
 import Products from "./Pages/Products/Products";
 import Cart from "./Pages/Cart/Cart";
 import ShoppingProduct from "./Pages/ShoppingProduct/ShoppingProduct";
 import BuyNow from "./Pages/BuyNow/BuyNow";
 import Buy_B2C from "./Pages/Buy_B2C/Buy_B2C";
 import PlaceOrder from "./Pages/PlaceOrder/PlaceOrder";
-import Register from "./Pages/Register/Register";
+import Register from "./Pages/Register/Register"; // Updated to match your import
 import "./App.css";
 
 function App() {
@@ -19,7 +18,7 @@ function App() {
 
   useEffect(() => {
     if (showLogin) {
-      navigate("/register"); // Navigate to the /register route
+      navigate("/register"); // Navigate to the /register route when showLogin is true
     }
   }, [showLogin, navigate]);
 

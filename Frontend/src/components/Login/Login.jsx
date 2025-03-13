@@ -1,31 +1,30 @@
 import React, { useState } from "react";
-import "./Login.css"; // Ensure you have this CSS file
+import { useNavigate } from "react-router-dom";
+import "./Login.css"; // Assuming the CSS file is still named Login.css
 
-function Login() {
-  const [step, setStep] = useState(1); // Step 1: Mobile Number, Step 2: OTP, Step 3: Category Selection, Step 4: Registration Form
+function Register() { // Changed name to match your Routes
+  const [step, setStep] = useState(1);
   const [mobileNumber, setMobileNumber] = useState("");
   const [otp, setOtp] = useState("");
-  const [category, setCategory] = useState(""); // B2B or B2C
+  const [category, setCategory] = useState("");
   const [shopName, setShopName] = useState("");
   const [businessType, setBusinessType] = useState("");
   const [pincode, setPincode] = useState("");
+  const navigate = useNavigate();
 
   // Handle mobile number submission
   const handleMobileSubmit = (e) => {
     e.preventDefault();
-    // Simulate OTP generation and send to the user
     console.log("OTP sent to:", mobileNumber);
-    setStep(2); // Move to OTP verification step
+    setStep(2);
   };
 
   // Handle OTP verification
   const handleOtpSubmit = (e) => {
     e.preventDefault();
-    // Simulate OTP verification
-    if (otp === "123456") {
-      // Replace with actual OTP verification logic
+    if (otp === "123456") { // Replace with actual OTP verification
       console.log("OTP verified");
-      setStep(3); // Move to category selection step
+      setStep(3);
     } else {
       alert("Invalid OTP. Please try again.");
     }
@@ -35,7 +34,7 @@ function Login() {
   const handleCategorySelect = (e) => {
     e.preventDefault();
     if (category) {
-      setStep(4); // Move to registration form step
+      setStep(4);
     } else {
       alert("Please select a category.");
     }
@@ -44,7 +43,6 @@ function Login() {
   // Handle shop registration form submission
   const handleRegistrationSubmit = (e) => {
     e.preventDefault();
-    // Simulate registration logic
     const shopDetails = {
       mobileNumber,
       category,
@@ -54,7 +52,11 @@ function Login() {
     };
     console.log("Shop Registered:", shopDetails);
     alert("Shop registration successful!");
-    // Reset the form
+
+    // Navigate to home page after successful registration
+    navigate("/"); // Changed from "/home" to "/" to match your home route
+
+    // Reset the form (optional)
     setStep(1);
     setMobileNumber("");
     setOtp("");
@@ -145,7 +147,6 @@ function Login() {
             placeholder="Enter pincode"
             required
           />
-
           <button type="submit">Register Shop</button>
         </form>
       )}
@@ -153,4 +154,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Register;
