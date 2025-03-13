@@ -1,13 +1,15 @@
 import React, { useContext } from "react";
 import "./B2CCart.css";
 import { StoreContext } from "../../components/context/StoreProvider";
-import { Link } from "react-router-dom"; // Add this for navigation
+import { Link } from "react-router-dom";
 
 function B2CCart() {
-  const { cartitem = {}, b2c_items = [], removeFromcart, isLoading } = useContext(StoreContext);
-
-  console.log("Cart Items:", cartitem);
-  console.log("B2C Items:", b2c_items);
+  const {
+    cartitem = {},
+    b2c_items = [],
+    removeFromcart,
+    isLoading,
+  } = useContext(StoreContext);
 
   const calculateTotalAmount = () => {
     let total = 0;
@@ -15,12 +17,7 @@ function B2CCart() {
       if (cartitem[itemId]?.quantity > 0) {
         const product = b2c_items.find((item) => item.id === Number(itemId));
         if (product) {
-          const itemTotal =
-            parseFloat(cartitem[itemId].totalPrice) ||
-            product.price * cartitem[itemId].quantity;
-          total += itemTotal;
-        } else {
-          console.warn(`Product not found for itemId: ${itemId}`);
+          total += cartitem[itemId].totalPrice;
         }
       }
     }
@@ -48,40 +45,38 @@ function B2CCart() {
         ) : (
           <div className="cart-items">
             {Object.keys(cartitem).map((itemId) => {
-              const product = b2c_items.find((item) => item.id === Number(itemId));
-              console.log(`Processing item ${itemId}:`, { product, cartitem: cartitem[itemId] });
-
-              if (!product || cartitem[itemId].quantity <= 0) {
-                console.log(`Skipping item ${itemId}: No product or zero quantity`);
-                return null;
-              }
+              const product = b2c_items.find(
+                (item) => item.id === Number(itemId)
+              );
+              if (!product || cartitem[itemId].quantity <= 0) return null;
 
               return (
                 <div key={itemId} className="cart-item">
                   <div className="item-image">
                     <img
-                      src={product.images?.[0] || "https://via.placeholder.com/150"}
+                      src={
+                        product.images?.[0] || "https://via.placeholder.com/150"
+                      }
                       alt={product.name || "Product Image"}
                     />
                   </div>
                   <div className="item-details">
                     <h2>{product.name || "Unnamed Product"}</h2>
-                    <p>Price: ${product.price?.toFixed(2) || "N/A"}</p>
+                    <p>Price: ₹{product.price?.toFixed(2) || "N/A"}</p>
                     <p>Quantity: {cartitem[itemId].quantity}</p>
-                    <p>
-                      Total: $
-                      {(cartitem[itemId].totalPrice ||
-                        product.price * cartitem[itemId].quantity).toFixed(2)}
-                    </p>
+                    <p>Total: ₹{cartitem[itemId].totalPrice.toFixed(2)}</p>
                   </div>
                   <button
                     className="remove-button"
                     onClick={() => {
-                      if (window.confirm(`Are you sure you want to remove ${product.name} from your cart?`)) {
+                      if (
+                        window.confirm(
+                          `Are you sure you want to remove ${product.name} from your cart?`
+                        )
+                      ) {
                         removeFromcart(itemId);
                       }
                     }}
-                    aria-label={`Remove ${product.name} from cart`}
                   >
                     Remove
                   </button>
@@ -93,8 +88,15 @@ function B2CCart() {
 
         <div className="cart-summary">
           <h2>Cart Summary</h2>
-          <p>Total Items: {Object.keys(cartitem).filter((itemId) => cartitem[itemId].quantity > 0).length}</p>
-          <p>Total Amount: ${calculateTotalAmount()}</p>
+          <p>
+            Total Items:{" "}
+            {
+              Object.keys(cartitem).filter(
+                (itemId) => cartitem[itemId].quantity > 0
+              ).length
+            }
+          </p>
+          <p>Total Amount: ₹{calculateTotalAmount()}</p>
           <button
             className="checkout-button"
             onClick={handleCheckout}

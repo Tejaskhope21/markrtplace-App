@@ -6,8 +6,8 @@ export const StoreContext = createContext(null);
 
 const StoreContextProvider = ({ children }) => {
   const [cartitem, setCartitem] = useState({});
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
-  // ✅ Add to Cart Function (Fixed Type Handling)
   const addToCart = (itemId, quantity = 1, price = 0) => {
     if (!itemId || quantity <= 0 || price <= 0) return;
 
@@ -25,7 +25,6 @@ const StoreContextProvider = ({ children }) => {
     });
   };
 
-  // ✅ Remove from Cart Function
   const removeFromcart = (itemId) => {
     setCartitem((prev) => {
       const updatedCart = { ...prev };
@@ -35,13 +34,15 @@ const StoreContextProvider = ({ children }) => {
   };
 
   const contextValue = {
-    item_list: item_list || [], // Ensure fallback if undefined
+    item_list: item_list || [],
     menu_list: menu_list || [],
     product: product || [],
     productcategory: productcategory || [],
+    b2c_items: productcategory || [], // Add this for B2CCart
     addToCart,
     removeFromcart,
     cartitem,
+    isLoading,
   };
 
   return (

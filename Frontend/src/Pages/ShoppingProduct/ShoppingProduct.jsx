@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import './ShoppingProduct.css';
-import { useLocation } from 'react-router-dom';
-import { productcategory } from '../../assets/b_to_c_data';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import "./ShoppingProduct.css";
+import { useLocation } from "react-router-dom";
+import { productcategory } from "../../assets/b_to_c_data";
+import { useNavigate } from "react-router-dom";
 
 function ShoppingProduct() {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ function ShoppingProduct() {
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const selectedCategory = queryParams.get('category');
+  const selectedCategory = queryParams.get("category");
 
   // Filter products based on the selected category
   const filterproduct = productcategory.filter(
@@ -26,12 +26,11 @@ function ShoppingProduct() {
   ];
 
   // State for subcategory filtering
-  const [shopcategory, setShopcategory] = useState('all');
+  const [shopcategory, setShopcategory] = useState("all");
 
   // Filter products based on the selected subcategory
   const proFilter = filterproduct.filter(
-    (item) =>
-      shopcategory === 'all' || item.subcategory === shopcategory
+    (item) => shopcategory === "all" || item.subcategory === shopcategory
   );
 
   return (
@@ -40,7 +39,7 @@ function ShoppingProduct() {
 
       {/* Subcategory Filter */}
       <div className="subcategory-filter">
-        <button onClick={() => setShopcategory('all')}>All</button>
+        <button onClick={() => setShopcategory("all")}>All</button>
         {uniqueSubcategories.map((subcategory, index) => (
           <button key={index} onClick={() => setShopcategory(subcategory)}>
             {subcategory}
@@ -59,9 +58,11 @@ function ShoppingProduct() {
             />
             <h2>{product.name}</h2>
             <p>{product.description}</p>
-            <p>Price: ${product.price}</p>
+            <p>Price: ₹{product.price}</p>
             <p>Rating: {product.rating} / 5</p>
-            <button onClick={() => handleCategoryClick(product.id)}>Buy Product</button>
+            <button onClick={() => handleCategoryClick(product.id)}>
+              View Details
+            </button>
           </div>
         ))}
       </div>

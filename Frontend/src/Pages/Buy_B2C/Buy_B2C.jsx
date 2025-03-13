@@ -1,51 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./Buy_B2C.css";
 import { useLocation } from "react-router-dom";
 import { productcategory } from "../../assets/b_to_c_data";
+import { StoreContext } from "../../components/context/StoreProvider";
 
 function Buy_B2C() {
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0); // State to track the main image index
-  const [quantity, setQuantity] = useState(1); // State to track the quantity of the product
+  const { addToCart } = useContext(StoreContext);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const selectedCategory = queryParams.get("id");
   const productId = Number(selectedCategory) || 0;
 
-  // Find the product based on productId
   const product = productcategory.find((item) => item.id === productId);
 
-  // Handle thumbnail click to update the main image
   const handleThumbnailClick = (index) => {
     setSelectedImageIndex(index);
   };
 
-  // Handle quantity change
   const handleQuantityChange = (e) => {
     const value = Math.max(
-      product.MOQ || 1,
+      product?.MOQ || 1,
       Math.min(1000, Number(e.target.value))
     );
     setQuantity(value);
   };
 
-  // Calculate total price based on quantity
   const calculateTotalPrice = () => {
-    return (product.price * quantity).toFixed(2);
+    return product ? (product.price * quantity).toFixed(2) : "0.00";
   };
 
-  // Handle place order
   const handlePlaceOrder = () => {
+    if (!product) return;
     const totalPrice = calculateTotalPrice();
-    const orderDetails = {
-      productId: product.id,
-      productName: product.name,
-      quantity: quantity,
-      totalPrice: totalPrice,
-    };
-    console.log("Placing order:", orderDetails);
-    // Add your order placement logic here (e.g., API call, add to cart, etc.)
-    alert(`Order placed successfully! Total: $${totalPrice}`);
+    addToCart(product.id, quantity, product.price);
+    alert(`Product added to cart successfully! Total: $${totalPrice}`);
   };
 
   if (!product) {
@@ -92,12 +83,16 @@ function Buy_B2C() {
         <div className="buy-b2c-details">
           <h1 className="buy-b2c-title">{product.name || "Unnamed Product"}</h1>
           <div className="supplier-info">
-            <span className="supplier-name">{product.supplier?.name}</span>
-            <span className="location">{product.supplier?.location}</span>
+            <span className="supplier-name">
+              {product.supplier?.name || "Unknown Supplier"}
+            </span>
+            <span className="location">
+              {product.supplier?.location || "Unknown Location"}
+            </span>
           </div>
           <p className="reviews">No reviews yet</p>
-          <p className="price">${product.price.toFixed(2)}</p>
-          <p className="moq">MOQ: {product.MOQ} pieces</p>
+          <p className="price">₹{product.price.toFixed(2)}</p>
+          <p className="moq">MOQ: {product.MOQ || 1} pieces</p>
 
           {/* Quantity Input Section */}
           <div className="quantity-section">
@@ -110,12 +105,12 @@ function Buy_B2C() {
               onChange={handleQuantityChange}
               className="quantity-input"
             />
-            <p className="total-price">Total: ${calculateTotalPrice()}</p>
+            <p className="total-price">Total: ₹{calculateTotalPrice()}</p>
           </div>
 
           <div className="specifications">
             <h3>Specifications</h3>
-            {product.specifications && (
+            {product.specifications ? (
               <ul>
                 {Object.entries(product.specifications).map(([key, value]) => (
                   <li key={key}>
@@ -124,6 +119,8 @@ function Buy_B2C() {
                   </li>
                 ))}
               </ul>
+            ) : (
+              <p>No specifications available</p>
             )}
           </div>
 
@@ -139,7 +136,7 @@ function Buy_B2C() {
           <div className="actions">
             <button className="send-inquiry">Send inquiry</button>
             <button className="place-order" onClick={handlePlaceOrder}>
-              Place Order
+              Add to Cart
             </button>
           </div>
 
