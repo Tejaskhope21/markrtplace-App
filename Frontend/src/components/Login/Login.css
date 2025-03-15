@@ -1,103 +1,36 @@
-/* General styles for the shop registration page */
 .shop-registration {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.registration-form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: #ffffff; /* White background */
-  padding: 20px;
-  font-family: Arial, sans-serif;
-}
-
-.shop-registration h1 {
-  font-size: 28px;
-  color: #333; /* Dark gray text */
-  margin-bottom: 20px;
-}
-
-/* Styles for the registration form */
-.registration-form {
-  background-color: #f9f9f9; /* Light gray background */
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  max-width: 400px;
-  width: 100%;
-  text-align: center;
+  gap: 15px;
 }
 
 .registration-form label {
-  display: block;
-  font-size: 16px;
-  color: #555; /* Medium gray text */
-  margin-bottom: 8px;
-  text-align: left;
+  font-weight: bold;
 }
 
 .registration-form input,
 .registration-form select {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 20px;
-  border: 1px solid #ddd; /* Light gray border */
-  border-radius: 5px;
+  padding: 8px;
   font-size: 16px;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-.registration-form input:focus,
-.registration-form select:focus {
-  border-color: #007bff; /* Blue border on focus */
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .registration-form button {
-  width: 100%;
-  padding: 12px;
-  background-color: #007bff; /* Blue background */
-  color: #fff; /* White text */
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
   border: none;
-  border-radius: 5px;
-  font-size: 16px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .registration-form button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
-}
-
-/* Styles for the OTP step */
-.registration-form .otp-instruction {
-  font-size: 14px;
-  color: #777; /* Light gray text */
-  margin-bottom: 20px;
-}
-
-/* Styles for the registration form step */
-.registration-form .shop-details {
-  text-align: left;
-}
-
-/* Responsive design */
-@media (max-width: 480px) {
-  .registration-form {
-    padding: 20px;
-  }
-
-  .shop-registration h1 {
-    font-size: 24px;
-  }
-
-  .registration-form input,
-  .registration-form select {
-    padding: 10px;
-    font-size: 14px;
-  }
-
-  .registration-form button {
-    padding: 10px;
-    font-size: 14px;
-  }
+  background-color: #0056b3;
 }

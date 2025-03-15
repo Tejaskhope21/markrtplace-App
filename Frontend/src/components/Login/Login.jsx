@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css"; // Assuming the CSS file is still named Login.css
 
-function Register() { // Changed name to match your Routes
-  const [step, setStep] = useState(1);
+function Register() {
   const [mobileNumber, setMobileNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [category, setCategory] = useState("");
@@ -12,52 +11,39 @@ function Register() { // Changed name to match your Routes
   const [pincode, setPincode] = useState("");
   const navigate = useNavigate();
 
-  // Handle mobile number submission
-  const handleMobileSubmit = (e) => {
+  // Handle form submission
+  const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("OTP sent to:", mobileNumber);
-    setStep(2);
-  };
 
-  // Handle OTP verification
-  const handleOtpSubmit = (e) => {
-    e.preventDefault();
-    if (otp === "123456") { // Replace with actual OTP verification
-      console.log("OTP verified");
-      setStep(3);
-    } else {
-      alert("Invalid OTP. Please try again.");
+    // Basic validation
+    if (!mobileNumber || !otp || !category || !shopName || !businessType || !pincode) {
+      alert("Please fill in all fields.");
+      return;
     }
-  };
 
-  // Handle category selection
-  const handleCategorySelect = (e) => {
-    e.preventDefault();
-    if (category) {
-      setStep(4);
-    } else {
-      alert("Please select a category.");
+    // Mock OTP verification (replace with actual logic if needed)
+    if (otp !== "123456") {
+      alert("Invalid OTP. Please enter 123456 for this demo.");
+      return;
     }
-  };
 
-  // Handle shop registration form submission
-  const handleRegistrationSubmit = (e) => {
-    e.preventDefault();
+    // Collect all data
     const shopDetails = {
       mobileNumber,
+      otp, // Optional: You might not need to include OTP in the final data
       category,
       shopName,
       businessType,
       pincode,
     };
+
     console.log("Shop Registered:", shopDetails);
     alert("Shop registration successful!");
 
     // Navigate to home page after successful registration
-    navigate("/"); // Changed from "/home" to "/" to match your home route
+    navigate("/");
 
     // Reset the form (optional)
-    setStep(1);
     setMobileNumber("");
     setOtp("");
     setCategory("");
@@ -69,87 +55,78 @@ function Register() { // Changed name to match your Routes
   return (
     <div className="shop-registration">
       <h1>Shop Registration</h1>
-      {step === 1 && (
-        <form onSubmit={handleMobileSubmit} className="registration-form">
-          <label htmlFor="mobileNumber">Mobile Number</label>
-          <input
-            type="tel"
-            id="mobileNumber"
-            value={mobileNumber}
-            onChange={(e) => setMobileNumber(e.target.value)}
-            placeholder="Enter your mobile number"
-            required
-          />
-          <button type="submit">Get OTP</button>
-        </form>
-      )}
+      <form onSubmit={handleSubmit} className="registration-form">
+        {/* Mobile Number */}
+        <label htmlFor="mobileNumber">Mobile Number</label>
+        <input
+          type="tel"
+          id="mobileNumber"
+          value={mobileNumber}
+          onChange={(e) => setMobileNumber(e.target.value)}
+          placeholder="Enter your mobile number"
+          required
+        />
 
-      {step === 2 && (
-        <form onSubmit={handleOtpSubmit} className="registration-form">
-          <label htmlFor="otp">Enter OTP</label>
-          <input
-            type="text"
-            id="otp"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            placeholder="Enter OTP"
-            required
-          />
-          <button type="submit">Verify OTP</button>
-        </form>
-      )}
+        {/* OTP */}
+        <label htmlFor="otp">OTP</label>
+        <input
+          type="text"
+          id="otp"
+          value={otp}
+          onChange={(e) => setOtp(e.target.value)}
+          placeholder="Enter OTP (use 123456 for demo)"
+          required
+        />
 
-      {step === 3 && (
-        <form onSubmit={handleCategorySelect} className="registration-form">
-          <label htmlFor="category">Select Category</label>
-          <select
-            id="category"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-          >
-            <option value="">Select</option>
-            <option value="B2B">B2B</option>
-            <option value="B2C">B2C</option>
-          </select>
-          <button type="submit">Next</button>
-        </form>
-      )}
+        {/* Category */}
+        <label htmlFor="category">Select Category</label>
+        <select
+          id="category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          required
+        >
+          <option value="">Select</option>
+          <option value="B2B">B2B</option>
+          <option value="B2C">B2C</option>
+        </select>
 
-      {step === 4 && (
-        <form onSubmit={handleRegistrationSubmit} className="registration-form">
-          <label htmlFor="shopName">Shop Name</label>
-          <input
-            type="text"
-            id="shopName"
-            value={shopName}
-            onChange={(e) => setShopName(e.target.value)}
-            placeholder="Enter shop name"
-            required
-          />
+        {/* Shop Name */}
+        <label htmlFor="shopName">Shop Name</label>
+        <input
+          type="text"
+          id="shopName"
+          value={shopName}
+          onChange={(e) => setShopName(e.target.value)}
+          placeholder="Enter shop name"
+          required
+        />
 
-          <label htmlFor="businessType">Business Type</label>
-          <input
-            type="text"
-            id="businessType"
-            value={businessType}
-            onChange={(e) => setBusinessType(e.target.value)}
-            placeholder="Enter business type"
-            required
-          />
+        {/* Business Type */}
+        <label htmlFor="businessType">Business Type</label>
+        <input
+          type="text"
+          id="businessType"
+          value={businessType}
+          onChange={(e) => setBusinessType(e.target.value)}
+          placeholder="Enter business type"
+          required
+        />
 
-          <label htmlFor="pincode">Pincode</label>
-          <input
-            type="text"
-            id="pincode"
-            value={pincode}
-            onChange={(e) => setPincode(e.target.value)}
-            placeholder="Enter pincode"
-            required
-          />
-          <button type="submit">Register Shop</button>
-        </form>
-      )}
+        {/* Pincode */}
+        <label htmlFor="pincode">Pincode</label>
+        <input
+          type="text"
+          id="pincode"
+          value={pincode}
+          onChange={(e) => setPincode(e.target.value)}
+          placeholder="Enter pincode"
+          required
+        />
+
+        {/* Submit Button */}
+        <button type="submit">Register Shop</button>
+      </form>
     </div>
   );
 }
