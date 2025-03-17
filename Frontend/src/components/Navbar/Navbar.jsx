@@ -36,7 +36,8 @@ function Navbar({ setShowLogin }) {
     <nav className={`navbar ${isScrolled ? "scrolled" : ""}`}>
       <div className="logo">
         <Link className="link" to="/">
-          <span className="M-class">M</span>arket<span className="M-class">S</span>etu
+          <span className="M-class">M</span>arket
+          <span className="M-class">S</span>etu
         </Link>
       </div>
 
