@@ -1,18 +1,23 @@
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
+
+
+import express from 'express';
+import cors from 'cors';
+
+import connectDB from './config/connect_db.js';
+
+import 'dotenv/config'
 
 const menuRoutes = require('./routes/menuRoutes');
 const itemRoutes = require('./routes/itemRoutes');
 
 const app = express();
 
-// Middleware
+// Middlewar
 app.use(express.json());
 app.use(cors());
 
 // MongoDB Connection
+<<<<<<< HEAD
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO);
@@ -22,6 +27,9 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
+=======
+connectDB();
+>>>>>>> 87e3bc262baa3688377a1a08d886a2fa2baf2305
 
 // Sample route
 app.get('/', (req, res) => {
@@ -33,7 +41,7 @@ app.use('/api/menus', menuRoutes);
 app.use('/api/items', itemRoutes);
 
 // Start server
-const PORT = process.env.PORT || 5000;
+const PORT = 5000 || 5000;
 connectDB().then(() => {
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 });
