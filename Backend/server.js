@@ -1,5 +1,3 @@
-
-
 import express from 'express';
 import cors from 'cors';
 
@@ -17,7 +15,6 @@ app.use(express.json());
 app.use(cors());
 
 // MongoDB Connection
-<<<<<<< HEAD
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO);
@@ -27,9 +24,8 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-=======
+
 connectDB();
->>>>>>> 87e3bc262baa3688377a1a08d886a2fa2baf2305
 
 // Sample route
 app.get('/', (req, res) => {
