@@ -70,6 +70,17 @@ const itemSchema = new mongoose.Schema({
       type: Number,
       required: true
     }
+  },
+  b2b_menu: {  // New field for B2B menu
+    menu_item: {
+      type: String,
+      enum: ['ElectricalMaterial', 'IndustrialMaterial', 'Fabric'], // Restrict to these categories
+      default: null
+    },
+    menu_img: {
+      type: String,
+      default: null
+    }
   }
 });
 
