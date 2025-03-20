@@ -68,8 +68,7 @@ export const getItems = async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch items', error });
   }
 };
-<<<<<<< HEAD
-=======
+
 
 // Get item by ID
 export const getItemById = async (req, res) => {
@@ -154,4 +153,4 @@ export const deleteItem = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
->>>>>>> 97c5ff45b22cc05aa6f15e46e789fbdb9223baf7
+
