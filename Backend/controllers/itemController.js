@@ -22,38 +22,43 @@ export const getItemById = async (req, res) => {
 };
 
 // Create new item with image upload
+
+
 export const item_add = async (req, res) => {
-  const image_filename = req.file ? `${req.file.filename}` : '';
-
-  // Map form data to Item schema
-  const newItem = new Item({
-    id: req.body.id,
-    name: req.body.name,
-    category: req.body.category, // General category
-    product_category: req.body.product_category,
-    price_per_piece: {
-      '20-199': Number(req.body['price_per_piece[20-199]']) || 0,
-      '200-999': Number(req.body['price_per_piece[200-999]']) || 0,
-      '1000+': Number(req.body['price_per_piece[1000+]']) || 0
-    },
-    MOQ: Number(req.body.MOQ) || 0,
-    specifications: req.body.specifications || {},
-    images: image_filename ? [image_filename] : [], // Store uploaded image
-    supplier: {
-      name: req.body.supplier_name || '',
-      location: req.body.supplier_location || ''
-    },
-    shipping: {
-      free_shipping_above: Number(req.body.free_shipping_above) || 0,
-      cost: Number(req.body.shipping_cost) || 0
-    },
-    b2b_menu: {
-      menu_item: req.body.b2b_menu || null, // From the category dropdown
-      menu_img: req.body.b2b_menu_img || null // Optional image for B2B menu
-    }
-  });
-
   try {
+    // Parse specifications if it's a string
+    let specifications = req.body.specifications;
+    if (typeof specifications === 'string') {
+      specifications = JSON.parse(specifications);
+    }
+
+    const newItem = new Item({
+      id: Number(req.body.id),
+      name: req.body.name,
+      category: req.body.category,
+      product_category: req.body.product_category,
+      price_per_piece: {
+        '20-199': Number(req.body['price_per_piece[20-199]']) || 0,
+        '200-999': Number(req.body['price_per_piece[200-999]']) || 0,
+        '1000+': Number(req.body['price_per_piece[1000+]']) || 0
+      },
+      MOQ: Number(req.body.MOQ) || 0,
+      specifications: specifications || {},
+      images: req.file ? [req.file.filename] : [],
+      supplier: {
+        name: req.body.supplier_name || '',
+        location: req.body.supplier_location || ''
+      },
+      shipping: {
+        free_shipping_above: Number(req.body.free_shipping_above) || 0,
+        cost: Number(req.body.shipping_cost) || 0
+      },
+      b2b_menu: {
+        menu_item: req.body.b2b_menu || null, // Directly use the string
+        menu_img: req.body.b2b_menu_img || null
+      }
+    });
+
     await newItem.save();
     res.json({ success: true, message: 'Item Added' });
   } catch (error) {
@@ -61,6 +66,7 @@ export const item_add = async (req, res) => {
     res.status(400).json({ success: false, message: error.message });
   }
 };
+// Other controller functions (getItems, getItemById, updateItem, deleteItem) remain unchanged
 
 // Update an item
 export const updateItem = async (req, res) => {

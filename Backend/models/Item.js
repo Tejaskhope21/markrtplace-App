@@ -28,27 +28,30 @@ const itemSchema = new mongoose.Schema({
     required: true
   },
   specifications: {
-    conductor_material: String,
-    voltage_rating: String,
-    wire_gauge: [String],
-    power_rating: String,
-    color_temperature: [String],
-    input_voltage: String,
-    type: [String],
-    rated_current: [String],
-    length: [String],
-    wire_type: String,
-    plug_type: String,
-    power: [String],
-    phase: String,
-    dimensions: [String],
-    thickness: [String],
-    sizes: [String],
-    grades: [String],
-    material: [String],
-    colors: [String],
-    packaging: [String],
-    strength: [String]
+    type: {
+      conductor_material: String,
+      voltage_rating: String,
+      wire_gauge: [String],
+      power_rating: String,
+      color_temperature: [String],
+      input_voltage: String,
+      type: [String],
+      rated_current: [String],
+      length: [String],
+      wire_type: String,
+      plug_type: String,
+      power: [String],
+      phase: String,
+      dimensions: [String],
+      thickness: [String],
+      sizes: [String],
+      grades: [String],
+      material: [String],
+      colors: [String],
+      packaging: [String],
+      strength: [String]
+    },
+    default: {} // Allow empty object as default
   },
   images: {
     type: [String],
@@ -65,17 +68,20 @@ const itemSchema = new mongoose.Schema({
     }
   },
   shipping: {
-    free_shipping_above: Number,
+    free_shipping_above: {
+      type: Number,
+      default: 0
+    },
     cost: {
       type: Number,
       required: true
     }
   },
-  b2b_menu: {  // New field for B2B menu
+  b2b_menu: {
     menu_item: {
       type: String,
-      enum: ['ElectricalMaterial', 'IndustrialMaterial', 'Fabric'], // Restrict to these categories
-      default: null
+      enum: ['ElectricalMaterial', 'IndustrialMaterial', 'Fabric'],
+      required: true // Make this required since it's a critical field
     },
     menu_img: {
       type: String,
