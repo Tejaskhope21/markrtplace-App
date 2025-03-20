@@ -1,87 +1,99 @@
 import mongoose from 'mongoose';
 
+const priceSchema = new mongoose.Schema({
+  '20-199': {
+    type: Number,
+    required: true,
+  },
+  '200-999': {
+    type: Number,
+    required: true,
+  },
+  '1000+': {
+    type: Number,
+    required: true,
+  },
+});
+
+const supplierSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  location: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+});
+
+const shippingSchema = new mongoose.Schema({
+  free_shipping_above: {
+    type: Number,
+    required: false,
+    default: 0,
+  },
+  cost: {
+    type: Number,
+    required: true,
+  },
+});
+
 const itemSchema = new mongoose.Schema({
   id: {
     type: Number,
     required: true,
-    unique: true
+    unique: true,
   },
   name: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
   },
   category: {
     type: String,
-    required: true
+    required: true,
+    enum: ['ElectricalMaterial', 'IndustrialMaterial', 'Fabric'], // Ensures valid categories
   },
   product_category: {
     type: String,
-    required: true
+    required: true,
+    trim: true,
   },
   price_per_piece: {
-    type: Map,
-    of: Number,
-    required: true
+    type: priceSchema,
+    required: true,
   },
   MOQ: {
     type: Number,
-    required: true
+    required: true,
   },
   specifications: {
-    conductor_material: String,
-    voltage_rating: String,
-    wire_gauge: [String],
-    power_rating: String,
-    color_temperature: [String],
-    input_voltage: String,
-    type: [String],
-    rated_current: [String],
-    length: [String],
-    wire_type: String,
-    plug_type: String,
-    power: [String],
-    phase: String,
-    dimensions: [String],
-    thickness: [String],
-    sizes: [String],
-    grades: [String],
-    material: [String],
-    colors: [String],
-    packaging: [String],
-    strength: [String]
+    type: Map,
+    of: String, // Allows dynamic key-value pairs
   },
   images: {
-    type: [String],
-    required: true
+    type: [String], // Array of image URLs
+    required: true,
   },
   supplier: {
-    name: {
-      type: String,
-      required: true
-    },
-    location: {
-      type: String,
-      required: true
-    }
+    type: supplierSchema,
+    required: true,
   },
   shipping: {
-    free_shipping_above: Number,
-    cost: {
-      type: Number,
-      required: true
-    }
+    type: shippingSchema,
+    required: true,
   },
-  b2b_menu: {  // New field for B2B menu
-    menu_item: {
-      type: String,
-      enum: ['ElectricalMaterial', 'IndustrialMaterial', 'Fabric'], // Restrict to these categories
-      default: null
-    },
-    menu_img: {
-      type: String,
-      default: null
-    }
-  }
+  b2b_menu: {
+    type: String,
+    required: true,
+    enum: ['ElectricalMaterial', 'IndustrialMaterial', 'Fabric'], // Matches the select menu options
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Item = mongoose.model('Item', itemSchema);

@@ -1,6 +1,6 @@
-import React from 'react';
-import Login from '../../components/Login/Login';
-import './Register.css'; // Import the CSS file
+import React from "react";
+import Login from "../../components/Login/Login";
+import "./Register.css"; // Import the CSS file
 
 function Register() {
   return (
@@ -11,3 +11,4 @@ function Register() {
 }
 
 export default Register;
+``;
