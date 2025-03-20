@@ -1,46 +1,193 @@
-.admin-container {
-  max-width: 600px;
-  margin: 20px auto;
+.add {
+  max-width: 900px; /* Slightly wider for larger screens */
+  margin: 30px auto;
   padding: 20px;
   background: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.admin-container h1 {
-  text-align: center;
-  margin-bottom: 20px;
+.flex-col {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Increased gap for better spacing */
 }
 
-.admin-container form div {
-  margin-bottom: 15px;
+.add-img {
+  align-items: center;
 }
 
-.admin-container label {
-  display: block;
-  margin-bottom: 5px;
+.add-img p {
   font-weight: bold;
+  margin-bottom: 10px;
+  font-size: 16px; /* Slightly larger for readability */
 }
 
-.admin-container input,
-.admin-container select {
+.add-img img {
+  width: 150px; /* Larger image for better visibility */
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid #ddd; /* Add a subtle border for better definition */
+}
+
+.add-name p,
+.add-category p,
+.add-price p {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.add-name input,
+.add-price input,
+.add-category input,
+.add-category select {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  box-sizing: border-box;
+  font-size: 14px;
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
 }
 
-.admin-container button {
+.add-category-price {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
+}
+
+.add-category,
+.add-price {
+  flex: 1;
+  min-width: 200px; /* Ensure fields don't get too narrow */
+}
+
+.add-btn {
   background: #ff6200;
   color: #fff;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  width: 100%;
+  margin-top: 20px;
+  font-size: 16px;
+  transition: background 0.3s ease;
+  width: 100%; /* Full width on smaller screens */
+  max-width: 200px; /* Limit width on larger screens */
 }
 
-.admin-container button:hover {
+.add-btn:hover {
   background: #e65c00;
+}
+
+/* Responsive Design */
+
+/* Tablets (768px and below) */
+@media (max-width: 768px) {
+  .add {
+    margin: 15px;
+    padding: 15px;
+  }
+
+  .add-img img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .add-category-price {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .add-category,
+  .add-price {
+    min-width: 100%; /* Full width for smaller screens */
+  }
+
+  .add-name p,
+  .add-category p,
+  .add-price p {
+    font-size: 13px;
+  }
+
+  .add-name input,
+  .add-price input,
+  .add-category input,
+  .add-category select {
+    padding: 8px;
+    font-size: 13px;
+  }
+
+  .add-btn {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+}
+
+/* Mobile (480px and below) */
+@media (max-width: 480px) {
+  .add {
+    margin: 10px;
+    padding: 10px;
+  }
+
+  .flex-col {
+    gap: 10px;
+  }
+
+  .add-img img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .add-img p {
+    font-size: 14px;
+  }
+
+  .add-name p,
+  .add-category p,
+  .add-price p {
+    font-size: 12px;
+  }
+
+  .add-name input,
+  .add-price input,
+  .add-category input,
+  .add-category select {
+    padding: 6px;
+    font-size: 12px;
+  }
+
+  .add-btn {
+    padding: 8px 16px;
+    font-size: 14px;
+    max-width: 100%; /* Full width on mobile */
+  }
+}
+
+/* Larger screens (1024px and above) */
+@media (min-width: 1024px) {
+  .add {
+    padding: 30px;
+  }
+
+  .add-img img {
+    width: 180px;
+    height: 180px;
+  }
+
+  .add-name input,
+  .add-price input,
+  .add-category input,
+  .add-category select {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .add-btn {
+    padding: 14px 28px;
+    font-size: 17px;
+  }
 }

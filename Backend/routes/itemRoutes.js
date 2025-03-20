@@ -4,6 +4,7 @@ import { addItem, getItems } from '../controllers/itemController.js';
 
 const router = express.Router();
 
+<<<<<<< HEAD
 // ✅ Multer configuration for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -13,6 +14,13 @@ const storage = multer.diskStorage({
     cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
+=======
+// router.get('/', getItems);
+// router.get('/:id', getItemById);
+router.post('/add', upload.single('image'), item_add); // Change '/add' to '/'
+router.put('/:id', updateItem);
+router.delete('/:id', deleteItem);
+>>>>>>> 97c5ff45b22cc05aa6f15e46e789fbdb9223baf7
 
 const upload = multer({ storage });
 

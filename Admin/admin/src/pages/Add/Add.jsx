@@ -1,11 +1,57 @@
+<<<<<<< HEAD
 const handleSubmit = async (e) => {
   e.preventDefault();
 
   const formDataToSend = new FormData();
+=======
+import React, { useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import './Add.css';
+
+const Add = () => {
+  const url = "http://localhost:5000";
+  const [image, setImage] = useState(false);
+  const [formData, setFormData] = useState({
+    id: '',
+    name: '',
+    category: '',
+    product_category: '',
+    price_per_piece: { '20-199': 0, '200-999': 0, '1000+': 0 },
+    MOQ: '',
+    specifications: {
+      conductor_material: '',
+      voltage_rating: '',
+      wire_gauge: [],
+      power_rating: '',
+      color_temperature: [],
+      input_voltage: '',
+      type: [],
+      rated_current: [],
+      length: [],
+      wire_type: '',
+      plug_type: '',
+      power: [],
+      phase: '',
+      dimensions: [],
+      thickness: [],
+      sizes: [],
+      grades: [],
+      material: [],
+      colors: [],
+      packaging: [],
+      strength: []
+    },
+    supplier: { name: '', location: '' },
+    shipping: { free_shipping_above: 0, cost: 0 },
+    b2b_menu: '' // Store only the menu_item string
+  });
+>>>>>>> 97c5ff45b22cc05aa6f15e46e789fbdb9223baf7
 
   // Map b2b_menu to category
   formDataToSend.append("category", formData.b2b_menu);
 
+<<<<<<< HEAD
   for (let key in formData) {
     if (key === "price_per_piece") {
       formDataToSend.append(
@@ -33,9 +79,91 @@ const handleSubmit = async (e) => {
       formDataToSend.append("image", formData.images[0]);
     } else if (key !== "b2b_menu") {
       formDataToSend.append(key, formData[key]);
+=======
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleNestedChange = (e) => {
+    const { name, value } = e.target;
+    const [field, subField] = name.split('.');
+    setFormData((prev) => ({
+      ...prev,
+      [field]: {
+        ...prev[field],
+        [subField]: value
+      }
+    }));
+  };
+
+  const handleSpecChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      specifications: {
+        ...prev.specifications,
+        [name]: value.includes(',') ? value.split(',').map(item => item.trim()) : value
+      }
+    }));
+  };
+
+  const handlePriceChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      price_per_piece: {
+        ...prev.price_per_piece,
+        [name]: Number(value)
+      }
+    }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setImage(file);
+    setFormData((prev) => ({
+      ...prev,
+      images: [file]
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validate required fields
+    if (!formData.supplier.name || !formData.supplier.location) {
+      toast.error('Supplier name and location are required.');
+      return;
+    }
+
+    const formDataToSend = new FormData();
+    for (let key in formData) {
+      if (key === 'price_per_piece') {
+        formDataToSend.append(`price_per_piece[20-199]`, formData.price_per_piece['20-199']);
+        formDataToSend.append(`price_per_piece[200-999]`, formData.price_per_piece['200-999']);
+        formDataToSend.append(`price_per_piece[1000+]`, formData.price_per_piece['1000+']);
+      } else if (key === 'supplier') {
+        formDataToSend.append('supplier_name', formData.supplier.name);
+        formDataToSend.append('supplier_location', formData.supplier.location);
+      } else if (key === 'shipping') {
+        formDataToSend.append('free_shipping_above', formData.shipping.free_shipping_above);
+        formDataToSend.append('shipping_cost', formData.shipping.cost);
+      } else if (key === 'images' && formData.images[0] instanceof File) {
+        formDataToSend.append('image', formData.images[0]);
+      } else if (key === 'specifications') {
+        formDataToSend.append('specifications', JSON.stringify(formData.specifications));
+      } else {
+        formDataToSend.append(key, formData[key]);
+      }
+>>>>>>> 97c5ff45b22cc05aa6f15e46e789fbdb9223baf7
     }
   }
 
+<<<<<<< HEAD
   try {
     await axios.post("http://localhost:5000/api/items", formDataToSend, {
       headers: { "Content-Type": "multipart/form-data" },
@@ -59,4 +187,277 @@ const handleSubmit = async (e) => {
     console.error("Error adding item:", error);
     alert("Failed to add item.");
   }
+=======
+    try {
+      const response = await axios.post(`${url}/api/items`, formDataToSend, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if (response.data.success) {
+        setFormData({
+          id: '',
+          name: '',
+          category: '',
+          product_category: '',
+          price_per_piece: { '20-199': 0, '200-999': 0, '1000+': 0 },
+          MOQ: '',
+          specifications: {
+            conductor_material: '',
+            voltage_rating: '',
+            wire_gauge: [],
+            power_rating: '',
+            color_temperature: [],
+            input_voltage: '',
+            type: [],
+            rated_current: [],
+            length: [],
+            wire_type: '',
+            plug_type: '',
+            power: [],
+            phase: '',
+            dimensions: [],
+            thickness: [],
+            sizes: [],
+            grades: [],
+            material: [],
+            colors: [],
+            packaging: [],
+            strength: []
+          },
+          supplier: { name: '', location: '' },
+          shipping: { free_shipping_above: 0, cost: 0 },
+          b2b_menu: ''
+        });
+        setImage(false);
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error('Error adding item:', error);
+      toast.error('Failed to add item. Please try again.');
+    }
+  };
+
+  return (
+    <div className="add">
+      <form className="flex-col" onSubmit={handleSubmit}>
+        <div className="add-img flex-col">
+          <p>Upload Image</p>
+          <label htmlFor="image">
+            <img
+              src={image ? URL.createObjectURL(image) : 'https://via.placeholder.com/120?text=Upload+Image'}
+              alt="Upload Preview"
+            />
+          </label>
+          <input
+            type="file"
+            id="image"
+            accept="image/*"
+            onChange={handleImageChange}
+            hidden
+            required
+          />
+        </div>
+
+        <div className="add-name flex-col">
+          <p>Product Name</p>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Type here"
+            required
+          />
+        </div>
+
+        <div className="add-name flex-col">
+          <p>Product ID</p>
+          <input
+            type="number"
+            name="id"
+            value={formData.id}
+            onChange={handleChange}
+            placeholder="Enter ID"
+            required
+          />
+        </div>
+
+        <div className="add-category-price">
+          <div className="add-category flex-col">
+            <p>B2B Category</p>
+            <select
+              name="b2b_menu"
+              value={formData.b2b_menu}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat, index) => (
+                <option key={index} value={cat.menu_item}>{cat.menu_item}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="add-category flex-col">
+            <p>Product Category</p>
+            <input
+              type="text"
+              name="product_category"
+              value={formData.product_category}
+              onChange={handleChange}
+              placeholder="Type here"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="add-category-price">
+          <div className="add-price flex-col">
+            <p>Price (20-199 units)</p>
+            <input
+              type="number"
+              name="20-199"
+              value={formData.price_per_piece['20-199']}
+              onChange={handlePriceChange}
+              placeholder="Enter price"
+              required
+            />
+          </div>
+          <div className="add-price flex-col">
+            <p>Price (200-999 units)</p>
+            <input
+              type="number"
+              name="200-999"
+              value={formData.price_per_piece['200-999']}
+              onChange={handlePriceChange}
+              placeholder="Enter price"
+              required
+            />
+          </div>
+          <div className="add-price flex-col">
+            <p>Price (1000+ units)</p>
+            <input
+              type="number"
+              name="1000+"
+              value={formData.price_per_piece['1000+']}
+              onChange={handlePriceChange}
+              placeholder="Enter price"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="add-name flex-col">
+          <p>MOQ (Minimum Order Quantity)</p>
+          <input
+            type="number"
+            name="MOQ"
+            value={formData.MOQ}
+            onChange={handleChange}
+            placeholder="Enter MOQ"
+            required
+          />
+        </div>
+
+        <div className="add-category-price">
+          <div className="add-name flex-col">
+            <p>Conductor Material</p>
+            <input
+              type="text"
+              name="conductor_material"
+              value={formData.specifications.conductor_material}
+              onChange={handleSpecChange}
+              placeholder="e.g., Copper"
+            />
+          </div>
+          <div className="add-name flex-col">
+            <p>Voltage Rating</p>
+            <input
+              type="text"
+              name="voltage_rating"
+              value={formData.specifications.voltage_rating}
+              onChange={handleSpecChange}
+              placeholder="e.g., 600V"
+            />
+          </div>
+        </div>
+
+        <div className="add-category-price">
+          <div className="add-name flex-col">
+            <p>Wire Gauge (comma-separated)</p>
+            <input
+              type="text"
+              name="wire_gauge"
+              value={formData.specifications.wire_gauge.join(', ')}
+              onChange={handleSpecChange}
+              placeholder="e.g., 16, 18, 20"
+            />
+          </div>
+          <div className="add-name flex-col">
+            <p>Power Rating</p>
+            <input
+              type="text"
+              name="power_rating"
+              value={formData.specifications.power_rating}
+              onChange={handleSpecChange}
+              placeholder="e.g., 2kW"
+            />
+          </div>
+        </div>
+
+        <div className="add-category-price">
+          <div className="add-name flex-col">
+            <p>Supplier Name</p>
+            <input
+              type="text"
+              name="supplier.name"
+              value={formData.supplier.name}
+              onChange={handleNestedChange}
+              placeholder="Type here"
+              required
+            />
+          </div>
+          <div className="add-name flex-col">
+            <p>Supplier Location</p>
+            <input
+              type="text"
+              name="supplier.location"
+              value={formData.supplier.location}
+              onChange={handleNestedChange}
+              placeholder="Type here"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="add-category-price">
+          <div className="add-price flex-col">
+            <p>Free Shipping Above</p>
+            <input
+              type="number"
+              name="shipping.free_shipping_above"
+              value={formData.shipping.free_shipping_above}
+              onChange={handleNestedChange}
+              placeholder="Enter amount"
+            />
+          </div>
+          <div className="add-price flex-col">
+            <p>Shipping Cost</p>
+            <input
+              type="number"
+              name="shipping.cost"
+              value={formData.shipping.cost}
+              onChange={handleNestedChange}
+              placeholder="Enter cost"
+              required
+            />
+          </div>
+        </div>
+
+        <button type="submit" className="add-btn">Add Item</button>
+      </form>
+    </div>
+  );
+>>>>>>> 97c5ff45b22cc05aa6f15e46e789fbdb9223baf7
 };
