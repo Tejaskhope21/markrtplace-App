@@ -4,7 +4,9 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import fs from 'fs';
 import shopeRoutes from './routes/shopRoutes.js'
-import itemRoutes from './routes/itemRoutes.js'; // ✅ Import item routes
+import itemRoutes from './routes/itemRoutes.js'; // ✅ Import item 
+import categoryRoutes from './routes/categoryRoutes.js';
+
 import cors from 'cors';
 
 
@@ -40,6 +42,8 @@ mongoose.connect(process.env.MONGO)
 
 app.use('/api/shops' , shopeRoutes);
 app.use('/api/items', itemRoutes); // ✅ Register item routes
+app.use('/api/categories', categoryRoutes);
+
 
 
 app.get('/', (req, res) => {
