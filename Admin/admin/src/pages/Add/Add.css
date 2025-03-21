@@ -81,6 +81,27 @@
 .add-btn:hover {
   background: #e65c00;
 }
+.image-upload-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.image-upload-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-upload-slot label {
+  cursor: pointer;
+}
+
+.image-upload-slot img {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
 
 /* Responsive Design */
 
