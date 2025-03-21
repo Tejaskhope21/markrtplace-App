@@ -4,9 +4,7 @@ import Product from '../models/Product.js';
 const createProduct = async (req, res) => {
   try {
     const productData = req.body;
-
-    // No need to check for existing ID since it's auto-generated
-    const product = new Product(productData); // id will be set automatically by the schema
+    const product = new Product(productData); // id is auto-generated
     const savedProduct = await product.save();
     res.status(201).json({ message: 'Product created successfully', data: savedProduct });
   } catch (error) {
@@ -14,7 +12,17 @@ const createProduct = async (req, res) => {
   }
 };
 
-// Rest of the controller remains mostly unchanged, but adjust id references to String
+// Get all products
+const getAllProducts = async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.status(200).json({ message: 'Products retrieved successfully', data: products });
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving products', error: error.message });
+  }
+};
+
+// Get a single product by ID
 const getProductById = async (req, res) => {
   try {
     const product = await Product.findOne({ id: req.params.id }); // id is now a String
@@ -27,11 +35,11 @@ const getProductById = async (req, res) => {
   }
 };
 
-// Similarly update updateProduct and deleteProduct
+// Update a product by ID
 const updateProduct = async (req, res) => {
   try {
     const updatedProduct = await Product.findOneAndUpdate(
-      { id: req.params.id }, // id is now a String
+      { id: req.params.id },
       req.body,
       { new: true, runValidators: true }
     );
@@ -44,9 +52,10 @@ const updateProduct = async (req, res) => {
   }
 };
 
+// Delete a product by ID
 const deleteProduct = async (req, res) => {
   try {
-    const deletedProduct = await Product.findOneAndDelete({ id: req.params.id }); // id is now a String
+    const deletedProduct = await Product.findOneAndDelete({ id: req.params.id });
     if (!deletedProduct) {
       return res.status(404).json({ message: 'Product not found' });
     }
@@ -56,12 +65,21 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-// Export (unchanged)
+// Get featured products
+const getFeaturedProducts = async (req, res) => {
+  try {
+    const featuredProducts = await Product.find({ isFeatured: true });
+    res.status(200).json({ message: 'Featured products retrieved successfully', data: featuredProducts });
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving featured products', error: error.message });
+  }
+};
+
 export {
   createProduct,
-  getAllProducts, // No change needed
+  getAllProducts,
   getProductById,
   updateProduct,
   deleteProduct,
-  getFeaturedProducts, // No change needed
+  getFeaturedProducts,
 };
