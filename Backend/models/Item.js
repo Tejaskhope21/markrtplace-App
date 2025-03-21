@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { uid } from "uid";
 
 const priceSchema = new mongoose.Schema({
   "20-199": { type: Number, required: true },
@@ -17,14 +18,19 @@ const shippingSchema = new mongoose.Schema({
 });
 
 const itemSchema = new mongoose.Schema({
-  id: { type: Number, required: true, unique: true },
+  id: {
+    type: String, // Changed from Number to String for uid
+    required: true,
+    unique: true,
+    default: () => uid(6), // Auto-generate a 6-character unique ID
+  },
   name: { type: String, required: true, trim: true },
   category: { type: String, required: true },
   product_category: { type: String, required: true, trim: true },
   price_per_piece: { type: priceSchema, required: true },
   MOQ: { type: Number, required: true },
   specifications: { type: Map, of: String, default: {} },
-  images: { type: [String], required: true }, // ✅ Image Paths are stored as an array
+  images: { type: [String], required: true }, // Image paths stored as an array
   supplier: { type: supplierSchema, required: true },
   shipping: { type: shippingSchema, required: true },
   b2b_menu: { type: String, required: true },

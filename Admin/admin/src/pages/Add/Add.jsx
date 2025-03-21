@@ -7,7 +7,6 @@ const Add = () => {
   const url = "http://localhost:5000";
   const [images, setImages] = useState([]);
   const [formData, setFormData] = useState({
-    id: '',
     name: '',
     category: '',
     product_category: '',
@@ -183,7 +182,6 @@ const Add = () => {
       });
       if (response.data.success) {
         setFormData({
-          id: '',
           name: '',
           category: '',
           product_category: '',
@@ -269,18 +267,8 @@ const Add = () => {
           />
         </div>
 
-        <div className="add-name flex-col">
-          <p>Product ID</p>
-          <input
-            type="number"
-            name="id"
-            value={formData.id}
-            onChange={handleChange}
-            placeholder="Enter ID"
-            required
-          />
-        </div>
-
+        {/* Removed Product ID input */}
+        
         <div className="add-category-price">
           <div className="add-category flex-col">
             <p>B2B Category</p>
