@@ -5,7 +5,7 @@ import './Add.css';
 
 const Add = () => {
   const url = "http://localhost:5000";
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
   const [formData, setFormData] = useState({
     id: '',
     name: '',
@@ -36,22 +36,21 @@ const Add = () => {
     },
     supplier: { name: '', location: '' },
     shipping: { free_shipping_above: 0, cost: 0 },
-    b2b_menu: ''
+    b2b_menu: '',
+    images: []
   });
 
-  // State for categories, loading, and error
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fetch categories from the backend when the component mounts
   useEffect(() => {
     const fetchCategories = async () => {
       setLoading(true);
       try {
         const response = await axios.get(`${url}/api/categories`);
         if (response.data.success) {
-          setCategories(response.data.data); // Assuming the API returns { success: true, data: [...] }
+          setCategories(response.data.data);
         } else {
           setError('Failed to fetch categories');
           toast.error('Failed to fetch categories');
@@ -66,7 +65,7 @@ const Add = () => {
     };
 
     fetchCategories();
-  }, [url]); // Dependency array includes `url` to re-fetch if it changes
+  }, [url]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -90,11 +89,28 @@ const Add = () => {
 
   const handleSpecChange = (e) => {
     const { name, value } = e.target;
+    const arrayFields = [
+      'dimensions',
+      'color_temperature',
+      'type',
+      'rated_current',
+      'length',
+      'power',
+      'thickness',
+      'sizes',
+      'grades',
+      'colors',
+      'packaging',
+      'strength'
+    ];
+
     setFormData((prev) => ({
       ...prev,
       specifications: {
         ...prev.specifications,
-        [name]: value.includes(',') ? value.split(',').map(item => item.trim()) : value
+        [name]: arrayFields.includes(name)
+          ? value ? value.split(',').map(item => item.trim()) : []
+          : value
       }
     }));
   };
@@ -110,13 +126,18 @@ const Add = () => {
     }));
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = (e, index) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(file);
+      const newImages = [...images];
+      newImages[index] = file;
+      setImages(newImages);
+
+      const newFormDataImages = [...formData.images];
+      newFormDataImages[index] = file;
       setFormData((prev) => ({
         ...prev,
-        images: [file]
+        images: newFormDataImages
       }));
     }
   };
@@ -145,8 +166,12 @@ const Add = () => {
         formDataToSend.append('shipping_cost', formData.shipping.cost);
       } else if (key === 'specifications') {
         formDataToSend.append('specifications', JSON.stringify(formData.specifications));
-      } else if (key === 'images' && formData.images && formData.images[0] instanceof File) {
-        formDataToSend.append('image', formData.images[0]);
+      } else if (key === 'images') {
+        formData.images.forEach((image, index) => {
+          if (image instanceof File) {
+            formDataToSend.append(`image${index}`, image);
+          }
+        });
       } else if (key !== 'b2b_menu') {
         formDataToSend.append(key, formData[key]);
       }
@@ -187,9 +212,10 @@ const Add = () => {
           },
           supplier: { name: '', location: '' },
           shipping: { free_shipping_above: 0, cost: 0 },
-          b2b_menu: ''
+          b2b_menu: '',
+          images: []
         });
-        setImage(null);
+        setImages([]);
         toast.success(response.data.message);
       } else {
         toast.error(response.data.message);
@@ -204,21 +230,31 @@ const Add = () => {
     <div className="add">
       <form className="flex-col" onSubmit={handleSubmit}>
         <div className="add-img flex-col">
-          <p>Upload Image</p>
-          <label htmlFor="image">
-            <img
-              src={image ? URL.createObjectURL(image) : 'https://via.placeholder.com/120?text=Upload+Image'}
-              alt="Upload Preview"
-            />
-          </label>
-          <input
-            type="file"
-            id="image"
-            accept="image/*"
-            onChange={handleImageChange}
-            hidden
-            required
-          />
+          <p>Upload Images (up to 5)</p>
+          <div className="image-upload-grid">
+            {[...Array(5)].map((_, index) => (
+              <div key={index} className="image-upload-slot">
+                <label htmlFor={`image-${index}`}>
+                  <img
+                    src={
+                      images[index]
+                        ? URL.createObjectURL(images[index])
+                        : 'https://via.placeholder.com/120?text=Upload+Image'
+                    }
+                    alt={`Upload Preview ${index + 1}`}
+                    style={{ width: '120px', height: '120px', objectFit: 'cover' }}
+                  />
+                </label>
+                <input
+                  type="file"
+                  id={`image-${index}`}
+                  accept="image/*"
+                  onChange={(e) => handleImageChange(e, index)}
+                  hidden
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="add-name flex-col">
