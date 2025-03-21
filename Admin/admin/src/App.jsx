@@ -13,6 +13,7 @@ function App() {
     <Navbar/>
       <Routes>
         <Route path="/add" element={<Add />} />
+        <Route path="/add_b2c" element={<Add />} />
         <Route path="/list" element={<List />} />
         
       </Routes>

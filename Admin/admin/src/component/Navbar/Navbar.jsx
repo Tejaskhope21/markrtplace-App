@@ -26,6 +26,9 @@ function Navbar() {
         <Link className="link" to="/add">
           Add
         </Link>
+        <Link className="link" to="/add_b2c">
+          Add_b2c
+        </Link>
         <Link className="link" to="/list">
           List
         </Link>
