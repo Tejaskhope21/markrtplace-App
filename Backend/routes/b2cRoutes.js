@@ -10,7 +10,7 @@ import {
 
 const router = express.Router();
 
-router.post('/products', createProduct);
+router.post('/productsadd', createProduct);
 router.get('/products', getAllProducts);
 router.get('/products/:id', getProductById); // :id is now a string
 router.put('/products/:id', updateProduct); // :id is now a string

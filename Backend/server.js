@@ -6,6 +6,7 @@ import fs from 'fs';
 import shopeRoutes from './routes/shopRoutes.js'
 import itemRoutes from './routes/itemRoutes.js'; // ✅ Import item 
 import categoryRoutes from './routes/categoryRoutes.js';
+import productRoutes from "./routes/b2cRoutes.js";
 
 import cors from 'cors';
 
@@ -43,6 +44,8 @@ mongoose.connect(process.env.MONGO)
 app.use('/api/shops' , shopeRoutes);
 app.use('/api/items', itemRoutes); // ✅ Register item routes
 app.use('/api/categories', categoryRoutes);
+app.use('/api/products', productRoutes);
+
 
 
 
@@ -55,5 +58,5 @@ if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
 }
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 6000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
