@@ -5,19 +5,19 @@ const categorySchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      unique: true, // Ensure category names are unique
+      unique: true,
       trim: true,
     },
     image: {
       type: String,
-      required: true, // URL for category image
+      required: true,
     },
     createdAt: {
       type: Date,
-      default: Date.now, // Automatically set creation date
+      default: Date.now,
     },
   },
-  { timestamps: true } // Add createdAt and updatedAt automatically
+  { timestamps: true }
 );
 
 const Category = mongoose.model('Category', categorySchema);
