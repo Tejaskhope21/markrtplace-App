@@ -38,7 +38,7 @@ app.use(express.urlencoded({ extended: true })); // ✅ For form data
 mongoose.connect(process.env.MONGO)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
-
+6
 // ✅ Routes
 
 app.use('/api/shops' , shopeRoutes);

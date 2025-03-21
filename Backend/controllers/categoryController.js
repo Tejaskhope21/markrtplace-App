@@ -6,7 +6,7 @@ export const createCategory = async (req, res) => {
     const { name, image } = req.body;
 
     if (!name || !image) {
-      return res.status(400).json({ success: false, message: 'All fields are required' });
+      return res.status(400).json({ success: false, message: 'Name and image are required' });
     }
 
     const categoryExists = await Category.findOne({ name });
@@ -17,7 +17,7 @@ export const createCategory = async (req, res) => {
     const category = new Category({ name, image });
     await category.save();
 
-    res.status(201).json({ success: true, message: 'Category created successfully', data: category });
+    res.status(201).json({ success: true, data: category });
   } catch (error) {
     console.error('Error creating category:', error);
     res.status(500).json({ success: false, message: 'Failed to create category' });
@@ -51,7 +51,7 @@ export const updateCategory = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Category not found' });
     }
 
-    res.status(200).json({ success: true, message: 'Category updated', data: updatedCategory });
+    res.status(200).json({ success: true, data: updatedCategory });
   } catch (error) {
     console.error('Error updating category:', error);
     res.status(500).json({ success: false, message: 'Failed to update category' });

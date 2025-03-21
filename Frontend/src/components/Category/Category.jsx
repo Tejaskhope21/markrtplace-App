@@ -1,131 +1,169 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // ✅ Import Axios for API requests
+import axios from "axios";
 import "./Category.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const Category = () => {
   const navigate = useNavigate();
   const scrollRef = useRef(null);
-  const [categories, setCategories] = useState([]); // ✅ Dynamic categories state
+  const [categories, setCategories] = useState([]);
   const [isLeftDisabled, setIsLeftDisabled] = useState(true);
   const [isRightDisabled, setIsRightDisabled] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ✅ Fetch categories from the backend
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/categories/list"
-        ); // Replace with actual backend URL
-        setCategories(response.data);
-      } catch (error) {
-        console.error("Failed to fetch categories:", error);
-        setError("Failed to load categories.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchCategories = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-    fetchCategories();
+      const response = await axios.get(
+        "http://localhost:6000/api/categories/list",
+        {
+          timeout: 5000,
+          headers: {
+            "Cache-Control": "no-cache", // Prevent caching issues
+          },
+        }
+      );
+
+      const categoryData = Array.isArray(response.data.data)
+        ? response.data.data
+        : [];
+
+      setCategories(categoryData);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      setError(
+        error.response?.data?.message ||
+          "Failed to load categories. Please check your connection and try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  // ✅ Handle category click and navigate
-  const handleCategoryClick = (category) => {
-    navigate(`/products?category=${category}`);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
-  // ✅ Scroll functionality
-  const scroll = (direction) => {
+  const handleCategoryClick = useCallback(
+    (categoryName) => {
+      navigate(`/products?category=${encodeURIComponent(categoryName)}`);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    [navigate]
+  );
+
+  const scroll = useCallback((direction) => {
     if (scrollRef.current) {
       const scrollAmount = 300;
-      const newScrollPosition =
-        direction === "left"
-          ? scrollRef.current.scrollLeft - scrollAmount
-          : scrollRef.current.scrollLeft + scrollAmount;
-
       scrollRef.current.scrollTo({
-        left: newScrollPosition,
+        left:
+          direction === "left"
+            ? scrollRef.current.scrollLeft - scrollAmount
+            : scrollRef.current.scrollLeft + scrollAmount,
         behavior: "smooth",
       });
     }
-  };
+  }, []);
 
-  // ✅ Monitor scroll position to enable/disable arrows
   useEffect(() => {
     const checkScroll = () => {
       if (scrollRef.current) {
-        setIsLeftDisabled(scrollRef.current.scrollLeft === 0);
-        setIsRightDisabled(
-          scrollRef.current.scrollLeft + scrollRef.current.clientWidth >=
-            scrollRef.current.scrollWidth - 1
-        );
+        const { scrollLeft, clientWidth, scrollWidth } = scrollRef.current;
+        setIsLeftDisabled(scrollLeft === 0);
+        setIsRightDisabled(scrollLeft + clientWidth >= scrollWidth - 1);
       }
     };
 
-    if (scrollRef.current) {
-      scrollRef.current.addEventListener("scroll", checkScroll);
+    const currentRef = scrollRef.current;
+    if (currentRef) {
+      currentRef.addEventListener("scroll", checkScroll);
       checkScroll();
     }
 
     return () => {
-      if (scrollRef.current) {
-        scrollRef.current.removeEventListener("scroll", checkScroll);
+      if (currentRef) {
+        currentRef.removeEventListener("scroll", checkScroll);
       }
     };
   }, []);
 
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <h3 className="title">B2B Order Now</h3>
+        <p>Loading categories...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <h3 className="title">B2B Order Now</h3>
+        <p className="error">{error}</p>
+        <button onClick={fetchCategories} className="retry-button">
+          Retry
+        </button>
+      </div>
+    );
+  }
+
   return (
     <>
       <h3 className="title">B2B Order Now</h3>
+      <div className="category-container">
+        <button
+          className="nav-arrow left"
+          onClick={() => scroll("left")}
+          disabled={isLeftDisabled}
+          aria-label="Scroll left"
+        >
+          <i className="fa-regular fa-circle-left"></i>
+        </button>
 
-      {loading ? (
-        <p>Loading categories...</p>
-      ) : error ? (
-        <p className="error">{error}</p>
-      ) : (
-        <div className="category-container">
-          <button
-            className="nav-arrow left"
-            onClick={() => scroll("left")}
-            disabled={isLeftDisabled}
-          >
-            <i className="fa-regular fa-circle-left"></i>
-          </button>
-
-          <div className="scroll-wrapper" ref={scrollRef}>
-            {categories.length > 0 ? (
-              categories.map((category) => (
-                <div
-                  key={category._id}
-                  className="category-card"
-                  onClick={() => handleCategoryClick(category.name)}
-                >
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    className="category-image"
-                  />
-                  <h2 className="category-title">{category.name}</h2>
-                </div>
-              ))
-            ) : (
-              <p>No categories available.</p>
-            )}
-          </div>
-
-          <button
-            className="nav-arrow right"
-            onClick={() => scroll("right")}
-            disabled={isRightDisabled}
-          >
-            <i className="fa-regular fa-circle-right"></i>
-          </button>
+        <div className="scroll-wrapper" ref={scrollRef}>
+          {categories.length > 0 ? (
+            categories.map((category) => (
+              <div
+                key={category._id}
+                className="category-card"
+                onClick={() => handleCategoryClick(category.name)}
+                role="button"
+                tabIndex={0}
+                onKeyPress={(e) =>
+                  e.key === "Enter" && handleCategoryClick(category.name)
+                }
+              >
+                <img
+                  src={category.image}
+                  alt={category.name}
+                  className="category-image"
+                  onError={(e) => {
+                    e.target.src = "/fallback-image.jpg";
+                  }}
+                  loading="lazy" // Improve performance
+                />
+                <h2 className="category-title">{category.name}</h2>
+              </div>
+            ))
+          ) : (
+            <p>No categories available at the moment.</p>
+          )}
         </div>
-      )}
+
+        <button
+          className="nav-arrow right"
+          onClick={() => scroll("right")}
+          disabled={isRightDisabled}
+          aria-label="Scroll right"
+        >
+          <i className="fa-regular fa-circle-right"></i>
+        </button>
+      </div>
     </>
   );
 };
