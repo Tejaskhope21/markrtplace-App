@@ -178,7 +178,7 @@ mongoose.connect(process.env.MONGO)
 app.use('/api/shops', shopeRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api/items', itemRoutes);
-
+// sdfasf
 app.use('/api/products', productRoutes);
 
 
