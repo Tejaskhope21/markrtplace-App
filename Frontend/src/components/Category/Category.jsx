@@ -19,11 +19,11 @@ const Category = () => {
       setError(null);
 
       const response = await axios.get(
-        "http://localhost:6000/api/categories/list",
+        "http://localhost:5000/api/categories", // Change from 6000 to 5000
         {
           timeout: 5000,
           headers: {
-            "Cache-Control": "no-cache", // Prevent caching issues
+            "Cache-Control": "no-cache",
           },
         }
       );
