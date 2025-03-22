@@ -167,10 +167,12 @@ mongoose.connect(process.env.MONGO)
   .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
+
 // Routes
 app.use('/api/shops', shopeRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api/items', itemRoutes);
+
 app.use('/api/products', productRoutes);
 
 
