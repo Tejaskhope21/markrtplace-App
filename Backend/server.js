@@ -130,7 +130,7 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import fs from 'fs';
 import shopeRoutes from './routes/shopRoutes.js';
-import itemRoutes from './routes/itemRoutes.js';
+import itemsRoutes from './routes/itemRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import productRoutes from './routes/b2cRoutes.js';
 import cors from 'cors';
@@ -141,14 +141,20 @@ const app = express();
 
 // Enable CORS for the frontend origin
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+  const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
+  const origin = req.headers.origin;
+
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
+
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Cache-Control");
-  
+
   if (req.method === "OPTIONS") {
     return res.sendStatus(204);
   }
-  
+
   next();
 });
 
@@ -177,9 +183,22 @@ mongoose.connect(process.env.MONGO)
 // Routes
 app.use('/api/shops', shopeRoutes);
 app.use('/api', categoryRoutes);
-app.use('/api/items', itemRoutes);
-// sdfasf
+import Item from './models/Item.js'; // Ensure you have a Mongoose model
+
+app.post("/api/add", async (req, res) => {
+  try {
+    const newItem = new Item(req.body); // Create a new item instance
+    const savedItem = await newItem.save(); // Save item to MongoDB
+
+    res.status(201).json({ success: true, message: "Item added successfully!", data: savedItem });
+  } catch (error) {
+    console.error("Error saving item:", error);
+    res.status(500).json({ success: false, message: "Error saving item", error });
+  }
+});
+
 app.use('/api/products', productRoutes);
+
 
 
 app.get('/', (req, res) => {
