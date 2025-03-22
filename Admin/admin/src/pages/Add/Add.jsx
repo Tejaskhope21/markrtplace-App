@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import './Add.css';
 
 const Add = () => {
-  const url = "http://localhost:5000";
+  const url = "http://localhost:5000"; // Ensure this matches your backend port
   const [images, setImages] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
@@ -47,6 +47,7 @@ const Add = () => {
     const fetchCategories = async () => {
       setLoading(true);
       try {
+        // const response = await axios.get(`${url}/api/categories`);
         const response = await axios.get(`${url}/api/categories`);
         if (response.data.success) {
           setCategories(response.data.data);
@@ -55,9 +56,9 @@ const Add = () => {
           toast.error('Failed to fetch categories');
         }
       } catch (err) {
-        setError('Error fetching categories');
-        toast.error('Error fetching categories');
-        console.error('Error fetching categories:', err);
+        console.error('Error fetching categories:', err.response || err.message);
+        setError('Error fetching categories: ' + (err.response?.data?.message || err.message));
+        toast.error('Error fetching categories: ' + (err.response?.data?.message || err.message));
       } finally {
         setLoading(false);
       }
@@ -141,17 +142,99 @@ const Add = () => {
     }
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!formData.supplier.name || !formData.supplier.location) {
+  //     toast.error('Supplier name and location are required.');
+  //     return;
+  //   }
+
+  //   const formDataToSend = new FormData();
+  //   formDataToSend.append("category", formData.b2b_menu);
+
+  //   for (let key in formData) {
+  //     if (key === 'price_per_piece') {
+  //       formDataToSend.append(`price_per_piece[20-199]`, formData.price_per_piece['20-199']);
+  //       formDataToSend.append(`price_per_piece[200-999]`, formData.price_per_piece['200-999']);
+  //       formDataToSend.append(`price_per_piece[1000+]`, formData.price_per_piece['1000+']);
+  //     } else if (key === 'supplier') {
+  //       formDataToSend.append('supplier_name', formData.supplier.name);
+  //       formDataToSend.append('supplier_location', formData.supplier.location);
+  //     } else if (key === 'shipping') {
+  //       formDataToSend.append('free_shipping_above', formData.shipping.free_shipping_above);
+  //       formDataToSend.append('shipping_cost', formData.shipping.cost);
+  //     } else if (key === 'specifications') {
+  //       formDataToSend.append('specifications', JSON.stringify(formData.specifications));
+  //     } else if (key === 'images') {
+  //       formData.images.forEach((image, index) => {
+  //         if (image instanceof File) {
+  //           formDataToSend.append(`image${index}`, image);
+  //         }
+  //       });
+  //     } else if (key !== 'b2b_menu') {
+  //       formDataToSend.append(key, formData[key]);
+  //     }
+  //   }
+
+  //   try {
+  //     const response = await axios.post(`${url}/api/items`, formDataToSend, {
+  //       headers: { 'Content-Type': 'multipart/form-data' }
+  //     });
+  //     if (response.data.success) {
+  //       setFormData({
+  //         name: '',
+  //         category: '',
+  //         product_category: '',
+  //         price_per_piece: { '20-199': 0, '200-999': 0, '1000+': 0 },
+  //         MOQ: '',
+  //         specifications: {
+  //           description: '',
+  //           weight: '',
+  //           dimensions: [],
+  //           material: '',
+  //           color_temperature: [],
+  //           input_voltage: '',
+  //           type: [],
+  //           rated_current: [],
+  //           length: [],
+  //           wire_type: '',
+  //           plug_type: '',
+  //           power: [],
+  //           phase: '',
+  //           thickness: [],
+  //           sizes: [],
+  //           grades: [],
+  //           colors: [],
+  //           packaging: [],
+  //           strength: []
+  //         },
+  //         supplier: { name: '', location: '' },
+  //         shipping: { free_shipping_above: 0, cost: 0 },
+  //         b2b_menu: '',
+  //         images: []
+  //       });
+  //       setImages([]);
+  //       toast.success(response.data.message);
+  //     } else {
+  //       toast.error(response.data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error adding item:', error);
+  //     toast.error('Failed to add item. Please try again.');
+  //   }
+  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (!formData.supplier.name || !formData.supplier.location) {
       toast.error('Supplier name and location are required.');
       return;
     }
-
+  
     const formDataToSend = new FormData();
     formDataToSend.append("category", formData.b2b_menu);
-
+  
     for (let key in formData) {
       if (key === 'price_per_piece') {
         formDataToSend.append(`price_per_piece[20-199]`, formData.price_per_piece['20-199']);
@@ -168,14 +251,14 @@ const Add = () => {
       } else if (key === 'images') {
         formData.images.forEach((image, index) => {
           if (image instanceof File) {
-            formDataToSend.append(`image${index}`, image);
+            formDataToSend.append(`images`, image); // Use 'images' to match the backend
           }
         });
       } else if (key !== 'b2b_menu') {
         formDataToSend.append(key, formData[key]);
       }
     }
-
+  
     try {
       const response = await axios.post(`${url}/api/items`, formDataToSend, {
         headers: { 'Content-Type': 'multipart/form-data' }
@@ -237,7 +320,7 @@ const Add = () => {
                     src={
                       images[index]
                         ? URL.createObjectURL(images[index])
-                        : 'https://via.placeholder.com/120?text=Upload+Image'
+                        : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==' // Gray placeholder
                     }
                     alt={`Upload Preview ${index + 1}`}
                     style={{ width: '120px', height: '120px', objectFit: 'cover' }}
@@ -267,8 +350,6 @@ const Add = () => {
           />
         </div>
 
-        {/* Removed Product ID input */}
-        
         <div className="add-category-price">
           <div className="add-category flex-col">
             <p>B2B Category</p>
@@ -276,6 +357,8 @@ const Add = () => {
               <p>Loading categories...</p>
             ) : error ? (
               <p style={{ color: 'red' }}>{error}</p>
+            ) : categories.length === 0 ? (
+              <p>No categories available</p>
             ) : (
               <select
                 name="b2b_menu"
@@ -285,8 +368,8 @@ const Add = () => {
               >
                 <option value="">Select Category</option>
                 {categories.map((cat, index) => (
-                  <option key={index} value={cat.menu_item}>
-                    {cat.menu_item}
+                  <option key={index} value={cat.name}>
+                    {cat.name}
                   </option>
                 ))}
               </select>

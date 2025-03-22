@@ -28,6 +28,7 @@ export const createCategory = async (req, res) => {
 export const getCategories = async (req, res) => {
   try {
     const categories = await Category.find().sort({ createdAt: -1 });
+    console.log('Fetched categories:', categories); // Debug log
     res.status(200).json({ success: true, data: categories });
   } catch (error) {
     console.error('Error fetching categories:', error);
