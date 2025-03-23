@@ -26,15 +26,23 @@ const Products = () => {
         console.log("Fetching from:", url);
 
         const response = await axios.get(url);
-        setItems(response.data);
 
-        // Extract unique subcategories
-        const uniqueSubcategories = [
-          ...new Set(response.data.map((item) => item.subcategory)),
-        ];
-        setSubcategories(uniqueSubcategories);
+        if (Array.isArray(response.data)) {
+          setItems(response.data);
+          const uniqueSubcategories = [
+            ...new Set(response.data.map((item) => item.subcategory || item.category)),
+          ];
+          setSubcategories(uniqueSubcategories);
+        } else if (response.data.success === false) {
+          setError(response.data.message);
+          setItems([]);
+        } else {
+          throw new Error("Unexpected response format");
+        }
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to load items.");
+        console.error("Error fetching items:", err);
+        setError(err.message === "Network Error" ? "Failed to connect to the server. Please ensure the backend is running." : err.response?.data?.message || "Failed to load items.");
+        setItems([]);
       } finally {
         setLoading(false);
       }
@@ -43,35 +51,39 @@ const Products = () => {
     fetchItems();
   }, [selectedCategory]);
 
-  // Filter items based on selected subcategory
   const filteredItems =
     selectedSubcategory === "all"
       ? items
       : items.filter((item) => item.subcategory === selectedSubcategory);
 
+  const handleCategoryClick = (id) => {
+    navigate(`/buy?id=${id}`);
+  };
+
   return (
     <div className="products-container">
       <h1 className="products-title">{selectedCategory} Items</h1>
 
-      {/* Subcategory Filter */}
       {subcategories.length > 0 && (
         <div className="subcategory-filter">
-          <label>Filter by Subcategory:</label>
-          <select
-            value={selectedSubcategory}
-            onChange={(e) => setSelectedSubcategory(e.target.value)}
+          <button
+            onClick={() => setSelectedSubcategory("all")}
+            className={selectedSubcategory === "all" ? "active" : ""}
           >
-            <option value="all">All</option>
-            {subcategories.map((sub, index) => (
-              <option key={index} value={sub}>
-                {sub}
-              </option>
-            ))}
-          </select>
+            All
+          </button>
+          {subcategories.map((subcategory, index) => (
+            <button
+              key={index}
+              onClick={() => setSelectedSubcategory(subcategory)}
+              className={selectedSubcategory === subcategory ? "active" : ""}
+            >
+              {subcategory}
+            </button>
+          ))}
         </div>
       )}
 
-      {/* Loading & Error Handling */}
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
@@ -81,24 +93,23 @@ const Products = () => {
           {filteredItems.length > 0 ? (
             filteredItems.map((item) => (
               <div key={item._id} className="product-card">
-                {/* <img
+                <img
                   src={item.images[0]}
                   alt={item.name}
                   className="product-image"
-                /> */}
-                <img
-                  src={`http://localhost:5000/uploads/${item.images[0]}`}
-                  alt={item.name}
-                  className="product-image"
+                  onError={(e) => {
+                    console.error(`Failed to load image: ${item.images[0]}`);
+                    e.target.src = "https://via.placeholder.com/150";
+                  }}
                 />
-
                 <h2>{item.name}</h2>
                 <p className="product-description">
                   {item.description || "No description available."}
                 </p>
-                <p>Price: ₹{Object.values(item.price_per_piece)[0]}</p>
-                <button onClick={() => navigate(`/buy?id=${item._id}`)}>
-                  Buy
+                <p>Price: ₹{item.price || Object.values(item.price_per_piece)[0]}</p>
+                <p>Rating: {item.rating || "N/A"} / 5</p>
+                <button onClick={() => handleCategoryClick(item._id)}>
+                  View Details
                 </button>
               </div>
             ))

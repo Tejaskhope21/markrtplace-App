@@ -3,7 +3,7 @@ import { uid } from 'uid';
 
 const Schema = mongoose.Schema;
 
-const ProductSchema = new Schema({
+const itemb2cSchema = new Schema({
   id: {
     type: String, // Changed from Number to String to accommodate uid
     required: true,
@@ -103,5 +103,5 @@ const ProductSchema = new Schema({
 });
 
 // Create and export the model
-const Product = mongoose.model('Product', ProductSchema);
-export default Product;
+const itemb2c = mongoose.model('itemb2c', itemb2cSchema);
+export default itemb2c;

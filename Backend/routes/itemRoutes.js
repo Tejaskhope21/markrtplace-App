@@ -4,27 +4,63 @@ import Item from "../models/Item.js";
 const router = express.Router();
 
 // ✅ Route to get all items or filter by category
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const { category } = req.query;
+    const { category, ids } = req.query;
 
-    let items;
     if (category) {
-      items = await Item.find({
-        category: { $regex: new RegExp(category, "i") }, // Case-insensitive search
-      });
+      if (!category) {
+        return res.status(400).json({ success: false, message: 'Category is required' });
+      }
+
+      const items = await Item.find({ category: category }).exec();
+
+      if (!items || items.length === 0) {
+        return res.status(404).json({ success: false, message: 'No items found for this category' });
+      }
+
+      res.status(200).json(items);
+    } else if (ids) {
+      const itemIds = ids.split(',').map(id => id.trim());
+      if (!itemIds.length) {
+        return res.status(400).json({ success: false, message: 'No item IDs provided' });
+      }
+
+      const items = await Item.find({ _id: { $in: itemIds } }).exec();
+
+      if (!items || items.length === 0) {
+        return res.status(404).json({ success: false, message: 'No items found for the provided IDs' });
+      }
+
+      res.status(200).json(items);
     } else {
-      items = await Item.find();
+      return res.status(400).json({ success: false, message: 'Category or IDs must be provided' });
     }
-
-    if (!items.length) {
-      return res.status(404).json({ message: "No items found" });
-    }
-
-    res.json(items);
   } catch (error) {
-    console.error("Error fetching items:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.error('Error fetching items:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch items', error: error.message });
+  }
+});
+
+// Fetch a single item by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ success: false, message: 'Item ID is required' });
+    }
+
+    const item = await Item.findById(id).exec();
+
+    if (!item) {
+      return res.status(404).json({ success: false, message: `No item found with ID: ${id}` });
+    }
+
+    res.status(200).json(item);
+  } catch (error) {
+    console.error('Error fetching item:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch item', error: error.message });
   }
 });
 

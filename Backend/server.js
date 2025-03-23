@@ -8,8 +8,7 @@ import cors from 'cors';
 import shopRoutes from './routes/shopRoutes.js';
 import itemRoutes from './routes/itemRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
-import productRoutes from './routes/b2cRoutes.js';
-import Product from './models/Product.js';
+import itemb2cRoutes from './routes/itemb2cRoutes.js';
 import Item from './models/Item.js';
 import path from "path";
 
@@ -37,7 +36,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(path.resolve(), "uploads")));
 
-
 // Multer configuration for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -61,34 +59,39 @@ if (!fs.existsSync('uploads')) {
 
 // Routes
 app.use('/api/shops', shopRoutes);
-app.use('/api/items', itemRoutes);
+app.use('/api/items', itemRoutes); // This handles /api/items and /api/items/:id
 app.use('/api', categoryRoutes);
-app.use('/api/products', productRoutes);
+app.use('/api/itemsb2c', itemb2cRoutes);
 
 // Add new item
-app.post('/api/add', async (req, res) => {
+app.post('/api/add', upload.array('images', 5), async (req, res) => {
   try {
-    const newItem = new Item(req.body);
-    const savedItem = await newItem.save();
-    res.status(201).json({ success: true, message: 'Item added successfully!', data: savedItem });
-  } catch (error) {
-    console.error('Error saving item:', error);
-    res.status(500).json({ success: false, message: 'Error saving item', error });
-  }
-});
+    const { name, category, subcategory, description, price, rating, price_per_piece, MOQ, specifications, supplier, shipping, b2b_menu } = req.body;
 
-// Get products by category
-app.get('/api/products', async (req, res) => {
-  try {
-    const { category } = req.query;
-    const products = category ? await Product.find({ category }) : await Product.find();
-    if (products.length > 0) {
-      res.json(products);
-    } else {
-      res.status(404).json({ message: 'No products found' });
-    }
+    const imageUrls = req.files.map(file => `http://localhost:5000/uploads/${file.filename}`);
+
+    const newItem = new Item({
+      name,
+      category,
+      subcategory,
+      description,
+      price,
+      rating,
+      price_per_piece: JSON.parse(price_per_piece),
+      MOQ,
+      specifications: JSON.parse(specifications || '{}'),
+      images: imageUrls,
+      supplier: JSON.parse(supplier),
+      shipping: JSON.parse(shipping),
+      b2b_menu,
+    });
+
+    const savedItem = await newItem.save();
+
+    res.status(201).json({ success: true, message: "Item added successfully!", data: savedItem });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching products', error });
+    console.error("Error saving item:", error);
+    res.status(500).json({ success: false, message: "Error saving item", error: error.message });
   }
 });
 

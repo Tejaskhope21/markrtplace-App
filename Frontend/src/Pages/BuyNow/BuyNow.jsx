@@ -1,30 +1,48 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./BuyNow.css";
-import { item_list } from "../../assets/data"; // Adjust the import path as needed
 import { useLocation } from "react-router-dom";
 import { StoreContext } from "../../components/context/StoreProvider";
+import axios from "axios";
 
 function BuyNow() {
   const { cartitem, addToCart, removeFromcart } = useContext(StoreContext);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [quantity, setQuantity] = useState(""); // Changed from 1 to ""
+  const [quantity, setQuantity] = useState("");
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const selectedCategory = queryParams.get("id");
-  const productId = Number(selectedCategory) || 0;
 
-  const product = item_list.find((item) => item.id === productId);
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        if (!selectedCategory) {
+          throw new Error("No product ID specified");
+        }
 
-  // Debugging (check the console to see if the product data is coming correctly)
-  console.log("Product Data:", product);
-  console.log("Price Per Piece:", product?.price_per_piece);
+        console.log("Fetching product from:", `http://localhost:5000/api/items/${selectedCategory}`);
+        const response = await axios.get(`http://localhost:5000/api/items/${selectedCategory}`);
+        console.log("Fetched product:", response.data);
+        console.log("Price per piece:", response.data.price_per_piece);
+        setProduct(response.data);
+      } catch (err) {
+        console.error("Error fetching product:", err);
+        setError(err.response?.data?.message || "Failed to load product.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [selectedCategory]);
 
   const handleThumbnailClick = (index) => {
     setSelectedImageIndex(index);
   };
 
-  // Handle quantity change
   const handleQuantityChange = (e) => {
     const value =
       e.target.value === ""
@@ -33,25 +51,26 @@ function BuyNow() {
     setQuantity(value);
   };
 
-  if (!product) {
+  if (loading) {
+    return <div className="no-product"><p>Loading...</p></div>;
+  }
+
+  if (error || !product) {
     return (
       <div className="no-product">
-        <p>No product found with ID: {selectedCategory || "Not specified"}</p>
+        <p>{error || `No product found with ID: ${selectedCategory || "Not specified"}`}</p>
       </div>
     );
   }
 
-  // ✅ Try fetching price from available ranges
   const getPricePerPiece = () => {
-    return (
-      product?.price_per_piece?.["50-499"] ??
-      product?.price_per_piece?.["1-49"] ??
-      product?.price_per_piece?.["500+"] ??
-      undefined
-    );
+    if (!product?.price_per_piece || typeof product.price_per_piece !== "object") {
+      return product?.price ?? undefined; // Fallback to price field
+    }
+    const priceRanges = Object.values(product.price_per_piece);
+    return priceRanges.length > 0 ? priceRanges[0] : product?.price ?? undefined;
   };
 
-  // ✅ Calculate total price based on quantity
   const calculateTotalPrice = () => {
     const pricePerPiece = getPricePerPiece();
     if (pricePerPiece !== undefined && quantity !== "") {
@@ -63,7 +82,7 @@ function BuyNow() {
   const handleBuyNow = () => {
     const totalPrice = calculateTotalPrice();
     if (quantity && totalPrice > 0) {
-      addToCart(productId, Number(quantity), Number(totalPrice));
+      addToCart(product._id, Number(quantity), Number(totalPrice));
     }
   };
 
@@ -82,6 +101,10 @@ function BuyNow() {
                   selectedImageIndex === index ? "active" : ""
                 }`}
                 onClick={() => handleThumbnailClick(index)}
+                onError={(e) => {
+                  console.error(`Failed to load thumbnail: ${img}`);
+                  e.target.src = "https://via.placeholder.com/50";
+                }}
               />
             ))}
           </div>
@@ -91,6 +114,10 @@ function BuyNow() {
                 src={product.images[selectedImageIndex]}
                 alt={`${product?.name || "Product"} - Main`}
                 className="main-image"
+                onError={(e) => {
+                  console.error(`Failed to load main image: ${product.images[selectedImageIndex]}`);
+                  e.target.src = "https://via.placeholder.com/300";
+                }}
               />
             ) : (
               <p>No image available</p>
@@ -111,7 +138,6 @@ function BuyNow() {
           </div>
           <p className="reviews">No reviews yet</p>
 
-          {/* ✅ Fixed Price Display */}
           <p className="price">
             ₹
             {getPricePerPiece() !== undefined
@@ -121,7 +147,6 @@ function BuyNow() {
           </p>
           <p className="moq">MOQ: {product?.MOQ || 1} pieces</p>
 
-          {/* Quantity Input Section */}
           <div className="quantity-section">
             <h3>Quantity</h3>
             <input
@@ -136,7 +161,6 @@ function BuyNow() {
             <p className="total-price">Total: ₹{calculateTotalPrice()}</p>
           </div>
 
-          {/* Specifications */}
           <div className="specifications">
             <h3>Specifications</h3>
             {product?.specifications && (
@@ -151,7 +175,6 @@ function BuyNow() {
             )}
           </div>
 
-          {/* Shipping Info */}
           <div className="shipping-info">
             <h3>Shipping</h3>
             <p>
@@ -161,24 +184,22 @@ function BuyNow() {
             </p>
           </div>
 
-          {/* Actions */}
           <div className="actions">
             <button className="send-inquiry">Send Inquiry</button>
-            {!cartitem[productId] ? (
+            {!cartitem[product._id] ? (
               <button className="send-inquiry" onClick={handleBuyNow}>
                 Buy Now
               </button>
             ) : (
               <button
                 className="send-inquiry"
-                onClick={() => removeFromcart(productId)}
+                onClick={() => removeFromcart(product._id)}
               >
                 Cancel
               </button>
             )}
           </div>
 
-          {/* Protections */}
           <div className="protections">
             <h3>Protections for this product</h3>
             <p>✔ Secure payments</p>
