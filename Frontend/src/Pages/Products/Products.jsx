@@ -9,118 +9,103 @@ const Products = () => {
   const queryParams = new URLSearchParams(location.search);
   const selectedCategory = queryParams.get("category");
 
-  const [products, setProducts] = useState([]); // Store products from backend
-  const [loading, setLoading] = useState(true); // Track loading state
-  const [error, setError] = useState(null); // Track errors
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState("all");
+  const [subcategories, setSubcategories] = useState([]);
 
-  // ✅ Fetch products from backend when component mounts
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchItems = async () => {
       try {
-        if (!selectedCategory) {
-          throw new Error("No category selected");
-        }
+        if (!selectedCategory) throw new Error("No category selected");
 
-        const response = await axios.get(
-          `http://localhost:5000/api/products?category=${encodeURIComponent(
-            selectedCategory
-          )}`
-        );
-        setProducts(response.data);
+        const url = `http://localhost:5000/api/items?category=${encodeURIComponent(
+          selectedCategory
+        )}`;
+        console.log("Fetching from:", url);
+
+        const response = await axios.get(url);
+        setItems(response.data);
+
+        // Extract unique subcategories
+        const uniqueSubcategories = [
+          ...new Set(response.data.map((item) => item.subcategory)),
+        ];
+        setSubcategories(uniqueSubcategories);
       } catch (err) {
-        console.error("Error fetching products:", err);
-        setError(err.response?.data?.message || "Failed to load products.");
+        setError(err.response?.data?.message || "Failed to load items.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProducts();
-  }, [selectedCategory]); // Refetch when category changes
+    fetchItems();
+  }, [selectedCategory]);
 
-  const handleCardClick = (id) => {
-    navigate(`/buy?id=${id}`);
-  };
-
-  const handleButtonClick = (e, id) => {
-    e.stopPropagation();
-    console.log(`Buy button clicked for product ID: ${id}`);
-  };
-
-  const uniqueSubcategories = [
-    ...new Set(products.map((item) => item.product_category)),
-  ];
-
-  const filteredProducts = products.filter(
-    (item) =>
-      selectedSubcategory === "all" ||
-      item.product_category === selectedSubcategory
-  );
+  // Filter items based on selected subcategory
+  const filteredItems =
+    selectedSubcategory === "all"
+      ? items
+      : items.filter((item) => item.subcategory === selectedSubcategory);
 
   return (
     <div className="products-container">
-      <h1 className="products-title">{selectedCategory} Products</h1>
+      <h1 className="products-title">{selectedCategory} Items</h1>
 
+      {/* Subcategory Filter */}
+      {subcategories.length > 0 && (
+        <div className="subcategory-filter">
+          <label>Filter by Subcategory:</label>
+          <select
+            value={selectedSubcategory}
+            onChange={(e) => setSelectedSubcategory(e.target.value)}
+          >
+            <option value="all">All</option>
+            {subcategories.map((sub, index) => (
+              <option key={index} value={sub}>
+                {sub}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {/* Loading & Error Handling */}
       {loading ? (
-        <p>Loading products...</p>
+        <p>Loading...</p>
       ) : error ? (
-        <p className="error-message">{error}</p>
+        <p>{error}</p>
       ) : (
-        <>
-          <div className="subcategory-filter">
-            <label className="filter-label">Sort by Subcategory: </label>
-            <select
-              className="filter-select"
-              value={selectedSubcategory}
-              onChange={(e) => setSelectedSubcategory(e.target.value)}
-            >
-              <option value="all">All</option>
-              {uniqueSubcategories.map((sub) => (
-                <option key={sub} value={sub}>
-                  {sub}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="product-flex-container">
-            {filteredProducts.map((product) => (
-              <div
-                key={product._id} // Use _id from MongoDB
-                className="product-card"
-                onClick={() => handleCardClick(product._id)}
-              >
+        <div className="product-flex-container">
+          {filteredItems.length > 0 ? (
+            filteredItems.map((item) => (
+              <div key={item._id} className="product-card">
+                {/* <img
+                  src={item.images[0]}
+                  alt={item.name}
+                  className="product-image"
+                /> */}
                 <img
-                  src={product.images[0]}
-                  alt={product.name}
+                  src={`http://localhost:5000/uploads/${item.images[0]}`}
+                  alt={item.name}
                   className="product-image"
                 />
-                <div className="product-details">
-                  <h2 className="product-name">{product.name}</h2>
-                  <p className="product-subcategory">
-                    Subcategory: {product.product_category}
-                  </p>
-                  <p className="product-moq">MOQ: {product.MOQ}</p>
-                  <p className="product-price">
-                    Starting Price: ₹
-                    {Object.values(product.price_per_piece)[0] || "N/A"}
-                  </p>
-                  <p className="product-supplier">
-                    Supplier: {product.supplier.name},{" "}
-                    {product.supplier.location}
-                  </p>
-                  <button
-                    id="buy-btn"
-                    onClick={(e) => handleButtonClick(e, product._id)}
-                  >
-                    Buy Product
-                  </button>
-                </div>
+
+                <h2>{item.name}</h2>
+                <p className="product-description">
+                  {item.description || "No description available."}
+                </p>
+                <p>Price: ₹{Object.values(item.price_per_piece)[0]}</p>
+                <button onClick={() => navigate(`/buy?id=${item._id}`)}>
+                  Buy
+                </button>
               </div>
-            ))}
-          </div>
-        </>
+            ))
+          ) : (
+            <p>No items found for this subcategory.</p>
+          )}
+        </div>
       )}
     </div>
   );

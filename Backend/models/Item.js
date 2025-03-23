@@ -25,6 +25,7 @@ const itemSchema = new mongoose.Schema({
     default: () => uid(6), // Auto-generate a 6-character unique ID
   },
   name: { type: String, required: true, trim: true },
+  description: { type: String, required: true, trim: true }, // Added Description Field
   category: { type: String, required: true },
   product_category: { type: String, required: true, trim: true },
   price_per_piece: { type: priceSchema, required: true },

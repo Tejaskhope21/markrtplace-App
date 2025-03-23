@@ -1,24 +1,31 @@
 import express from "express";
-import multer from "multer";
-import { addItem, getItems } from "../controllers/itemController.js";
+import Item from "../models/Item.js";
 
 const router = express.Router();
 
-// ✅ Multer configuration for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/"); // Store uploaded images in `uploads/`
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
+// ✅ Route to get all items or filter by category
+router.get("/", async (req, res) => {
+  try {
+    const { category } = req.query;
+
+    let items;
+    if (category) {
+      items = await Item.find({
+        category: { $regex: new RegExp(category, "i") }, // Case-insensitive search
+      });
+    } else {
+      items = await Item.find();
+    }
+
+    if (!items.length) {
+      return res.status(404).json({ message: "No items found" });
+    }
+
+    res.json(items);
+  } catch (error) {
+    console.error("Error fetching items:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 });
-const upload = multer({ storage });
-
-// ✅ Route to add a new item with image upload
-router.post("/add", upload.array("images", 5), addItem);
-
-// ✅ Route to get all items
-router.get("/", getItems);
 
 export default router;
