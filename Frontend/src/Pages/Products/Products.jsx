@@ -12,8 +12,9 @@ const Products = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedSubcategory, setSelectedSubcategory] = useState("all");
-  const [subcategories, setSubcategories] = useState([]);
+  const [selectedSort, setSelectedSort] = useState(""); // Sorting state
+  const [productCategories, setProductCategories] = useState([]);
+  const [selectedProductCategory, setSelectedProductCategory] = useState("all");
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -29,10 +30,12 @@ const Products = () => {
 
         if (Array.isArray(response.data)) {
           setItems(response.data);
-          const uniqueSubcategories = [
-            ...new Set(response.data.map((item) => item.subcategory || item.category)),
+
+          // Extract unique product categories
+          const uniqueProductCategories = [
+            ...new Set(response.data.map((item) => item.product_category)),
           ];
-          setSubcategories(uniqueSubcategories);
+          setProductCategories(uniqueProductCategories);
         } else if (response.data.success === false) {
           setError(response.data.message);
           setItems([]);
@@ -41,7 +44,11 @@ const Products = () => {
         }
       } catch (err) {
         console.error("Error fetching items:", err);
-        setError(err.message === "Network Error" ? "Failed to connect to the server. Please ensure the backend is running." : err.response?.data?.message || "Failed to load items.");
+        setError(
+          err.message === "Network Error"
+            ? "Failed to connect to the server. Please ensure the backend is running."
+            : err.response?.data?.message || "Failed to load items."
+        );
         setItems([]);
       } finally {
         setLoading(false);
@@ -51,10 +58,22 @@ const Products = () => {
     fetchItems();
   }, [selectedCategory]);
 
-  const filteredItems =
-    selectedSubcategory === "all"
-      ? items
-      : items.filter((item) => item.subcategory === selectedSubcategory);
+  // **Filtering and Sorting Logic**
+  let filteredItems = items;
+
+  if (selectedProductCategory !== "all") {
+    filteredItems = filteredItems.filter(
+      (item) => item.product_category === selectedProductCategory
+    );
+  }
+
+  if (selectedSort === "price_low") {
+    filteredItems = [...filteredItems].sort((a, b) => a.price - b.price);
+  } else if (selectedSort === "price_high") {
+    filteredItems = [...filteredItems].sort((a, b) => b.price - a.price);
+  } else if (selectedSort === "rating") {
+    filteredItems = [...filteredItems].sort((a, b) => b.rating - a.rating);
+  }
 
   const handleCategoryClick = (id) => {
     navigate(`/buy?id=${id}`);
@@ -64,26 +83,39 @@ const Products = () => {
     <div className="products-container">
       <h1 className="products-title">{selectedCategory} Items</h1>
 
-      {subcategories.length > 0 && (
-        <div className="subcategory-filter">
-          <button
-            onClick={() => setSelectedSubcategory("all")}
-            className={selectedSubcategory === "all" ? "active" : ""}
+      {/* Product Category Filter */}
+      {productCategories.length > 0 && (
+        <div className="filter-section">
+          <label>Product Category: </label>
+          <select
+            value={selectedProductCategory}
+            onChange={(e) => setSelectedProductCategory(e.target.value)}
           >
-            All
-          </button>
-          {subcategories.map((subcategory, index) => (
-            <button
-              key={index}
-              onClick={() => setSelectedSubcategory(subcategory)}
-              className={selectedSubcategory === subcategory ? "active" : ""}
-            >
-              {subcategory}
-            </button>
-          ))}
+            <option value="all">All</option>
+            {productCategories.map((category, index) => (
+              <option key={index} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
         </div>
       )}
 
+      {/* Sorting Dropdown */}
+      <div className="filter-section">
+        <label>Sort By: </label>
+        <select
+          value={selectedSort}
+          onChange={(e) => setSelectedSort(e.target.value)}
+        >
+          <option value="">Default</option>
+          <option value="price_low">Price: Low to High</option>
+          <option value="price_high">Price: High to Low</option>
+          <option value="rating">Rating</option>
+        </select>
+      </div>
+
+      {/* Products Display */}
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
@@ -106,7 +138,9 @@ const Products = () => {
                 <p className="product-description">
                   {item.description || "No description available."}
                 </p>
-                <p>Price: ₹{item.price || Object.values(item.price_per_piece)[0]}</p>
+                <p>
+                  Price: ₹{item.price || Object.values(item.price_per_piece)[0]}
+                </p>
                 <p>Rating: {item.rating || "N/A"} / 5</p>
                 <button onClick={() => handleCategoryClick(item._id)}>
                   View Details
@@ -114,7 +148,7 @@ const Products = () => {
               </div>
             ))
           ) : (
-            <p>No items found for this subcategory.</p>
+            <p>No items found for this selection.</p>
           )}
         </div>
       )}

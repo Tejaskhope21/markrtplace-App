@@ -74,6 +74,7 @@ app.post('/api/add', upload.array('images', 5), async (req, res) => {
       name,
       category,
       subcategory,
+      product_category,
       description,
       price,
       rating,
