@@ -11,7 +11,7 @@ const Add = () => {
     price_per_piece: { "20-199": "", "200-999": "", "1000+": "" },
     MOQ: "",
     specifications: {},
-    images: [],
+    images: [], // This will now store File objects, not URLs
     supplier: { name: "", location: "" },
     shipping: { free_shipping_above: 0, cost: "" },
     b2b_menu: "",
@@ -47,24 +47,33 @@ const Add = () => {
     const files = Array.from(e.target.files);
     setFormData((prev) => ({
       ...prev,
-      images: files.map((file) => URL.createObjectURL(file)),
+      images: files, // Store the File objects directly
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("category", formData.category);
+    data.append("product_category", formData.product_category);
+    data.append("price_per_piece[20-199]", formData.price_per_piece["20-199"]);
+    data.append("price_per_piece[200-999]", formData.price_per_piece["200-999"]);
+    data.append("price_per_piece[1000+]", formData.price_per_piece["1000+"]);
+    data.append("MOQ", formData.MOQ);
+    data.append("specifications[color]", formData.specifications.color || "");
+    data.append("specifications[weight]", formData.specifications.weight || "");
+    data.append("specifications[battery]", formData.specifications.battery || "");
+    formData.images.forEach((file) => data.append("images", file));
+    data.append("supplier[name]", formData.supplier.name);
+    data.append("supplier[location]", formData.supplier.location);
+    data.append("shipping[free_shipping_above]", formData.shipping.free_shipping_above);
+    data.append("shipping[cost]", formData.shipping.cost);
+    data.append("b2b_menu", formData.b2b_menu);
+  
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/add",
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
+      const response = await axios.post("http://localhost:5000/api/items/add", data);
       if (response.data.success) {
         alert("Item added successfully!");
         setFormData({
@@ -83,10 +92,7 @@ const Add = () => {
         alert("Failed to add item.");
       }
     } catch (error) {
-      console.error(
-        "Error adding item:",
-        error.response?.data || error.message
-      );
+      console.error("Error adding item:", error.response?.data || error.message);
     }
   };
 
@@ -157,6 +163,34 @@ const Add = () => {
             value={formData.MOQ}
             onChange={handleChange}
             required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Specifications - Color:</label>
+          <input
+            type="text"
+            name="specifications.color"
+            value={formData.specifications.color || ""}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <label>Specifications - Weight:</label>
+          <input
+            type="text"
+            name="specifications.weight"
+            value={formData.specifications.weight || ""}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <label>Specifications - Battery:</label>
+          <input
+            type="text"
+            name="specifications.battery"
+            value={formData.specifications.battery || ""}
+            onChange={handleChange}
           />
         </div>
 

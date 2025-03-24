@@ -64,37 +64,37 @@ app.use('/api', categoryRoutes);
 app.use('/api/itemsb2c', itemb2cRoutes);
 
 // Add new item
-app.post('/api/add', upload.array('images', 5), async (req, res) => {
-  try {
-    const { name, category, subcategory, description, price, rating, price_per_piece, MOQ, specifications, supplier, shipping, b2b_menu } = req.body;
+// app.post('/api/add', upload.array('images', 5), async (req, res) => {
+//   try {
+//     const { name, category, subcategory, description, price, rating, price_per_piece, MOQ, specifications, supplier, shipping, b2b_menu } = req.body;
 
-    const imageUrls = req.files.map(file => `http://localhost:5000/uploads/${file.filename}`);
+//     const imageUrls = req.files.map(file => `http://localhost:5000/uploads/${file.filename}`);
 
-    const newItem = new Item({
-      name,
-      category,
-      subcategory,
-      product_category,
-      description,
-      price,
-      rating,
-      price_per_piece: JSON.parse(price_per_piece),
-      MOQ,
-      specifications: JSON.parse(specifications || '{}'),
-      images: imageUrls,
-      supplier: JSON.parse(supplier),
-      shipping: JSON.parse(shipping),
-      b2b_menu,
-    });
+//     const newItem = new Item({
+//       name,
+//       category,
+//       subcategory,
+//       product_category,
+//       description,
+//       price,
+//       rating,
+//       price_per_piece: JSON.parse(price_per_piece),
+//       MOQ,
+//       specifications: JSON.parse(specifications || '{}'),
+//       images: imageUrls,
+//       supplier: JSON.parse(supplier),
+//       shipping: JSON.parse(shipping),
+//       b2b_menu,
+//     });
 
-    const savedItem = await newItem.save();
+//     const savedItem = await newItem.save();
 
-    res.status(201).json({ success: true, message: "Item added successfully!", data: savedItem });
-  } catch (error) {
-    console.error("Error saving item:", error);
-    res.status(500).json({ success: false, message: "Error saving item", error: error.message });
-  }
-});
+//     res.status(201).json({ success: true, message: "Item added successfully!", data: savedItem });
+//   } catch (error) {
+//     console.error("Error saving item:", error);
+//     res.status(500).json({ success: false, message: "Error saving item", error: error.message });
+//   }
+// });
 
 // Root endpoint
 app.get('/', (req, res) => {
