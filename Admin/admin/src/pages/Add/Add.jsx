@@ -8,10 +8,11 @@ const Add = () => {
     name: "",
     category: "",
     product_category: "",
+    description: "", // Added description
     price_per_piece: { "20-199": "", "200-999": "", "1000+": "" },
     MOQ: "",
     specifications: {},
-    images: [], // This will now store File objects, not URLs
+    images: [], // Store File objects instead of URLs
     supplier: { name: "", location: "" },
     shipping: { free_shipping_above: 0, cost: "" },
     b2b_menu: "",
@@ -44,20 +45,21 @@ const Add = () => {
   };
 
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
+    const files = Array.from(e.target.files); // Convert FileList to array
     setFormData((prev) => ({
       ...prev,
-      images: files, // Store the File objects directly
+      images: files, // Store File objects
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     const data = new FormData();
     data.append("name", formData.name);
     data.append("category", formData.category);
     data.append("product_category", formData.product_category);
+    data.append("description", formData.description);
     data.append("price_per_piece[20-199]", formData.price_per_piece["20-199"]);
     data.append("price_per_piece[200-999]", formData.price_per_piece["200-999"]);
     data.append("price_per_piece[1000+]", formData.price_per_piece["1000+"]);
@@ -65,13 +67,13 @@ const Add = () => {
     data.append("specifications[color]", formData.specifications.color || "");
     data.append("specifications[weight]", formData.specifications.weight || "");
     data.append("specifications[battery]", formData.specifications.battery || "");
-    formData.images.forEach((file) => data.append("images", file));
+    formData.images.forEach((file) => data.append("images", file)); // Append each file
     data.append("supplier[name]", formData.supplier.name);
     data.append("supplier[location]", formData.supplier.location);
     data.append("shipping[free_shipping_above]", formData.shipping.free_shipping_above);
     data.append("shipping[cost]", formData.shipping.cost);
     data.append("b2b_menu", formData.b2b_menu);
-  
+
     try {
       const response = await axios.post("http://localhost:5000/api/items/add", data);
       if (response.data.success) {
@@ -80,6 +82,7 @@ const Add = () => {
           name: "",
           category: "",
           product_category: "",
+          description: "",
           price_per_piece: { "20-199": "", "200-999": "", "1000+": "" },
           MOQ: "",
           specifications: {},
@@ -89,10 +92,11 @@ const Add = () => {
           b2b_menu: "",
         });
       } else {
-        alert("Failed to add item.");
+        alert("Failed to add item: " + response.data.message);
       }
     } catch (error) {
       console.error("Error adding item:", error.response?.data || error.message);
+      alert("Error adding item: " + (error.response?.data.message || error.message));
     }
   };
 
@@ -134,6 +138,17 @@ const Add = () => {
             type="text"
             name="product_category"
             value={formData.product_category}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Description:</label>
+          <input
+            type="text"
+            name="description"
+            value={formData.description}
             onChange={handleChange}
             required
           />
@@ -196,7 +211,13 @@ const Add = () => {
 
         <div className="form-group">
           <label>Images:</label>
-          <input type="file" multiple onChange={handleImageChange} required />
+          <input
+            type="file"
+            name="images"
+            multiple
+            onChange={handleImageChange}
+            required
+          />
         </div>
 
         <div className="supplier-group">
