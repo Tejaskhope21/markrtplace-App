@@ -54,59 +54,75 @@ router.get("/", async (req, res) => {
 });
 
 // Route to add a new item with file uploads
-router.post("/add", upload.array("images", 5), async (req, res) => {
+// router.post('/add', upload.array('images', 5), async (req, res) => {
+//   try {
+//     const { name, category, subcategory, description, price, rating, price_per_piece, MOQ, specifications, supplier, shipping, b2b_menu } = req.body;
+
+//     const imageUrls = req.files.map(file => `http://localhost:5000/uploads/${file.filename}`);
+
+//     const newItem = new Item({
+//       name,
+//       category,
+//       subcategory,
+//       product_category,
+//       description,
+//       price,
+//       rating,
+//       price_per_piece: JSON.parse(price_per_piece),
+//       MOQ,
+//       specifications: JSON.parse(specifications || '{}'),
+//       images: imageUrls,
+//       supplier: JSON.parse(supplier),
+//       shipping: JSON.parse(shipping),
+//       b2b_menu,
+//     });
+
+//     const savedItem = await newItem.save();
+
+//     res.status(201).json({ success: true, message: "Item added successfully!", data: savedItem });
+//   } catch (error) {
+//     console.error("Error saving item:", error);
+//     res.status(500).json({ success: false, message: "Error saving item", error: error.message });
+//   }
+// });
+router.post('/add', async (req, res) => { // Remove upload.array('images', 5)
   try {
+    console.log("req.body:", req.body);
+
     const {
       name,
       category,
       subcategory,
+      product_category,
       description,
       price,
       rating,
       MOQ,
       b2b_menu,
+      images, // Extract images as URLs from req.body
     } = req.body;
 
-    // Construct nested objects from form-data
-    const price_per_piece = {
-      "20-199": parseFloat(req.body["price_per_piece[20-199]"]),
-      "200-999": parseFloat(req.body["price_per_piece[200-999]"]),
-      "1000+": parseFloat(req.body["price_per_piece[1000+]"]),
-    };
+    const price_per_piece = req.body.price_per_piece; // Already an object in JSON
+    const specifications = req.body.specifications || {};
+    const supplier = req.body.supplier;
+    const shipping = req.body.shipping;
 
-    const specifications = {
-      color: req.body["specifications[color]"] || "",
-      weight: req.body["specifications[weight]"] || "",
-      battery: req.body["specifications[battery]"] || "",
-    };
-
-    const supplier = {
-      name: req.body["supplier[name]"],
-      location: req.body["supplier[location]"],
-    };
-
-    const shipping = {
-      free_shipping_above: parseFloat(req.body["shipping[free_shipping_above]"] || 0),
-      cost: parseFloat(req.body["shipping[cost]"]),
-    };
-
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ success: false, message: "At least one image is required" });
+    if (!images || !Array.isArray(images) || images.length === 0) {
+      return res.status(400).json({ success: false, message: "At least one image URL is required" });
     }
-
-    const imageUrls = req.files.map((file) => `http://localhost:5000/uploads/${file.filename}`);
 
     const newItem = new Item({
       name,
       category,
       subcategory,
+      product_category,
       description,
       price,
       rating,
       price_per_piece,
       MOQ,
       specifications,
-      images: imageUrls,
+      images, // Use URLs directly
       supplier,
       shipping,
       b2b_menu,
@@ -120,7 +136,6 @@ router.post("/add", upload.array("images", 5), async (req, res) => {
     res.status(500).json({ success: false, message: "Error saving item", error: error.message });
   }
 });
-
 // Fetch a single item by ID
 router.get("/:id", async (req, res) => {
   try {
