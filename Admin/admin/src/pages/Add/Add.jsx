@@ -18,7 +18,6 @@ const Add = () => {
     b2b_menu: "",
   });
 
-  // Fetch categories from API
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/categories")
@@ -32,7 +31,6 @@ const Add = () => {
       .catch((error) => console.error("Error fetching categories:", error));
   }, []);
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     const keys = name.split(".");
@@ -51,7 +49,6 @@ const Add = () => {
     });
   };
 
-  // Handle image selection
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     setFormData((prev) => ({
@@ -60,25 +57,38 @@ const Add = () => {
     }));
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // Validate required fields
-    if (!formData.name || !formData.category || !formData.product_category || !formData.description || !formData.MOQ || !formData.b2b_menu) {
-      alert("Please fill in all required fields.");
+
+    if (
+      !formData.name ||
+      !formData.category ||
+      !formData.product_category ||
+      !formData.description ||
+      !formData.MOQ ||
+      !formData.b2b_menu ||
+      formData.images.length === 0 ||
+      !formData.supplier.name ||
+      !formData.supplier.location ||
+      !formData.shipping.cost
+    ) {
+      alert(
+        "Please fill in all required fields including at least one image, supplier name, location, and shipping cost."
+      );
       return;
     }
-  
-    // Ensure price fields are not empty and convert them to numbers
+
     const priceFields = ["20-199", "200-999", "1000+"];
     for (let field of priceFields) {
-      if (!formData.price_per_piece[field] || isNaN(Number(formData.price_per_piece[field]))) {
+      if (
+        !formData.price_per_piece[field] ||
+        isNaN(Number(formData.price_per_piece[field]))
+      ) {
         alert(`Please enter a valid price for ${field} units.`);
         return;
       }
     }
-  
+
     const data = new FormData();
     data.append("name", formData.name);
     data.append("category", formData.category);
@@ -86,37 +96,39 @@ const Add = () => {
     data.append("description", formData.description);
     data.append("MOQ", formData.MOQ);
     data.append("b2b_menu", formData.b2b_menu);
-  
-    // Ensure all price fields are included
+
     priceFields.forEach((key) => {
       data.append(`price_per_piece[${key}]`, formData.price_per_piece[key]);
     });
-  
-    // Append specifications fields
+
     Object.keys(formData.specifications).forEach((key) => {
       data.append(`specifications[${key}]`, formData.specifications[key] || "");
     });
-  
-    // Append supplier details
-    data.append("supplier[name]", formData.supplier.name || "");
-    data.append("supplier[location]", formData.supplier.location || "");
-  
-    // Append shipping details
-    data.append("shipping[free_shipping_above]", formData.shipping.free_shipping_above || 0);
-    data.append("shipping[cost]", formData.shipping.cost || "");
-  
-    // Append images
+
+    data.append("supplier[name]", formData.supplier.name);
+    data.append("supplier[location]", formData.supplier.location);
+    data.append(
+      "shipping[free_shipping_above]",
+      formData.shipping.free_shipping_above || 0
+    );
+    data.append("shipping[cost]", formData.shipping.cost);
+
     formData.images.forEach((file) => data.append("images", file));
-  
-    console.log("Submitting data:", Object.fromEntries(data.entries()));
-  
+
+    console.log("FormData being sent:");
+    for (let [key, value] of data.entries()) {
+      console.log(`${key}: ${value instanceof File ? value.name : value}`);
+    }
+
     try {
-      const response = await axios.post("http://localhost:5000/api/items/add", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-  
+      const response = await axios.post(
+        "http://localhost:5000/api/items/add",
+        data,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
       if (response.data.success) {
         alert("Item added successfully!");
         setFormData({
@@ -136,12 +148,15 @@ const Add = () => {
         alert("Failed to add item: " + response.data.message);
       }
     } catch (error) {
-      console.error("Error adding item:", error.response?.data || error.message);
-      alert("Error adding item: " + (error.response?.data?.message || error.message));
+      console.error(
+        "Error adding item:",
+        error.response?.data || error.message
+      );
+      alert(
+        "Error adding item: " + (error.response?.data?.message || error.message)
+      );
     }
   };
-  
-  
 
   return (
     <div className="add-item-container">
@@ -149,27 +164,51 @@ const Add = () => {
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Name:</label>
-          <input type="text" name="name" value={formData.name} onChange={handleChange} required />
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className="form-group">
           <label>Category:</label>
-          <select name="category" value={formData.category} onChange={handleChange} required>
+          <select
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            required
+          >
             <option value="">Select a category</option>
             {categories.map((cat) => (
-              <option key={cat._id} value={cat.name}>{cat.name}</option>
+              <option key={cat._id} value={cat.name}>
+                {cat.name}
+              </option>
             ))}
           </select>
         </div>
 
         <div className="form-group">
           <label>Product Category:</label>
-          <input type="text" name="product_category" value={formData.product_category} onChange={handleChange} required />
+          <input
+            type="text"
+            name="product_category"
+            value={formData.product_category}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className="form-group">
           <label>Description:</label>
-          <textarea name="description" value={formData.description} onChange={handleChange} required />
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className="price-group">
@@ -177,42 +216,126 @@ const Add = () => {
           {["20-199", "200-999", "1000+"].map((range) => (
             <div className="form-group" key={range}>
               <label>{range} units:</label>
-              <input type="number" name={`price_per_piece.${range}`} value={formData.price_per_piece[range]} onChange={handleChange} required />
+              <input
+                type="number"
+                name={`price_per_piece.${range}`}
+                value={formData.price_per_piece[range]}
+                onChange={handleChange}
+                required
+              />
             </div>
           ))}
         </div>
 
         <div className="form-group">
           <label>MOQ:</label>
-          <input type="number" name="MOQ" value={formData.MOQ} onChange={handleChange} required />
+          <input
+            type="number"
+            name="MOQ"
+            value={formData.MOQ}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className="form-group">
           <label>B2B Menu:</label>
-          <input type="text" name="b2b_menu" value={formData.b2b_menu} onChange={handleChange} required />
+          <input
+            type="text"
+            name="b2b_menu"
+            value={formData.b2b_menu}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className="form-group">
           <label>Images:</label>
-          <input type="file" name="images" multiple onChange={handleImageChange} required />
+          <input
+            type="file"
+            name="images"
+            multiple
+            onChange={handleImageChange}
+            required
+          />
         </div>
 
         <div className="form-group">
           <label>Supplier Name:</label>
-          <input type="text" name="supplier.name" value={formData.supplier.name} onChange={handleChange} required />
+          <input
+            type="text"
+            name="supplier.name"
+            value={formData.supplier.name}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className="form-group">
           <label>Supplier Location:</label>
-          <input type="text" name="supplier.location" value={formData.supplier.location} onChange={handleChange} required />
+          <input
+            type="text"
+            name="supplier.location"
+            value={formData.supplier.location}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Free Shipping Above (optional):</label>
+          <input
+            type="number"
+            name="shipping.free_shipping_above"
+            value={formData.shipping.free_shipping_above}
+            onChange={handleChange}
+          />
         </div>
 
         <div className="form-group">
           <label>Shipping Cost:</label>
-          <input type="number" name="shipping.cost" value={formData.shipping.cost} onChange={handleChange} required />
+          <input
+            type="number"
+            name="shipping.cost"
+            value={formData.shipping.cost}
+            onChange={handleChange}
+            required
+          />
         </div>
 
-        <button type="submit" className="submit-btn">Add Item</button>
+        <div className="form-group">
+          <label>Specifications - Color (optional):</label>
+          <input
+            type="text"
+            name="specifications.color"
+            value={formData.specifications.color}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Specifications - Weight (optional):</label>
+          <input
+            type="text"
+            name="specifications.weight"
+            value={formData.specifications.weight}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Specifications - Battery (optional):</label>
+          <input
+            type="text"
+            name="specifications.battery"
+            value={formData.specifications.battery}
+            onChange={handleChange}
+          />
+        </div>
+
+        <button type="submit" className="submit-btn">
+          Add Item
+        </button>
       </form>
     </div>
   );
