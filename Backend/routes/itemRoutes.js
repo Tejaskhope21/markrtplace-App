@@ -22,7 +22,26 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
 
+    if (!id) {
+      return res.status(400).json({ success: false, message: "Item ID is required" });
+    }
+
+    const item = await Item.findById(id).exec();
+
+    if (!item) {
+      return res.status(404).json({ success: false, message: `No item found with ID: ${id}` });
+    }
+
+    res.status(200).json(item);
+  } catch (error) {
+    console.error("Error fetching item:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch item", error: error.message });
+  }
+});
 // Route to add a new item with file uploads
 router.post("/add", upload.array("images", 5), async (req, res) => {
   try {
