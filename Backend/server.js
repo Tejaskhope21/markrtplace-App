@@ -4,97 +4,72 @@ import dotenv from 'dotenv';
 import multer from 'multer';
 import fs from 'fs';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 import shopRoutes from './routes/shopRoutes.js';
 import itemRoutes from './routes/itemRoutes.js';
 import categoryRoutes from './routes/categoryRoutes.js';
 import itemb2cRoutes from './routes/itemb2cRoutes.js';
-import Item from './models/Item.js';
-import path from "path";
 
 dotenv.config();
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 
-// Enable CORS
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174'];
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Cache-Control');
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(204);
-  }
-  next();
-});
+// CORS configuration
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control'],
+  credentials: true
+}));
 
-// Middleware for JSON and form data parsing
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/uploads", express.static(path.join(path.resolve(), "uploads")));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Multer configuration for file uploads
+// Multer configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}-${file.originalname}`);
-  },
+  }
 });
-const upload = multer({ storage });
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+const upload = multer({ 
+  storage,
+  limits: { fileSize: 5000000 }, // 5MB limit
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only images are allowed'));
+    }
+  }
+});
 
-// Ensure the 'uploads' directory exists
-if (!fs.existsSync('uploads')) {
-  fs.mkdirSync('uploads');
+// Create uploads directory if it doesn't exist
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
 }
 
 // Routes
 app.use('/api/shops', shopRoutes);
-app.use('/api/items', itemRoutes); // This handles /api/items and /api/items/:id
+app.use('/api/items', upload.array('images'), itemRoutes); // Apply multer here
 app.use('/api', categoryRoutes);
 app.use('/api/itemsb2c', itemb2cRoutes);
 
-// Add new item
-// app.post('/api/add', upload.array('images', 5), async (req, res) => {
-//   try {
-//     const { name, category, subcategory, description, price, rating, price_per_piece, MOQ, specifications, supplier, shipping, b2b_menu } = req.body;
-
-//     const imageUrls = req.files.map(file => `http://localhost:5000/uploads/${file.filename}`);
-
-//     const newItem = new Item({
-//       name,
-//       category,
-//       subcategory,
-//       product_category,
-//       description,
-//       price,
-//       rating,
-//       price_per_piece: JSON.parse(price_per_piece),
-//       MOQ,
-//       specifications: JSON.parse(specifications || '{}'),
-//       images: imageUrls,
-//       supplier: JSON.parse(supplier),
-//       shipping: JSON.parse(shipping),
-//       b2b_menu,
-//     });
-
-//     const savedItem = await newItem.save();
-
-//     res.status(201).json({ success: true, message: "Item added successfully!", data: savedItem });
-//   } catch (error) {
-//     console.error("Error saving item:", error);
-//     res.status(500).json({ success: false, message: "Error saving item", error: error.message });
-//   }
-// });
+// MongoDB connection
+mongoose.connect(process.env.MONGO)
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error('MongoDB connection error:', err));
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -102,4 +77,6 @@ app.get('/', (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

@@ -85,9 +85,10 @@ router.get("/", async (req, res) => {
 //     res.status(500).json({ success: false, message: "Error saving item", error: error.message });
 //   }
 // });
-router.post('/add', async (req, res) => { // Remove upload.array('images', 5)
+router.post('/add', async (req, res) => {
   try {
     console.log("req.body:", req.body);
+    console.log("req.files:", req.files);
 
     const {
       name,
@@ -99,17 +100,67 @@ router.post('/add', async (req, res) => { // Remove upload.array('images', 5)
       rating,
       MOQ,
       b2b_menu,
-      images, // Extract images as URLs from req.body
+      "price_per_piece[20-199]": price20_199,
+      "price_per_piece[200-999]": price200_999,
+      "price_per_piece[1000+]": price1000plus,
+      "specifications[color]": specColor,
+      "specifications[weight]": specWeight,
+      "specifications[battery]": specBattery,
+      "supplier[name]": supplierName,
+      "supplier[location]": supplierLocation,
+      "shipping[free_shipping_above]": shippingFreeAbove,
+      "shipping[cost]": shippingCost,
     } = req.body;
 
-    const price_per_piece = req.body.price_per_piece; // Already an object in JSON
-    const specifications = req.body.specifications || {};
-    const supplier = req.body.supplier;
-    const shipping = req.body.shipping;
+    // Construct nested objects
+    const price_per_piece = {
+      "20-199": price20_199,
+      "200-999": price200_999,
+      "1000+": price1000plus
+    };
 
-    if (!images || !Array.isArray(images) || images.length === 0) {
-      return res.status(400).json({ success: false, message: "At least one image URL is required" });
+    const specifications = {
+      color: specColor || "",
+      weight: specWeight || "",
+      battery: specBattery || ""
+    };
+
+    const supplier = {
+      name: supplierName,
+      location: supplierLocation
+    };
+
+    const shipping = {
+      free_shipping_above: shippingFreeAbove ? Number(shippingFreeAbove) : 0,
+      cost: shippingCost
+    };
+
+    // Validate required fields
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ success: false, message: "At least one image file is required" });
     }
+
+    if (!name || !category || !product_category || !description || !MOQ || !b2b_menu) {
+      return res.status(400).json({ success: false, message: "All basic fields (name, category, product_category, description, MOQ, b2b_menu) are required" });
+    }
+
+    if (!price20_199 || !price200_999 || !price1000plus) {
+      return res.status(400).json({ success: false, message: "All price_per_piece fields are required" });
+    }
+
+    if (!supplierName || !supplierLocation) {
+      return res.status(400).json({ success: false, message: "Supplier name and location are required" });
+    }
+
+    if (!shippingCost) {
+      return res.status(400).json({ success: false, message: "Shipping cost is required" });
+    }
+
+    const images = req.files.map(file => ({
+      filename: file.filename,
+      path: `/uploads/${file.filename}`,
+      originalname: file.originalname
+    }));
 
     const newItem = new Item({
       name,
@@ -117,19 +168,18 @@ router.post('/add', async (req, res) => { // Remove upload.array('images', 5)
       subcategory,
       product_category,
       description,
-      price,
-      rating,
+      price: price ? Number(price) : undefined,
+      rating: rating ? Number(rating) : undefined,
       price_per_piece,
       MOQ,
       specifications,
-      images, // Use URLs directly
+      images,
       supplier,
       shipping,
       b2b_menu,
     });
 
     const savedItem = await newItem.save();
-
     res.status(201).json({ success: true, message: "Item added successfully!", data: savedItem });
   } catch (error) {
     console.error("Error saving item:", error);
