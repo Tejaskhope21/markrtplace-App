@@ -19,19 +19,19 @@ const shippingSchema = new mongoose.Schema({
 
 const itemSchema = new mongoose.Schema({
   id: {
-    type: String,
+    type: String, // Changed from Number to String for uid
     required: true,
     unique: true,
-    default: () => uid(6),
+    default: () => uid(6), // Auto-generate a 6-character unique ID
   },
   name: { type: String, required: true, trim: true },
-  description: { type: String, required: true, trim: true },
+  description: { type: String, required: true, trim: true }, // Added Description Field
   category: { type: String, required: true },
   product_category: { type: String, required: true, trim: true },
   price_per_piece: { type: priceSchema, required: true },
   MOQ: { type: Number, required: true },
   specifications: { type: Map, of: String, default: {} },
-  images: { type: [String], required: true },
+  images: { type: [String], required: true }, // Image paths stored as an array
   supplier: { type: supplierSchema, required: true },
   shipping: { type: shippingSchema, required: true },
   b2b_menu: { type: String, required: true },

@@ -97,21 +97,17 @@ const Add = () => {
     data.append("MOQ", formData.MOQ);
     data.append("b2b_menu", formData.b2b_menu);
 
-    priceFields.forEach((key) => {
-      data.append(`price_per_piece[${key}]`, formData.price_per_piece[key]);
-    });
+    // Send price_per_piece as a nested object
+    data.append("price_per_piece", JSON.stringify(formData.price_per_piece));
 
-    Object.keys(formData.specifications).forEach((key) => {
-      data.append(`specifications[${key}]`, formData.specifications[key] || "");
-    });
+    // Send specifications as a nested object
+    data.append("specifications", JSON.stringify(formData.specifications));
 
-    data.append("supplier[name]", formData.supplier.name);
-    data.append("supplier[location]", formData.supplier.location);
-    data.append(
-      "shipping[free_shipping_above]",
-      formData.shipping.free_shipping_above || 0
-    );
-    data.append("shipping[cost]", formData.shipping.cost);
+    // Send supplier as a nested object
+    data.append("supplier", JSON.stringify(formData.supplier));
+
+    // Send shipping as a nested object
+    data.append("shipping", JSON.stringify(formData.shipping));
 
     formData.images.forEach((file) => data.append("images", file));
 
