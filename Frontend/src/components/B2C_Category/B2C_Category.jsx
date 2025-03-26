@@ -1,95 +1,171 @@
-import React, { useRef, useState, useEffect } from "react";
-import { product } from "../../assets/b_to_c_data";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import "@fortawesome/fontawesome-free/css/all.min.css";
+import axios from "axios";
 import "./B2C_Category.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const B2C_Category = () => {
   const navigate = useNavigate();
   const scrollRef = useRef(null);
+  const [categories, setCategories] = useState([]);
   const [isLeftDisabled, setIsLeftDisabled] = useState(true);
   const [isRightDisabled, setIsRightDisabled] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleCategoryClick = (category) => {
-    navigate(`/shop?category=${category}`);
-  };
+  // Fetch categories with error handling
+  const fetchCategories = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-  const scroll = (direction) => {
+      const response = await axios.get(
+        "http://localhost:5000/api/categoriesb2c",
+        {
+          timeout: 5000,
+          headers: {
+            "Cache-Control": "no-cache",
+          },
+        }
+      );
+
+      setCategories(
+        Array.isArray(response.data.data) ? response.data.data : []
+      );
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      setError(
+        error.response?.data?.message ||
+          "Failed to load categories. Please check your connection and try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  // Navigate on category click
+  const handleCategoryClick = useCallback(
+    (categoryName) => {
+      navigate(`/shop?category=${encodeURIComponent(categoryName)}`);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    [navigate]
+  );
+
+  // Scroll functionality
+  const scroll = useCallback((direction) => {
     if (scrollRef.current) {
       const scrollAmount = 300;
-      const newScrollPosition =
-        direction === "left"
-          ? scrollRef.current.scrollLeft - scrollAmount
-          : scrollRef.current.scrollLeft + scrollAmount;
-
       scrollRef.current.scrollTo({
-        left: newScrollPosition,
+        left:
+          direction === "left"
+            ? scrollRef.current.scrollLeft - scrollAmount
+            : scrollRef.current.scrollLeft + scrollAmount,
         behavior: "smooth",
       });
     }
-  };
+  }, []);
 
+  // Check scroll position to enable/disable buttons
   useEffect(() => {
     const checkScroll = () => {
       if (scrollRef.current) {
-        setIsLeftDisabled(scrollRef.current.scrollLeft === 0);
-        setIsRightDisabled(
-          scrollRef.current.scrollLeft + scrollRef.current.clientWidth >=
-            scrollRef.current.scrollWidth - 1
-        );
+        const { scrollLeft, clientWidth, scrollWidth } = scrollRef.current;
+        setIsLeftDisabled(scrollLeft === 0);
+        setIsRightDisabled(scrollLeft + clientWidth >= scrollWidth - 1);
       }
     };
 
-    if (scrollRef.current) {
-      scrollRef.current.addEventListener("scroll", checkScroll);
+    const currentRef = scrollRef.current;
+    if (currentRef) {
+      currentRef.addEventListener("scroll", checkScroll);
       checkScroll();
     }
 
     return () => {
-      if (scrollRef.current) {
-        scrollRef.current.removeEventListener("scroll", checkScroll);
+      if (currentRef) {
+        currentRef.removeEventListener("scroll", checkScroll);
       }
     };
   }, []);
 
-  return (
-    <>
-      <h3 className="title">B2C Shop Now</h3>
-      <div className="category-container">
-        <button
-          className="nav-arrow left"
-          onClick={() => scroll("left")}
-          disabled={isLeftDisabled}
-        >
-          <i className="fa-regular fa-circle-left"></i>
-        </button>
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <h3 className="b2c-title">B2C Shop Now</h3>
+        <p>Loading categories...</p>
+      </div>
+    );
+  }
 
-        <div className="scroll-wrapper" ref={scrollRef}>
-          {product.map((menu) => (
-            <div
-              key={menu.product_name}
-              className="category-card"
-              onClick={() => handleCategoryClick(menu.product_name)}
-            >
-              <img
-                src={menu.product_img}
-                alt={menu.product_name}
-                className="category-image"
-              />
-              <h2 className="category-title">{menu.product_name}</h2>
-            </div>
-          ))}
-        </div>
-
-        <button
-          className="nav-arrow right"
-          onClick={() => scroll("right")}
-          disabled={isRightDisabled}
-        >
-          <i className="fa-regular fa-circle-right"></i>
+  if (error) {
+    return (
+      <div className="error-container">
+        <h3 className="b2c-title">B2C Shop Now</h3>
+        <p className="error">{error}</p>
+        <button onClick={fetchCategories} className="retry-button">
+          Retry
         </button>
       </div>
-    </>
+    );
+  }
+
+  return (
+    <div className="b2c-category-container">
+      <h3 className="b2c-title">B2C Shop Now</h3>
+
+      <button
+        className="b2c-nav-arrow left"
+        onClick={() => scroll("left")}
+        disabled={isLeftDisabled}
+        aria-label="Scroll left"
+      >
+        <i className="fa-regular fa-circle-left"></i>
+      </button>
+
+      <div className="b2c-scroll-wrapper" ref={scrollRef}>
+        {categories.length > 0 ? (
+          categories.map((category) => (
+            <div
+              key={category._id}
+              className="b2c-category-card"
+              onClick={() => handleCategoryClick(category.name)}
+              role="button"
+              tabIndex={0}
+              onKeyPress={(e) =>
+                e.key === "Enter" && handleCategoryClick(category.name)
+              }
+            >
+              <img
+                src={category.image}
+                alt={category.name}
+                className="b2c-category-image"
+                onError={(e) => {
+                  e.target.src = "/fallback-image.jpg";
+                }}
+                loading="lazy"
+              />
+              <h2 className="b2c-category-title">{category.name}</h2>
+            </div>
+          ))
+        ) : (
+          <p>No categories available at the moment.</p>
+        )}
+      </div>
+
+      <button
+        className="b2c-nav-arrow right"
+        onClick={() => scroll("right")}
+        disabled={isRightDisabled}
+        aria-label="Scroll right"
+      >
+        <i className="fa-regular fa-circle-right"></i>
+      </button>
+    </div>
   );
 };
 

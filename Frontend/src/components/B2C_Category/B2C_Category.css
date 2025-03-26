@@ -1,22 +1,35 @@
 .b2c-category-container {
   position: relative;
   padding: 20px 40px;
-  background-color: #f8f9fa;
-  max-width: 1400px;
-  margin: 0 auto;
-  
+  background-color: #f8f9fa; /* Match Category.css background */
+  width: 100%; /* Full width for the container */
+  margin: 0; /* Remove auto margin to allow full width */
+}
+
+.b2c-category-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Full viewport width */
+  height: 100%; /* Match the container height */
+  background-color: #f8f9fa; /* Same background color as container */
+  z-index: -1; /* Place it behind the content */
 }
 
 .b2c-title {
   text-align: center;
-  font-size: 28px;
-  margin-bottom: 30px;
+  font-size: 28px; /* Match Category.css */
+  margin-bottom: 30px; /* Match Category.css */
   color: #1a1a1a;
   font-weight: 700;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', sans-serif; /* Match Category.css */
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1px; /* Match Category.css */
   transition: color 0.3s ease;
+  max-width: 1200px; /* Constrain the title width */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .b2c-title:hover {
@@ -32,6 +45,8 @@
   padding-bottom: 15px;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  max-width: 1200px; /* Constrain the scrollable content */
+  margin: 0 auto; /* Center the content */
 }
 
 .b2c-scroll-wrapper::-webkit-scrollbar {
@@ -40,26 +55,26 @@
 
 .b2c-category-card {
   flex: 0 0 auto;
-  width: 240px;
-  margin: 0 15px;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
+  width: 240px; /* Match Category.css */
+  margin: 0 15px; /* Match Category.css */
+  padding: 15px; /* Match Category.css */
+  border: 1px solid #ddd; /* Match Category.css */
+  border-radius: 12px; /* Match Category.css */
   background-color: #ffffff;
   text-align: center;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05); /* Match Category.css */
 }
 
 .b2c-category-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Match Category.css */
 }
 
 .b2c-category-image {
   width: 100%;
-  height: 150px;
+  height: 150px; /* Match Category.css */
   object-fit: cover;
   border-radius: 10px;
   transition: transform 0.3s ease;
@@ -70,11 +85,11 @@
 }
 
 .b2c-category-title {
-  font-size: 18px;
-  margin-top: 15px;
+  font-size: 18px; /* Match Category.css */
+  margin-top: 15px; /* Match Category.css */
   color: #333;
-  font-weight: 500;
-  font-family: 'Poppins', sans-serif;
+  font-weight: 500; /* Match Category.css */
+  font-family: 'Poppins', sans-serif; /* Match Category.css */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -83,4 +98,208 @@
 
 .b2c-category-card:hover .b2c-category-title {
   color: #ff6200;
+}
+
+.b2c-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.6); /* Match Category.css */
+  color: #fff; /* Match Category.css */
+  border: none;
+  border-radius: 50%;
+  width: 45px; /* Match Category.css */
+  height: 45px; /* Match Category.css */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 24px; /* Match Category.css */
+  transition: background 0.3s ease, transform 0.3s ease;
+  z-index: 10; /* Match Category.css */
+}
+
+.b2c-nav-arrow.left {
+  left: calc((100% - 1200px) / 2 + 10px); /* Adjusted for centered content */
+}
+
+.b2c-nav-arrow.right {
+  right: calc((100% - 1200px) / 2 + 10px);
+}
+
+.b2c-nav-arrow:hover {
+  background: rgba(0, 0, 0, 0.8); /* Match Category.css */
+  transform: translateY(-50%) scale(1.1); /* Match Category.css */
+}
+
+.b2c-nav-arrow:disabled {
+  background: rgba(0, 0, 0, 0.3); /* Match Category.css */
+  cursor: not-allowed;
+  opacity: 0.5; /* Match Category.css */
+}
+
+.b2c-nav-arrow i {
+  font-size: 24px; /* Match Category.css */
+  color: #fff; /* Match Category.css */
+}
+
+.loading-container,
+.error-container {
+  text-align: center;
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.error {
+  color: #ff0000;
+  margin-bottom: 20px;
+}
+
+.retry-button {
+  padding: 10px 20px;
+  background-color: #ff6200;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.retry-button:hover {
+  background-color: #e55a00;
+}
+
+/* Media Queries for Responsive Design */
+@media (min-width: 1024px) {
+  .b2c-category-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .b2c-scroll-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px; /* Match Category.css */
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 1200px) {
+  .b2c-category-container {
+    padding: 20px 30px; /* Match Category.css */
+  }
+
+  .b2c-category-card {
+    width: 220px; /* Match Category.css */
+    margin: 0 12px; /* Match Category.css */
+    padding: 12px; /* Match Category.css */
+  }
+
+  .b2c-category-image {
+    height: 130px; /* Match Category.css */
+  }
+
+  .b2c-category-title {
+    font-size: 16px; /* Match Category.css */
+    margin-top: 12px; /* Match Category.css */
+  }
+
+  .b2c-nav-arrow {
+    width: 40px; /* Match Category.css */
+    height: 40px; /* Match Category.css */
+    font-size: 22px; /* Match Category.css */
+  }
+
+  .b2c-nav-arrow.left {
+    left: calc((100% - 1200px) / 2 + 5px);
+  }
+
+  .b2c-nav-arrow.right {
+    right: calc((100% - 1200px) / 2 + 5px);
+  }
+}
+
+@media (max-width: 768px) {
+  .b2c-category-container {
+    padding: 15px 20px; /* Match Category.css */
+  }
+
+  .b2c-title {
+    font-size: 24px; /* Match Category.css */
+    margin-bottom: 25px; /* Match Category.css */
+  }
+
+  .b2c-category-card {
+    width: 200px; /* Match Category.css */
+    margin: 0 10px; /* Match Category.css */
+    padding: 10px; /* Match Category.css */
+  }
+
+  .b2c-category-image {
+    height: 110px; /* Match Category.css */
+  }
+
+  .b2c-category-title {
+    font-size: 15px; /* Match Category.css */
+    margin-top: 10px; /* Match Category.css */
+  }
+
+  .b2c-nav-arrow {
+    width: 35px; /* Match Category.css */
+    height: 35px; /* Match Category.css */
+    font-size: 20px; /* Match Category.css */
+  }
+
+  .b2c-nav-arrow.left {
+    left: 5px; /* Match Category.css */
+  }
+
+  .b2c-nav-arrow.right {
+    right: 5px; /* Match Category.css */
+  }
+}
+
+@media (max-width: 480px) {
+  .b2c-category-container {
+    padding: 10px 15px; /* Match Category.css */
+  }
+
+  .b2c-title {
+    font-size: 20px; /* Match Category.css */
+    margin-bottom: 20px; /* Match Category.css */
+  }
+
+  .b2c-category-card {
+    width: 160px; /* Match Category.css */
+    margin: 0 8px; /* Match Category.css */
+    padding: 8px; /* Match Category.css */
+  }
+
+  .b2c-category-image {
+    height: 90px; /* Match Category.css */
+  }
+
+  .b2c-category-title {
+    font-size: 14px; /* Match Category.css */
+    margin-top: 8px; /* Match Category.css */
+  }
+
+  .b2c-nav-arrow {
+    width: 30px; /* Match Category.css */
+    height: 30px; /* Match Category.css */
+    font-size: 18px; /* Match Category.css */
+  }
+
+  .b2c-nav-arrow.left {
+    left: 5px; /* Match Category.css */
+  }
+
+  .b2c-nav-arrow.right {
+    right: 5px; /* Match Category.css */
+  }
 }
