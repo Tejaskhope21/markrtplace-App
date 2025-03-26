@@ -1,71 +1,88 @@
 import ItemB2C from "../models/itemb2c.js";
 
-// ✅ Create a new B2C item with image upload
+
+// ✅ Create a new B2C item with image URLs or file uploads
 export const createItemB2C = async (req, res) => {
   try {
     console.log("Request Body:", req.body);
     console.log("Uploaded Files:", req.files);
+    console.log("All req.body keys:", Object.keys(req.body));
 
+    // Parse JSON fields safely
+    const specifications = JSON.parse(req.body.specifications || "{}");
+    const supplier = JSON.parse(req.body.supplier || "{}");
+    const shipping = JSON.parse(req.body.shipping || "{}");
+    const imagesFromBody = JSON.parse(req.body.images || "[]"); // Parse images as an array of URLs
+
+    // Extract required fields
     const {
       name,
       category,
-      product_category,
+      subcategory,
+      price,
       description,
-      MOQ,
-      price_per_piece, // Expecting JSON string
-      specifications,  // Expecting JSON string
-      supplier,       // Expecting JSON string
-      shipping,       // Expecting JSON string
-      b2c_menu,       // B2C-specific field (assuming similar to b2b_menu)
+      brand,
+      stock,
+      rating,
+      isFeatured,
     } = req.body;
 
-    // Parse JSON fields safely
-    const pricePerPiece = JSON.parse(price_per_piece || "{}");
-    const specs = JSON.parse(specifications || "{}");
-    const supplierData = JSON.parse(supplier || "{}");
-    const shippingData = JSON.parse(shipping || "{}");
+    // Extract nested fields from parsed JSON objects
+    const supplierName = supplier.name;
+    const supplierLocation = supplier.location;
+    const shippingFreeAbove = shipping.free_shipping_above;
+    const shippingCost = shipping.cost;
 
-    // Construct nested objects
-    const price_per_piece_obj = {
-      "20-199": Number(pricePerPiece["20-199"]) || 0,
-      "200-999": Number(pricePerPiece["200-999"]) || 0,
-      "1000+": Number(pricePerPiece["1000+"]) || 0,
-    };
-
+    // Construct objects
     const specifications_obj = {
-      color: specs.color || "",
-      weight: specs.weight || "",
-      battery: specs.battery || "",
+      material: specifications.material || "",
+      height: specifications.height || "",
     };
 
     const supplier_obj = {
-      name: supplierData.name || "",
-      location: supplierData.location || "",
+      name: supplierName,
+      location: supplierLocation,
     };
 
     const shipping_obj = {
-      free_shipping_above: Number(shippingData.free_shipping_above) || 0,
-      cost: Number(shippingData.cost) || 0,
+      free_shipping_above: Number(shippingFreeAbove) || 0,
+      cost: Number(shippingCost),
     };
 
-    // Validate required fields
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ success: false, message: "At least one image file is required" });
+    // Determine the source of images
+    let images = [];
+    if (req.files && req.files.length > 0) {
+      // If files are uploaded, use them
+      images = req.files.map((file) => `/uploads/${file.filename}`);
+    } else if (imagesFromBody && imagesFromBody.length > 0) {
+      // If image URLs are provided, use them
+      images = imagesFromBody;
+      // Validate that all images are valid URLs
+      const urlPattern = /^https?:\/\/[^\s$.?#].[^\s]*$/;
+      for (const image of images) {
+        if (!urlPattern.test(image)) {
+          return res.status(400).json({ success: false, message: `Invalid image URL: ${image}` });
+        }
+      }
+    } else {
+      // If neither files nor URLs are provided, return an error
+      return res.status(400).json({ success: false, message: "At least one image (file or URL) is required" });
     }
 
     const requiredFields = {
       name,
       category,
-      product_category,
+      subcategory,
+      price,
       description,
-      MOQ,
-      b2c_menu,
-      "price_per_piece[20-199]": pricePerPiece["20-199"],
-      "price_per_piece[200-999]": pricePerPiece["200-999"],
-      "price_per_piece[1000+]": pricePerPiece["1000+"],
-      "supplier.name": supplierData.name,
-      "supplier.location": supplierData.location,
-      "shipping.cost": shippingData.cost,
+      brand,
+      stock,
+      supplierName,
+      supplierLocation,
+      "specifications.material": specifications.material,
+      "specifications.height": specifications.height,
+      shippingFreeAbove,
+      shippingCost,
     };
 
     for (const [key, value] of Object.entries(requiredFields)) {
@@ -75,24 +92,21 @@ export const createItemB2C = async (req, res) => {
       }
     }
 
-    const images = req.files.map((file) => ({
-      filename: file.filename,
-      path: `/uploads/${file.filename}`,
-      originalname: file.originalname,
-    }));
-
+    // Create new B2C item
     const newItemB2C = new ItemB2C({
       name,
       category,
-      product_category,
+      subcategory,
+      price: Number(price),
       description,
-      price_per_piece: price_per_piece_obj,
-      MOQ: Number(MOQ),
-      specifications: specifications_obj,
-      images,
+      brand,
+      stock: Number(stock),
+      rating: Number(rating) || 0,
+      images, // Use the determined images (from files or URLs)
       supplier: supplier_obj,
+      specifications: specifications_obj,
       shipping: shipping_obj,
-      b2c_menu,
+      isFeatured: isFeatured === "true" || isFeatured === true,
     });
 
     const savedItemB2C = await newItemB2C.save();
@@ -103,6 +117,8 @@ export const createItemB2C = async (req, res) => {
     res.status(500).json({ success: false, message: "Error creating B2C item", error: error.message });
   }
 };
+
+  
 
 // ✅ Get all B2C items
 export const getAllItemsB2C = async (req, res) => {
@@ -125,7 +141,8 @@ export const getItemB2CById = async (req, res) => {
       return res.status(400).json({ success: false, message: "Item ID is required" });
     }
 
-    const itemB2C = await ItemB2C.findById(id).exec();
+    // Use findOne with the custom 'id' field (not _id)
+    const itemB2C = await ItemB2C.findOne({ id }).exec();
 
     if (!itemB2C) {
       return res.status(404).json({ success: false, message: `No B2C item found with ID: ${id}` });
@@ -150,50 +167,46 @@ export const updateItemB2C = async (req, res) => {
     const {
       name,
       category,
-      product_category,
+      subcategory,
+      price,
       description,
-      MOQ,
-      price_per_piece,
-      specifications,
+      brand,
+      stock,
+      rating,
       supplier,
+      specifications,
       shipping,
-      b2c_menu,
+      isFeatured,
     } = req.body;
 
     // Parse JSON fields if provided
-    const pricePerPiece = price_per_piece ? JSON.parse(price_per_piece) : undefined;
-    const specs = specifications ? JSON.parse(specifications) : undefined;
     const supplierData = supplier ? JSON.parse(supplier) : undefined;
+    const specs = specifications ? JSON.parse(specifications) : undefined;
     const shippingData = shipping ? JSON.parse(shipping) : undefined;
 
+    // Construct update data
     const updateData = {};
     if (name) updateData.name = name;
     if (category) updateData.category = category;
-    if (product_category) updateData.product_category = product_category;
+    if (subcategory) updateData.subcategory = subcategory;
+    if (price) updateData.price = Number(price);
     if (description) updateData.description = description;
-    if (MOQ) updateData.MOQ = Number(MOQ);
-    if (b2c_menu) updateData.b2c_menu = b2c_menu;
-
-    if (pricePerPiece) {
-      updateData.price_per_piece = {
-        "20-199": Number(pricePerPiece["20-199"]) || 0,
-        "200-999": Number(pricePerPiece["200-999"]) || 0,
-        "1000+": Number(pricePerPiece["1000+"]) || 0,
-      };
-    }
-
-    if (specs) {
-      updateData.specifications = {
-        color: specs.color || "",
-        weight: specs.weight || "",
-        battery: specs.battery || "",
-      };
-    }
+    if (brand) updateData.brand = brand;
+    if (stock) updateData.stock = Number(stock);
+    if (rating) updateData.rating = Number(rating);
+    if (isFeatured !== undefined) updateData.isFeatured = isFeatured === "true" || isFeatured === true;
 
     if (supplierData) {
       updateData.supplier = {
         name: supplierData.name || "",
         location: supplierData.location || "",
+      };
+    }
+
+    if (specs) {
+      updateData.specifications = {
+        material: specs.material || "",
+        height: specs.height || "",
       };
     }
 
@@ -205,15 +218,11 @@ export const updateItemB2C = async (req, res) => {
     }
 
     if (req.files && req.files.length > 0) {
-      updateData.images = req.files.map((file) => ({
-        filename: file.filename,
-        path: `/uploads/${file.filename}`,
-        originalname: file.originalname,
-      }));
+      updateData.images = req.files.map((file) => `/uploads/${file.filename}`);
     }
 
-    const updatedItemB2C = await ItemB2C.findByIdAndUpdate(
-      id,
+    const updatedItemB2C = await ItemB2C.findOneAndUpdate(
+      { id }, // Use custom 'id' field
       updateData,
       { new: true, runValidators: true }
     );
@@ -238,7 +247,7 @@ export const deleteItemB2C = async (req, res) => {
       return res.status(400).json({ success: false, message: "Item ID is required" });
     }
 
-    const deletedItemB2C = await ItemB2C.findByIdAndDelete(id);
+    const deletedItemB2C = await ItemB2C.findOneAndDelete({ id });
 
     if (!deletedItemB2C) {
       return res.status(404).json({ success: false, message: "B2C item not found" });
