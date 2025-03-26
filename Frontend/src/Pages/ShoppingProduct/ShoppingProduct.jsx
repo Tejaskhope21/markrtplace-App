@@ -1,37 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 import "./ShoppingProduct.css";
-import { useLocation } from "react-router-dom";
-import { productcategory } from "../../assets/b_to_c_data";
-import { useNavigate } from "react-router-dom";
 
 function ShoppingProduct() {
   const navigate = useNavigate();
-
-  const handleCategoryClick = (id) => {
-    navigate(`/buy_b2c?id=${id}`); // Pass only the ID
-  };
-
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const selectedCategory = queryParams.get("category");
 
-  // Filter products based on the selected category
-  const filterproduct = productcategory.filter(
-    (product) => product.category === selectedCategory
-  );
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [shopCategory, setShopCategory] = useState("all");
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await axios.get(
+          `http://localhost:5000/api/productsb2c?category=${selectedCategory}`
+        );
+
+        setProducts(response.data.data || []);
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        setError("Failed to load products. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (selectedCategory) {
+      fetchProducts();
+    }
+  }, [selectedCategory]);
+
+  const handleCategoryClick = (id) => {
+    navigate(`/buy_b2c?id=${id}`);
+  };
 
   // Get unique subcategories (if any)
   const uniqueSubcategories = [
-    ...new Set(filterproduct.map((item) => item.subcategory || item.category)),
+    ...new Set(products.map((item) => item.subcategory || item.category)),
   ];
 
-  // State for subcategory filtering
-  const [shopcategory, setShopcategory] = useState("all");
-
   // Filter products based on the selected subcategory
-  const proFilter = filterproduct.filter(
-    (item) => shopcategory === "all" || item.subcategory === shopcategory
+  const filteredProducts = products.filter(
+    (item) => shopCategory === "all" || item.subcategory === shopCategory
   );
+
+  if (loading) {
+    return <p>Loading products...</p>;
+  }
+
+  if (error) {
+    return <p className="error">{error}</p>;
+  }
 
   return (
     <div className="shopping-product">
@@ -39,9 +66,9 @@ function ShoppingProduct() {
 
       {/* Subcategory Filter */}
       <div className="subcategory-filter">
-        <button onClick={() => setShopcategory("all")}>All</button>
+        <button onClick={() => setShopCategory("all")}>All</button>
         {uniqueSubcategories.map((subcategory, index) => (
-          <button key={index} onClick={() => setShopcategory(subcategory)}>
+          <button key={index} onClick={() => setShopCategory(subcategory)}>
             {subcategory}
           </button>
         ))}
@@ -49,22 +76,27 @@ function ShoppingProduct() {
 
       {/* Display Filtered Products */}
       <div className="product-list">
-        {proFilter.map((product) => (
-          <div key={product.name} className="product-card">
-            <img
-              src={product.images[0]}
-              alt={product.name}
-              className="product-image"
-            />
-            <h2>{product.name}</h2>
-            <p>{product.description}</p>
-            <p>Price: ₹{product.price}</p>
-            <p>Rating: {product.rating} / 5</p>
-            <button onClick={() => handleCategoryClick(product.id)}>
-              View Details
-            </button>
-          </div>
-        ))}
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <div key={product._id} className="product-card">
+              <img
+                src={product.images[0]}
+                alt={product.name}
+                className="product-image"
+                onError={(e) => (e.target.src = "/fallback-image.jpg")} // Handle broken images
+              />
+              <h2>{product.name}</h2>
+              <p>{product.description}</p>
+              <p>Price: ₹{product.price}</p>
+              <p>Rating: {product.rating} / 5</p>
+              <button onClick={() => handleCategoryClick(product._id)}>
+                View Details
+              </button>
+            </div>
+          ))
+        ) : (
+          <p>No products found in this category.</p>
+        )}
       </div>
     </div>
   );
