@@ -11,7 +11,7 @@ import {
 const router = express.Router();
 
 // Routes (without multer, since we're using image URLs)
-router.post("/add", createItemB2C);
+router.post("/addbtoc", createItemB2C);
 router.get("/", getAllItemsB2C);
 router.get("/:id", getItemB2CById);
 router.put("/:id", updateItemB2C); // Assuming updateItemB2C also uses image URLs

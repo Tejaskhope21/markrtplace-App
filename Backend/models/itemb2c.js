@@ -18,12 +18,10 @@ const itemb2cSchema = new Schema({
   category: {
     type: String,
     required: true,
-    lowercase: true,
   },
   subcategory: {
     type: String,
     required: true,
-    lowercase: true,
   },
   price: {
     type: Number,
@@ -51,11 +49,10 @@ const itemb2cSchema = new Schema({
     max: 5,
     default: 0,
   },
-  images: [{
-    type: String,
-    required: true,
-    match: [/^https?:\/\/[^\s$.?#].[^\s]*$/, 'Please enter a valid URL'],
-  }],
+  images: {
+  type: [String], 
+  required: true 
+  },
   supplier: {
     name: {
       type: String,
