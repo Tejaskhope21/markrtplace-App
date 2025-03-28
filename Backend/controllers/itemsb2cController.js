@@ -1,26 +1,45 @@
 import ItemB2C from "../models/itemb2c.js";
 
+// ✅ Fetch a single B2C item by ID
+export const getItemB2C = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    if (!id) {
+      return res.status(400).json({ success: false, message: "Item ID is required" });
+    }
 
-// ✅ Create a new B2C item with image URLs or file uploads
-export const createItemB2C = async (req, res) => {
+    const item = await ItemB2C.findById(id).exec();
+    
+    if (!item) {
+      return res.status(404).json({ success: false, message: `No item found with ID: ${id}` });
+    }
+
+    res.status(200).json({ success: true, data: item });
+  } catch (error) {
+    console.error("Error fetching B2C item:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch item", error: error.message });
+  }
+};
+
+// ✅ Add New B2C Item with Image Upload
+export const addItemB2C = async (req, res) => {
   try {
     console.log("Request Body:", req.body);
     console.log("Uploaded Files:", req.files);
-    console.log("All req.body keys:", Object.keys(req.body));
 
     // Parse JSON fields safely
     const specifications = JSON.parse(req.body.specifications || "{}");
     const supplier = JSON.parse(req.body.supplier || "{}");
     const shipping = JSON.parse(req.body.shipping || "{}");
-    const imagesFromBody = JSON.parse(req.body.images || "[]"); // Parse images as an array of URLs
 
     // Extract required fields
     const {
       name,
       category,
       subcategory,
-      price,
       description,
+      price,
       brand,
       stock,
       rating,
@@ -36,7 +55,7 @@ export const createItemB2C = async (req, res) => {
     // Construct objects
     const specifications_obj = {
       material: specifications.material || "",
-      height: specifications.height || "",
+      weight: specifications.weight || "",
     };
 
     const supplier_obj = {
@@ -49,39 +68,22 @@ export const createItemB2C = async (req, res) => {
       cost: Number(shippingCost),
     };
 
-    // Determine the source of images
-    let images = [];
-    if (req.files && req.files.length > 0) {
-      // If files are uploaded, use them
-      images = req.files.map((file) => `/uploads/${file.filename}`);
-    } else if (imagesFromBody && imagesFromBody.length > 0) {
-      // If image URLs are provided, use them
-      images = imagesFromBody;
-      // Validate that all images are valid URLs
-      const urlPattern = /^https?:\/\/[^\s$.?#].[^\s]*$/;
-      for (const image of images) {
-        if (!urlPattern.test(image)) {
-          return res.status(400).json({ success: false, message: `Invalid image URL: ${image}` });
-        }
-      }
-    } else {
-      // If neither files nor URLs are provided, return an error
-      return res.status(400).json({ success: false, message: "At least one image (file or URL) is required" });
+    // Validate required fields
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ success: false, message: "At least one image file is required" });
     }
 
     const requiredFields = {
       name,
       category,
       subcategory,
-      price,
       description,
+      price,
       brand,
       stock,
+      rating,
       supplierName,
       supplierLocation,
-      "specifications.material": specifications.material,
-      "specifications.height": specifications.height,
-      shippingFreeAbove,
       shippingCost,
     };
 
@@ -92,74 +94,50 @@ export const createItemB2C = async (req, res) => {
       }
     }
 
-    // Create new B2C item
-    const newItemB2C = new ItemB2C({
+    const imageUrls = req.files.map((file) => `/uploads/${file.filename}`);
+
+    const newItem = new ItemB2C({
       name,
       category,
       subcategory,
-      price: Number(price),
       description,
+      price: Number(price),
       brand,
       stock: Number(stock),
-      rating: Number(rating) || 0,
-      images, // Use the determined images (from files or URLs)
-      supplier: supplier_obj,
+      rating: Number(rating),
       specifications: specifications_obj,
+      images: imageUrls,
+      supplier: supplier_obj,
       shipping: shipping_obj,
       isFeatured: isFeatured === "true" || isFeatured === true,
     });
 
-    const savedItemB2C = await newItemB2C.save();
-    console.log("B2C item saved successfully:", savedItemB2C);
-    res.status(201).json({ success: true, message: "B2C item created successfully", data: savedItemB2C });
+    const savedItem = await newItem.save();
+    console.log("B2C Item saved successfully:", savedItem);
+    res.status(201).json({ success: true, message: "B2C Item added successfully!", data: savedItem });
   } catch (error) {
-    console.error("Error creating B2C item:", error);
-    res.status(500).json({ success: false, message: "Error creating B2C item", error: error.message });
+    console.error("Error saving B2C item:", error);
+    res.status(500).json({ success: false, message: "Error saving B2C item", error: error.message });
   }
 };
 
-  
-
-// ✅ Get all B2C items
+// ✅ Fetch All B2C Items
 export const getAllItemsB2C = async (req, res) => {
   try {
     const { category } = req.query;
-    const itemsB2C = category ? await ItemB2C.find({ category }) : await ItemB2C.find();
-    res.status(200).json({ success: true, message: "B2C items retrieved successfully", data: itemsB2C });
+    const items = category ? await ItemB2C.find({ category }) : await ItemB2C.find();
+    res.status(200).json({ success: true, data: items });
   } catch (error) {
-    console.error("Error retrieving B2C items:", error);
-    res.status(500).json({ success: false, message: "Error retrieving B2C items", error: error.message });
+    console.error("Error fetching B2C items:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch B2C items", error: error.message });
   }
 };
 
-// ✅ Get a single B2C item by ID
-export const getItemB2CById = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    if (!id) {
-      return res.status(400).json({ success: false, message: "Item ID is required" });
-    }
-
-    // Use findOne with the custom 'id' field (not _id)
-    const itemB2C = await ItemB2C.findOne({ id }).exec();
-
-    if (!itemB2C) {
-      return res.status(404).json({ success: false, message: `No B2C item found with ID: ${id}` });
-    }
-
-    res.status(200).json({ success: true, message: "B2C item retrieved successfully", data: itemB2C });
-  } catch (error) {
-    console.error("Error retrieving B2C item:", error);
-    res.status(500).json({ success: false, message: "Error retrieving B2C item", error: error.message });
-  }
-};
-
-// ✅ Update a B2C item by ID with optional image upload
+// ✅ Update a B2C Item by ID
 export const updateItemB2C = async (req, res) => {
   try {
     const { id } = req.params;
-
+    
     if (!id) {
       return res.status(400).json({ success: false, message: "Item ID is required" });
     }
@@ -168,8 +146,8 @@ export const updateItemB2C = async (req, res) => {
       name,
       category,
       subcategory,
-      price,
       description,
+      price,
       brand,
       stock,
       rating,
@@ -196,36 +174,15 @@ export const updateItemB2C = async (req, res) => {
     if (rating) updateData.rating = Number(rating);
     if (isFeatured !== undefined) updateData.isFeatured = isFeatured === "true" || isFeatured === true;
 
-    if (supplierData) {
-      updateData.supplier = {
-        name: supplierData.name || "",
-        location: supplierData.location || "",
-      };
-    }
-
-    if (specs) {
-      updateData.specifications = {
-        material: specs.material || "",
-        height: specs.height || "",
-      };
-    }
-
-    if (shippingData) {
-      updateData.shipping = {
-        free_shipping_above: Number(shippingData.free_shipping_above) || 0,
-        cost: Number(shippingData.cost) || 0,
-      };
-    }
+    if (supplierData) updateData.supplier = supplierData;
+    if (specs) updateData.specifications = specs;
+    if (shippingData) updateData.shipping = shippingData;
 
     if (req.files && req.files.length > 0) {
       updateData.images = req.files.map((file) => `/uploads/${file.filename}`);
     }
 
-    const updatedItemB2C = await ItemB2C.findOneAndUpdate(
-      { id }, // Use custom 'id' field
-      updateData,
-      { new: true, runValidators: true }
-    );
+    const updatedItemB2C = await ItemB2C.findByIdAndUpdate(id, updateData, { new: true });
 
     if (!updatedItemB2C) {
       return res.status(404).json({ success: false, message: "B2C item not found" });
@@ -238,16 +195,16 @@ export const updateItemB2C = async (req, res) => {
   }
 };
 
-// ✅ Delete a B2C item by ID
+// ✅ Delete a B2C Item by ID
 export const deleteItemB2C = async (req, res) => {
   try {
     const { id } = req.params;
-
+    
     if (!id) {
       return res.status(400).json({ success: false, message: "Item ID is required" });
     }
 
-    const deletedItemB2C = await ItemB2C.findOneAndDelete({ id });
+    const deletedItemB2C = await ItemB2C.findByIdAndDelete(id);
 
     if (!deletedItemB2C) {
       return res.status(404).json({ success: false, message: "B2C item not found" });
@@ -257,16 +214,5 @@ export const deleteItemB2C = async (req, res) => {
   } catch (error) {
     console.error("Error deleting B2C item:", error);
     res.status(500).json({ success: false, message: "Error deleting B2C item", error: error.message });
-  }
-};
-
-// ✅ Get featured B2C items
-export const getFeaturedItemsB2C = async (req, res) => {
-  try {
-    const featuredItemsB2C = await ItemB2C.find({ isFeatured: true });
-    res.status(200).json({ success: true, message: "Featured B2C items retrieved successfully", data: featuredItemsB2C });
-  } catch (error) {
-    console.error("Error retrieving featured B2C items:", error);
-    res.status(500).json({ success: false, message: "Error retrieving featured B2C items", error: error.message });
   }
 };

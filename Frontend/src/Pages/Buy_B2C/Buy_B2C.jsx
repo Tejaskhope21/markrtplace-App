@@ -1,57 +1,73 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./Buy_B2C.css";
 import { useLocation } from "react-router-dom";
-import { productcategory } from "../../assets/b_to_c_data";
 import { StoreContext } from "../../components/context/StoreProvider";
+import { productcategory } from "../../assets/b_to_c_data"; // Local B2C data
+import axios from "axios";
 
-function Buy_B2C() {
-  const { addToCart } = useContext(StoreContext);
+function Buy_B2C({ isB2C = false }) {
+  const { addToCart, removeFromcart, cartitem } = useContext(StoreContext);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const selectedCategory = queryParams.get("id");
-  const productId = Number(selectedCategory) || 0;
+  const productId = queryParams.get("id");
 
-  const product = productcategory.find((item) => item.id === productId);
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        let productData = null;
 
-  const handleThumbnailClick = (index) => {
-    setSelectedImageIndex(index);
-  };
+        if (isB2C) {
+          // Get product from local B2C data
+          productData = productcategory.find((item) => item.id === Number(productId));
+          if (!productData) throw new Error("Product not found in B2C data");
+        } else {
+          // Fetch product from API for B2B
+          const response = await axios.get(`http://localhost:5000/api/itemsb2c/${productId}`);
+          productData = response.data;
+        }
+
+        setProduct(productData);
+      } catch (err) {
+        setError(err.message || "Failed to load product.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [productId, isB2C]);
+
+  const handleThumbnailClick = (index) => setSelectedImageIndex(index);
 
   const handleQuantityChange = (e) => {
-    const value = Math.max(
-      product?.MOQ || 1,
-      Math.min(1000, Number(e.target.value))
-    );
+    const value = Math.max(product?.MOQ || 1, Math.min(1000, Number(e.target.value)));
     setQuantity(value);
   };
 
-  const calculateTotalPrice = () => {
-    return product ? (product.price * quantity).toFixed(2) : "0.00";
-  };
+  const calculateTotalPrice = () => (product ? (product.price * quantity).toFixed(2) : "0.00");
 
-  const handlePlaceOrder = () => {
+  const handleBuyNow = () => {
     if (!product) return;
-    const totalPrice = calculateTotalPrice();
     addToCart(product.id, quantity, product.price);
-    alert(`Product added to cart successfully! Total: $${totalPrice}`);
+    alert(`Product added to cart! Total: ₹${calculateTotalPrice()}`);
   };
 
-  if (!product) {
-    return (
-      <div className="no-product">
-        <p>No product found with ID: {selectedCategory || "Not specified"}</p>
-      </div>
-    );
-  }
+  if (loading) return <div className="no-product"><p>Loading...</p></div>;
+
+  if (error || !product) return <div className="no-product"><p>{error || "Product not found"}</p></div>;
 
   return (
-    <div className="buy-b2c-container">
-      <div className="buy-b2c-content">
+    <div className="buynow-container">
+      <div className="buynow-content">
         {/* Left Section: Images */}
-        <div className="buy-b2c-images">
+        <div className="buynow-images">
           <div className="thumbnail-gallery">
             {product.images &&
               product.images.map((img, index) => (
@@ -59,10 +75,9 @@ function Buy_B2C() {
                   key={index}
                   src={img}
                   alt={`${product.name || "Product"} - View ${index + 1}`}
-                  className={`thumbnail ${
-                    selectedImageIndex === index ? "active" : ""
-                  }`}
+                  className={`thumbnail ${selectedImageIndex === index ? "active" : ""}`}
                   onClick={() => handleThumbnailClick(index)}
+                  onError={(e) => (e.target.src = "https://via.placeholder.com/50")}
                 />
               ))}
           </div>
@@ -72,6 +87,7 @@ function Buy_B2C() {
                 src={product.images[selectedImageIndex]}
                 alt={`${product.name || "Product"} - Main`}
                 className="main-image"
+                onError={(e) => (e.target.src = "https://via.placeholder.com/300")}
               />
             ) : (
               <p>No image available</p>
@@ -80,18 +96,15 @@ function Buy_B2C() {
         </div>
 
         {/* Right Section: Product Details */}
-        <div className="buy-b2c-details">
-          <h1 className="buy-b2c-title">{product.name || "Unnamed Product"}</h1>
+        <div className="buynow-details">
+          <h1 className="buynow-title">{product.name || "Unnamed Product"}</h1>
           <div className="supplier-info">
-            <span className="supplier-name">
-              {product.supplier?.name || "Unknown Supplier"}
-            </span>
-            <span className="location">
-              {product.supplier?.location || "Unknown Location"}
-            </span>
+            <span className="supplier-name">{product.supplier?.name || "Unknown Supplier"}</span>
+            <span className="location">{product.supplier?.location || "Unknown Location"}</span>
           </div>
           <p className="reviews">No reviews yet</p>
-          <p className="price">₹{product.price.toFixed(2)}</p>
+
+          <p className="price">₹{product.price.toFixed(2)} <span>per piece</span></p>
           <p className="moq">MOQ: {product.MOQ || 1} pieces</p>
 
           {/* Quantity Input Section */}
@@ -128,25 +141,28 @@ function Buy_B2C() {
             <h3>Shipping</h3>
             <p>
               {product.shipping?.free_shipping_above
-                ? `Free shipping above $${product.shipping.free_shipping_above}`
-                : `Shipping cost: $${product.shipping?.cost || 0}`}
+                ? `Free shipping above ₹${product.shipping.free_shipping_above}`
+                : `Shipping cost: ₹${product.shipping?.cost || 0}`}
             </p>
           </div>
 
           <div className="actions">
-            <button className="send-inquiry">Send inquiry</button>
-            <button className="place-order" onClick={handlePlaceOrder}>
-              Add to Cart
-            </button>
+            <button className="send-inquiry">Send Inquiry</button>
+            {!cartitem[product.id] ? (
+              <button className="send-inquiry" onClick={handleBuyNow}>
+                Buy Now
+              </button>
+            ) : (
+              <button className="send-inquiry" onClick={() => removeFromcart(product.id)}>
+                Cancel
+              </button>
+            )}
           </div>
 
           <div className="protections">
             <h3>Protections for this product</h3>
             <p>✔ Secure payments</p>
-            <p>
-              Every payment you make on this site is secured with strict SSL
-              encryption and PCI DSS data.
-            </p>
+            <p>Every payment you make on this site is secured with strict SSL encryption and PCI DSS data.</p>
           </div>
         </div>
       </div>
