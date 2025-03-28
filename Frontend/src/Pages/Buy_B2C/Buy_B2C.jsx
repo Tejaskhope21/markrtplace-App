@@ -20,13 +20,11 @@ function Buy_B2C() {
     const fetchProduct = async () => {
       try {
         if (!productId) throw new Error("No product ID specified in URL");
-    
+
         const response = await axios.get(`http://localhost:5000/api/itemsb2c/${productId}`);
-    
         if (response.status !== 200 || !response.data) {
           throw new Error("Product data is missing or invalid.");
         }
-    
         setProduct(response.data);
       } catch (err) {
         console.error("Error fetching product:", err.message);
@@ -35,8 +33,6 @@ function Buy_B2C() {
         setLoading(false);
       }
     };
-    
-   
 
     fetchProduct();
   }, [productId]);
@@ -44,23 +40,20 @@ function Buy_B2C() {
   const handleThumbnailClick = (index) => setSelectedImageIndex(index);
 
   const getPricePerPiece = () => {
-    if (!product) return undefined;
-
+    if (!product) return 0;
     if (typeof product.price === "number") {
       return product.price;
     }
-
     if (product.price_per_piece && typeof product.price_per_piece === "object") {
-      const priceRanges = Object.values(product.price_per_piece);
-      return priceRanges.length > 0 ? Number(priceRanges[0]) : undefined;
+      const priceRanges = Object.values(product.price_per_piece).map(Number).filter(n => !isNaN(n));
+      return priceRanges.length > 0 ? priceRanges[0] : 0;
     }
-
-    return undefined;
+    return 0;
   };
 
   const calculateTotalPrice = () => {
     const pricePerPiece = getPricePerPiece();
-    return pricePerPiece !== undefined && quantity !== "" ? (pricePerPiece * Number(quantity)).toFixed(2) : "0.00";
+    return pricePerPiece !== 0 && quantity !== "" ? (pricePerPiece * Number(quantity)).toFixed(2) : "0.00";
   };
 
   const handleQuantityChange = (e) => {
@@ -91,7 +84,6 @@ function Buy_B2C() {
   return (
     <div className="buynow-container">
       <div className="buynow-content">
-        {/* Left Section: Images */}
         <div className="buynow-images">
           <div className="thumbnail-gallery">
             {product?.images?.map((img, index) => (
@@ -101,9 +93,7 @@ function Buy_B2C() {
                 alt={`${product?.name || "Product"} - View ${index + 1}`}
                 className={`thumbnail ${selectedImageIndex === index ? "active" : ""}`}
                 onClick={() => handleThumbnailClick(index)}
-                onError={(e) => {
-                  e.target.src = "https://via.placeholder.com/50";
-                }}
+                onError={(e) => { e.target.src = "https://via.placeholder.com/50"; }}
               />
             ))}
           </div>
@@ -113,9 +103,7 @@ function Buy_B2C() {
                 src={product.images[selectedImageIndex]}
                 alt={`${product?.name || "Product"} - Main`}
                 className="main-image"
-                onError={(e) => {
-                  e.target.src = "https://via.placeholder.com/300";
-                }}
+                onError={(e) => { e.target.src = "https://via.placeholder.com/300"; }}
               />
             ) : (
               <p>No image available</p>
@@ -123,18 +111,13 @@ function Buy_B2C() {
           </div>
         </div>
 
-        {/* Right Section: Product Details */}
         <div className="buynow-details">
           <h1 className="buynow-title">{product?.name || "Unnamed Product"}</h1>
           <div className="supplier-info">
             <span className="supplier-name">{product?.supplier?.name || "Unknown Supplier"}</span>
             <span className="location">{product?.supplier?.location || "Unknown Location"}</span>
           </div>
-          <p className="reviews">No reviews yet</p>
-
-          <p className="price">
-            ₹{getPricePerPiece() !== undefined ? getPricePerPiece().toFixed(2) : "N/A"} per piece
-          </p>
+          <p className="price">₹{getPricePerPiece().toFixed(2)} per piece</p>
           <p className="moq">MOQ: {product?.MOQ || 1} pieces</p>
 
           <div className="quantity-section">
@@ -151,29 +134,6 @@ function Buy_B2C() {
             <p className="total-price">Total: ₹{calculateTotalPrice()}</p>
           </div>
 
-          <div className="specifications">
-            <h3>Specifications</h3>
-            {product?.specifications && (
-              <ul>
-                {Object.entries(product.specifications).map(([key, value]) => (
-                  <li key={key}>
-                    <strong>{key.replace("_", " ").toUpperCase()}:</strong>{" "}
-                    {Array.isArray(value) ? value.join(", ") : value}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-
-          <div className="shipping-info">
-            <h3>Shipping</h3>
-            <p>
-              {product?.shipping?.free_shipping_above
-                ? `Free shipping above ₹${product.shipping.free_shipping_above}`
-                : `Shipping cost: ₹${product?.shipping?.cost || 0}`}
-            </p>
-          </div>
-
           <div className="actions">
             <button className="send-inquiry">Send Inquiry</button>
             {!cartitem[product._id] ? (
@@ -185,14 +145,6 @@ function Buy_B2C() {
                 Cancel
               </button>
             )}
-          </div>
-
-          <div className="protections">
-            <h3>Protections for this product</h3>
-            <p>✔ Secure payments</p>
-            <p>
-              Every payment you make on this site is secured with strict SSL encryption and PCI DSS data.
-            </p>
           </div>
         </div>
       </div>
