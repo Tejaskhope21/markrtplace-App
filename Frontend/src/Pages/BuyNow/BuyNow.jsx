@@ -23,10 +23,12 @@ function BuyNow() {
 
         const url = `http://localhost:5000/api/items/${productId}`;
         const response = await axios.get(url);
+
         
         if (!response.data || !response.data.images) throw new Error("No product images found");
         
         setProduct(response.data);
+
       } catch (err) {
         console.error("Error fetching product:", err);
         setError(err.response?.data?.message || err.message || "Failed to load product.");
@@ -111,9 +113,11 @@ function BuyNow() {
             {product?.images?.map((img, index) => (
               <img
                 key={index}
+
                 src={img.startsWith("http") ? img : `http://localhost:5000/uploads/${img}`}
                 alt={`Thumbnail ${index + 1}`}
                 className={`thumbnail ${selectedImageIndex === index ? "active" : ""}`}
+
                 onClick={() => handleThumbnailClick(index)}
                 onError={(e) => (e.target.src = "/fallback-image.jpg")}
               />
@@ -127,7 +131,9 @@ function BuyNow() {
                   : `http://localhost:5000/uploads/${product.images[selectedImageIndex]}`}
                 alt={`Main image`}
                 className="main-image"
+
                 onError={(e) => (e.target.src = "/fallback-image.jpg")}
+
               />
             ) : (<p>No image available</p>)}
           </div>
