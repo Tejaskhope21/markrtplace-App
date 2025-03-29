@@ -11,11 +11,10 @@ const Add_b2c = () => {
     name: "",
     category: "",
     subcategory: "",
-    price: "", // Using string for controlled input
+    price: "",
     description: "",
     brand: "",
-    stock: "", // Using string for controlled input
-    rating: "0", // Using string for controlled input
+    stock: "",
     images: [],
     supplier: {
       name: "",
@@ -73,7 +72,6 @@ const Add_b2c = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation
     if (
       !formData.name ||
       !formData.category ||
@@ -97,8 +95,7 @@ const Add_b2c = () => {
       isNaN(Number(formData.price)) ||
       isNaN(Number(formData.stock)) ||
       isNaN(Number(formData.shipping.cost)) ||
-      isNaN(Number(formData.shipping.free_shipping_above)) ||
-      isNaN(Number(formData.rating))
+      isNaN(Number(formData.shipping.free_shipping_above)) 
     ) {
       alert(
         "Please enter valid numbers for price, stock, rating, and shipping fields."
@@ -114,7 +111,6 @@ const Add_b2c = () => {
     data.append("description", formData.description);
     data.append("brand", formData.brand);
     data.append("stock", formData.stock);
-    data.append("rating", formData.rating);
     data.append("supplier", JSON.stringify(formData.supplier));
     data.append("specifications", JSON.stringify(formData.specifications));
     data.append("shipping", JSON.stringify(formData.shipping));
@@ -136,7 +132,6 @@ const Add_b2c = () => {
           description: "",
           brand: "",
           stock: "",
-          rating: "0",
           images: [],
           supplier: { name: "", location: "" },
           specifications: { material: "", height: "" },

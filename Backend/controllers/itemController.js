@@ -24,88 +24,89 @@ export const getItem = async (req, res) => {
   }
 
 
-export const addItem = async (req, res) => {
-  try {
-    console.log("Request Body:", req.body);
-    console.log("Uploaded Files:", req.files);
-    console.log("All req.body keys:", Object.keys(req.body));
-
-    // Parse JSON fields safely
-    const price_per_piece = JSON.parse(req.body.price_per_piece || "{}");
-    const specifications = JSON.parse(req.body.specifications || "{}");
-    const supplier = JSON.parse(req.body.supplier || "{}");
-    const shipping = JSON.parse(req.body.shipping || "{}");
-
-    // Extract required fields
-    const {
-      name,
-      category,
-      product_category,
-      description,
-      MOQ,
-      b2b_menu,
-    } = req.body;
-
-    // Extract nested fields from parsed JSON objects
-    const price20_199 = price_per_piece["20-199"];
-    const price200_999 = price_per_piece["200-999"];
-    const price1000plus = price_per_piece["1000+"];
-    const supplierName = supplier.name;
-    const supplierLocation = supplier.location;
-    const shippingFreeAbove = shipping.free_shipping_above;
-    const shippingCost = shipping.cost;
-
-    // Construct objects
-    const price_per_piece_obj = {
-      "20-199": Number(price20_199),
-      "200-999": Number(price200_999),
-      "1000+": Number(price1000plus),
-    };
-
-    const specifications_obj = {
-      color: specifications.color || "",
-      weight: specifications.weight || "",
-      battery: specifications.battery || "",
-    };
-
-    const supplier_obj = {
-      name: supplierName,
-      location: supplierLocation,
-    };
-
-    const shipping_obj = {
-      free_shipping_above: Number(shippingFreeAbove) || 0,
-      cost: Number(shippingCost),
-    };
-
-    // Validate required fields
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ success: false, message: "At least one image file is required" });
-    }
-
-    const requiredFields = {
-      name,
-      category,
-      product_category,
-      description,
-      MOQ,
-      b2b_menu,
-      supplierName,
-      supplierLocation,
-      shippingCost,
-      price20_199,
-      price200_999,
-      price1000plus,
-    };
-
-    for (const [key, value] of Object.entries(requiredFields)) {
-      if (!value) {
-        console.log(`Validation failed: ${key} is missing or empty`);
-        return res.status(400).json({ success: false, message: `${key} is required` });
+  export const addItem = async (req, res) => {
+    try {
+      console.log("Request Body:", req.body);
+      console.log("Uploaded Files:", req.files);
+      console.log("All req.body keys:", Object.keys(req.body));
+  
+      // Parse JSON fields safely
+      const price_per_piece = JSON.parse(req.body.price_per_piece || "{}");
+      const specifications = JSON.parse(req.body.specifications || "{}");
+      const supplier = JSON.parse(req.body.supplier || "{}");
+      const shipping = JSON.parse(req.body.shipping || "{}");
+  
+      // Extract required fields
+      const {
+        name,
+        category,
+        product_category,
+        description,
+        MOQ,
+        b2b_menu,
+      } = req.body;
+  
+      // Extract nested fields
+      const price20_199 = price_per_piece["20-199"];
+      const price200_999 = price_per_piece["200-999"];
+      const price1000plus = price_per_piece["1000+"];
+      const supplierName = supplier.name;
+      const supplierLocation = supplier.location;
+      const shippingFreeAbove = shipping.free_shipping_above;
+      const shippingCost = shipping.cost;
+  
+      // Construct objects
+      const price_per_piece_obj = {
+        "20-199": Number(price20_199),
+        "200-999": Number(price200_999),
+        "1000+": Number(price1000plus),
+      };
+  
+      const specifications_obj = {
+        color: specifications.color || "",
+        weight: specifications.weight || "",
+        battery: specifications.battery || "",
+      };
+  
+      const supplier_obj = {
+        name: supplierName,
+        location: supplierLocation,
+      };
+  
+      const shipping_obj = {
+        free_shipping_above: Number(shippingFreeAbove) || 0,
+        cost: Number(shippingCost),
+      };
+  
+      // Validate required fields
+      if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ success: false, message: "At least one image file is required" });
       }
-    }
-
-    const imageUrls = req.files.map((file) => `/uploads/${file.filename}`);
+  
+      const requiredFields = {
+        name,
+        category,
+        product_category,
+        description,
+        MOQ,
+        b2b_menu,
+        supplierName,
+        supplierLocation,
+        shippingCost,
+        price20_199,
+        price200_999,
+        price1000plus,
+      };
+  
+      for (const [key, value] of Object.entries(requiredFields)) {
+        if (!value) {
+          console.log(`Validation failed: ${key} is missing or empty`);
+          return res.status(400).json({ success: false, message: `${key} is required` });
+        }
+      }
+  
+      // Store only the filename, not the full path
+      const imageUrls = req.files.map((file) => file.filename);
 
     const newItem = new Item({
       name,
