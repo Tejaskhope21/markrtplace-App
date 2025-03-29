@@ -19,28 +19,14 @@ function BuyNow() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        if (!productId) {
-          throw new Error("No product ID specified in URL");
-        }
+        if (!productId) throw new Error("No product ID specified in URL");
 
-        console.log("Product ID from URL:", productId); // Debug: Log the ID
         const url = `http://localhost:5000/api/items/${productId}`;
-        console.log("Fetching product from:", url); // Debug: Log the exact URL
-
         const response = await axios.get(url);
-        console.log("Fetched product data:", response.data); // Debug: Log the response
-
-        if (!response.data) {
-          throw new Error("No product data returned from server");
-        }
-
-        // Adjust image paths if they are stored as objects (based on your Item schema)
-        const adjustedProduct = {
-          ...response.data,
-          images: response.data.images.map(img => img.path) // Extract 'path' from image objects
-        };
-
-        setProduct(adjustedProduct);
+        
+        if (!response.data || !response.data.images) throw new Error("No product images found");
+        
+        setProduct(response.data);
       } catch (err) {
         console.error("Error fetching product:", err);
         setError(err.response?.data?.message || err.message || "Failed to load product.");
@@ -106,35 +92,29 @@ function BuyNow() {
       <div className="buynow-content">
         {/* Left Section: Images */}
         <div className="buynow-images">
-          <div className="thumbnail-gallery">
+        <div className="thumbnail-gallery">
             {product?.images?.map((img, index) => (
               <img
                 key={index}
-                src={img}
-                alt={`${product?.name || "Product"} - View ${index + 1}`}
+                src={img.startsWith("http") ? img : `http://localhost:5000/uploads/${img}`}
+                alt={`Thumbnail ${index + 1}`}
                 className={`thumbnail ${selectedImageIndex === index ? "active" : ""}`}
                 onClick={() => handleThumbnailClick(index)}
-                onError={(e) => {
-                  console.error(`Failed to load thumbnail: ${img}`);
-                  e.target.src = "https://via.placeholder.com/50";
-                }}
+                onError={(e) => (e.target.src = "/fallback-image.jpg")}
               />
             ))}
           </div>
           <div className="main-image-container">
             {product?.images?.length > 0 ? (
               <img
-                src={product.images[selectedImageIndex]}
-                alt={`${product?.name || "Product"} - Main`}
+                src={product.images[selectedImageIndex].startsWith("http") 
+                  ? product.images[selectedImageIndex] 
+                  : `http://localhost:5000/uploads/${product.images[selectedImageIndex]}`}
+                alt={`Main image`}
                 className="main-image"
-                onError={(e) => {
-                  console.error(`Failed to load main image: ${product.images[selectedImageIndex]}`);
-                  e.target.src = "https://via.placeholder.com/300";
-                }}
+                onError={(e) => (e.target.src = "/fallback-image.jpg")}
               />
-            ) : (
-              <p>No image available</p>
-            )}
+            ) : (<p>No image available</p>)}
           </div>
         </div>
 

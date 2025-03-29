@@ -21,9 +21,7 @@ const Products = () => {
       try {
         if (!selectedCategory) throw new Error("No category selected");
 
-        const url = `http://localhost:5000/api/items?category=${encodeURIComponent(
-          selectedCategory
-        )}`;
+        const url = `http://localhost:5000/api/items?category=${encodeURIComponent(selectedCategory)}`;
         console.log("Fetching from:", url);
 
         const response = await axios.get(url);
@@ -68,11 +66,11 @@ const Products = () => {
   }
 
   if (selectedSort === "price_low") {
-    filteredItems = [...filteredItems].sort((a, b) => a.price - b.price);
+    filteredItems = [...filteredItems].sort((a, b) => (a.price || 0) - (b.price || 0));
   } else if (selectedSort === "price_high") {
-    filteredItems = [...filteredItems].sort((a, b) => b.price - a.price);
+    filteredItems = [...filteredItems].sort((a, b) => (b.price || 0) - (a.price || 0));
   } else if (selectedSort === "rating") {
-    filteredItems = [...filteredItems].sort((a, b) => b.rating - a.rating);
+    filteredItems = [...filteredItems].sort((a, b) => (b.rating || 0) - (a.rating || 0));
   }
 
   const handleCategoryClick = (id) => {
@@ -123,30 +121,40 @@ const Products = () => {
       ) : (
         <div className="product-flex-container">
           {filteredItems.length > 0 ? (
-            filteredItems.map((item) => (
-              <div key={item._id} className="product-card">
-                <img
-                  src={item.images[0]}
-                  alt={item.name}
-                  className="product-image"
-                  onError={(e) => {
-                    console.error(`Failed to load image: ${item.images[0]}`);
-                    e.target.src = "https://via.placeholder.com/150";
-                  }}
-                />
-                <h2>{item.name}</h2>
-                <p className="product-description">
-                  {item.description || "No description available."}
-                </p>
-                <p>
-                  Price: ₹{item.price || Object.values(item.price_per_piece)[0]}
-                </p>
-                <p>Rating: {item.rating || "N/A"} / 5</p>
-                <button onClick={() => handleCategoryClick(item._id)}>
-                  View Details
-                </button>
-              </div>
-            ))
+            filteredItems.map((item) => {
+              const imageUrl =
+                item.images && item.images.length > 0
+                  ? `http://localhost:5000/uploads/${item.images[0]}`
+                  : "https://via.placeholder.com/150";
+
+              return (
+                <div key={item._id} className="product-card">
+                  <img
+                    src={imageUrl}
+                    alt={item.name}
+                    className="product-image"
+                    onError={(e) => {
+                      console.error(`Failed to load image: ${imageUrl}`);
+                      e.target.src = "https://via.placeholder.com/150";
+                    }}
+                  />
+                  <h2>{item.name}</h2>
+                  <p className="product-description">
+                    {item.description || "No description available."}
+                  </p>
+                  <p>
+                    Price: ₹
+                    {item.price !== undefined
+                      ? item.price
+                      : item.price_per_piece
+                      ? Object.values(item.price_per_piece)[0]
+                      : "N/A"}
+                  </p>
+                  <p>Rating: {item.rating || "N/A"} / 5</p>
+                  <button onClick={() => handleCategoryClick(item._id)}>View Details</button>
+                </div>
+              );
+            })
           ) : (
             <p>No items found for this selection.</p>
           )}
