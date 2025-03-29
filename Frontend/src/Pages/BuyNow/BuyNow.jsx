@@ -23,13 +23,26 @@ function BuyNow() {
 
         const url = `http://localhost:5000/api/items/${productId}`;
         const response = await axios.get(url);
-        
-        if (!response.data || !response.data.images) throw new Error("No product images found");
-        
-        setProduct(response.data);
+        console.log("Fetched product data:", response.data); // Debug: Log the response
+
+        if (!response.data) {
+          throw new Error("No product data returned from server");
+        }
+
+        // Adjust image paths if they are stored as objects (based on your Item schema)
+        const adjustedProduct = {
+          ...response.data,
+          images: response.data.images.map(img => img.path) // Extract 'path' from image objects
+        };
+
+        setProduct(adjustedProduct);
       } catch (err) {
         console.error("Error fetching product:", err);
-        setError(err.response?.data?.message || err.message || "Failed to load product.");
+        setError(
+          err.response?.data?.message ||
+            err.message ||
+            "Failed to load product."
+        );
       } finally {
         setLoading(false);
       }
@@ -51,23 +64,34 @@ function BuyNow() {
   };
 
   if (loading) {
-    return <div className="no-product"><p>Loading...</p></div>;
+    return (
+      <div className="no-product">
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   if (error || !product) {
     return (
       <div className="no-product">
-        <p>{error || `No product found with ID: ${productId || "Not specified"}`}</p>
+        <p>
+          {error || `No product found with ID: ${productId || "Not specified"}`}
+        </p>
       </div>
     );
   }
 
   const getPricePerPiece = () => {
-    if (!product?.price_per_piece || typeof product.price_per_piece !== "object") {
+    if (
+      !product?.price_per_piece ||
+      typeof product.price_per_piece !== "object"
+    ) {
       return product?.price ?? undefined; // Fallback to price field
     }
     const priceRanges = Object.values(product.price_per_piece);
-    return priceRanges.length > 0 ? Number(priceRanges[0]) : product?.price ?? undefined;
+    return priceRanges.length > 0
+      ? Number(priceRanges[0])
+      : product?.price ?? undefined;
   };
 
   const calculateTotalPrice = () => {
@@ -83,7 +107,10 @@ function BuyNow() {
     if (quantity && totalPrice > 0) {
       addToCart(product._id, Number(quantity), Number(totalPrice));
     } else {
-      console.warn("Invalid quantity or total price:", { quantity, totalPrice });
+      console.warn("Invalid quantity or total price:", {
+        quantity,
+        totalPrice,
+      });
     }
   };
 
@@ -96,8 +123,8 @@ function BuyNow() {
             {product?.images?.map((img, index) => (
               <img
                 key={index}
-                src={img.startsWith("http") ? img : `http://localhost:5000/uploads/${img}`}
-                alt={`Thumbnail ${index + 1}`}
+                src={img}
+                alt={`${product?.name || "Product"} - View ${index + 1}`}
                 className={`thumbnail ${selectedImageIndex === index ? "active" : ""}`}
                 onClick={() => handleThumbnailClick(index)}
                 onError={(e) => (e.target.src = "/fallback-image.jpg")}
@@ -112,7 +139,10 @@ function BuyNow() {
                   : `http://localhost:5000/uploads/${product.images[selectedImageIndex]}`}
                 alt={`Main image`}
                 className="main-image"
-                onError={(e) => (e.target.src = "/fallback-image.jpg")}
+                onError={(e) => {
+                  console.error(`Failed to load main image: ${product.images[selectedImageIndex]}`);
+                  e.target.src = "https://via.placeholder.com/300";
+                }}
               />
             ) : (<p>No image available</p>)}
           </div>
@@ -122,13 +152,20 @@ function BuyNow() {
         <div className="buynow-details">
           <h1 className="buynow-title">{product?.name || "Unnamed Product"}</h1>
           <div className="supplier-info">
-            <span className="supplier-name">{product?.supplier?.name || "Unknown Supplier"}</span>
-            <span className="location">{product?.supplier?.location || "Unknown Location"}</span>
+            <span className="supplier-name">
+              {product?.supplier?.name || "Unknown Supplier"}
+            </span>
+            <span className="location">
+              {product?.supplier?.location || "Unknown Location"}
+            </span>
           </div>
           <p className="reviews">No reviews yet</p>
 
           <p className="price">
-            ₹{getPricePerPiece() !== undefined ? getPricePerPiece().toFixed(2) : "N/A"}
+            ₹
+            {getPricePerPiece() !== undefined
+              ? getPricePerPiece().toFixed(2)
+              : "N/A"}
             <span> per piece</span>
           </p>
           <p className="moq">MOQ: {product?.MOQ || 1} pieces</p>
@@ -177,7 +214,10 @@ function BuyNow() {
                 Buy Now
               </button>
             ) : (
-              <button className="send-inquiry" onClick={() => removeFromcart(product._id)}>
+              <button
+                className="send-inquiry"
+                onClick={() => removeFromcart(product._id)}
+              >
                 Cancel
               </button>
             )}
@@ -187,7 +227,8 @@ function BuyNow() {
             <h3>Protections for this product</h3>
             <p>✔ Secure payments</p>
             <p>
-              Every payment you make on this site is secured with strict SSL encryption and PCI DSS data.
+              Every payment you make on this site is secured with strict SSL
+              encryption and PCI DSS data.
             </p>
           </div>
         </div>
