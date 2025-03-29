@@ -94,7 +94,7 @@ export const addItemB2C = async (req, res) => {
       }
     }
 
-    const imageUrls = req.files.map((file) => `/uploads/${file.filename}`);
+    const imageUrls = req.files.map((file) => file.filename);
 
     const newItem = new ItemB2C({
       name,

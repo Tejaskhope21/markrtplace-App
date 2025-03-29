@@ -115,12 +115,14 @@ function ShoppingProduct() {
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
               <div key={product._id} className="product-card">
-                <img
-                  src={product.images[0] || "/fallback-image.jpg"}
-                  alt={product.name || "Product Image"}
-                  className="product-image"
-                  onError={(e) => (e.target.src = "/fallback-image.jpg")}
-                />
+              <img
+  src={product.images && product.images.length > 0 
+    ? `http://localhost:5000/uploads/${product.images[0]}` 
+    : "/fallback-image.jpg"}
+  alt={product.name || "Product Image"}
+  className="product-image"
+  onError={(e) => (e.target.src = "/fallback-image.jpg")}
+/>
                 <h2>{product.name}</h2>
                 <p>{product.description || "No description available."}</p>
                 <p>Price: ₹{product.price}</p>

@@ -15,6 +15,7 @@ const Add_b2c = () => {
     description: "",
     brand: "",
     stock: "",
+    rating: "",  // Added rating
     images: [],
     supplier: {
       name: "",
@@ -25,8 +26,8 @@ const Add_b2c = () => {
       height: "",
     },
     shipping: {
-      free_shipping_above: "0", // Using string for controlled input
-      cost: "", // Using string for controlled input
+      free_shipping_above: "0",
+      cost: "",
     },
     isFeatured: false,
   });
@@ -85,7 +86,8 @@ const Add_b2c = () => {
       !formData.specifications.material ||
       !formData.specifications.height ||
       !formData.shipping.cost ||
-      formData.images.length === 0
+      formData.images.length === 0 ||
+      !formData.rating  // Ensure rating is provided
     ) {
       alert("Please fill in all required fields.");
       return;
@@ -95,11 +97,12 @@ const Add_b2c = () => {
       isNaN(Number(formData.price)) ||
       isNaN(Number(formData.stock)) ||
       isNaN(Number(formData.shipping.cost)) ||
-      isNaN(Number(formData.shipping.free_shipping_above)) 
+      isNaN(Number(formData.shipping.free_shipping_above)) ||
+      isNaN(Number(formData.rating)) ||  // Validate rating is a number
+      formData.rating < 0 ||
+      formData.rating > 5  // Ensure rating is within range
     ) {
-      alert(
-        "Please enter valid numbers for price, stock, rating, and shipping fields."
-      );
+      alert("Please enter valid numbers for price, stock, rating, and shipping fields.");
       return;
     }
 
@@ -111,6 +114,7 @@ const Add_b2c = () => {
     data.append("description", formData.description);
     data.append("brand", formData.brand);
     data.append("stock", formData.stock);
+    data.append("rating", formData.rating);  // Added rating in API request
     data.append("supplier", JSON.stringify(formData.supplier));
     data.append("specifications", JSON.stringify(formData.specifications));
     data.append("shipping", JSON.stringify(formData.shipping));
@@ -132,6 +136,7 @@ const Add_b2c = () => {
           description: "",
           brand: "",
           stock: "",
+          rating: "",  // Reset rating
           images: [],
           supplier: { name: "", location: "" },
           specifications: { material: "", height: "" },
@@ -142,13 +147,8 @@ const Add_b2c = () => {
         alert("Failed to add item: " + response.data.message);
       }
     } catch (error) {
-      console.error(
-        "Error adding item:",
-        error.response?.data || error.message
-      );
-      alert(
-        "Error adding item: " + (error.response?.data?.message || error.message)
-      );
+      console.error("Error adding item:", error.response?.data || error.message);
+      alert("Error adding item: " + (error.response?.data?.message || error.message));
     }
   };
 
@@ -157,21 +157,10 @@ const Add_b2c = () => {
       <h2>Add B2C Item</h2>
       <form onSubmit={handleSubmit}>
         <label>Name:</label>
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" name="name" value={formData.name} onChange={handleChange} required />
 
         <label>Category:</label>
-        <select
-          name="category"
-          value={formData.category}
-          onChange={handleChange}
-          required
-        >
+        <select name="category" value={formData.category} onChange={handleChange} required>
           <option value="">Select a category</option>
           {categories.map((cat) => (
             <option key={cat._id} value={cat.name}>
@@ -181,128 +170,46 @@ const Add_b2c = () => {
         </select>
 
         <label>Subcategory:</label>
-        <input
-          type="text"
-          name="subcategory"
-          value={formData.subcategory}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" name="subcategory" value={formData.subcategory} onChange={handleChange} required />
 
         <label>Price:</label>
-        <input
-          type="number"
-          name="price"
-          value={formData.price}
-          onChange={handleChange}
-          required
-        />
+        <input type="number" name="price" value={formData.price} onChange={handleChange} required />
 
         <label>Description:</label>
-        <textarea
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          required
-        />
+        <textarea name="description" value={formData.description} onChange={handleChange} required />
 
         <label>Brand:</label>
-        <input
-          type="text"
-          name="brand"
-          value={formData.brand}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" name="brand" value={formData.brand} onChange={handleChange} required />
 
         <label>Stock:</label>
-        <input
-          type="number"
-          name="stock"
-          value={formData.stock}
-          onChange={handleChange}
-          required
-        />
+        <input type="number" name="stock" value={formData.stock} onChange={handleChange} required />
 
         <label>Rating:</label>
-        <input
-          type="number"
-          name="rating"
-          min="0"
-          max="5"
-          value={formData.rating}
-          onChange={handleChange}
-        />
+        <input type="number" name="rating" min="0" max="5" value={formData.rating} onChange={handleChange} required />
 
         <label>Images:</label>
-        <input
-          type="file"
-          name="images"
-          multiple
-          onChange={handleImageChange}
-          required
-        />
+        <input type="file" name="images" multiple onChange={handleImageChange} required />
 
         <label>Supplier Name:</label>
-        <input
-          type="text"
-          name="supplier.name"
-          value={formData.supplier.name}
-          onChange={handleNestedChange}
-          required
-        />
+        <input type="text" name="supplier.name" value={formData.supplier.name} onChange={handleNestedChange} required />
 
         <label>Supplier Location:</label>
-        <input
-          type="text"
-          name="supplier.location"
-          value={formData.supplier.location}
-          onChange={handleNestedChange}
-          required
-        />
+        <input type="text" name="supplier.location" value={formData.supplier.location} onChange={handleNestedChange} required />
 
         <label>Material:</label>
-        <input
-          type="text"
-          name="specifications.material"
-          value={formData.specifications.material}
-          onChange={handleNestedChange}
-          required
-        />
+        <input type="text" name="specifications.material" value={formData.specifications.material} onChange={handleNestedChange} required />
 
         <label>Height:</label>
-        <input
-          type="text"
-          name="specifications.height"
-          value={formData.specifications.height}
-          onChange={handleNestedChange}
-          required
-        />
+        <input type="text" name="specifications.height" value={formData.specifications.height} onChange={handleNestedChange} required />
 
         <label>Free Shipping Above:</label>
-        <input
-          type="number"
-          name="shipping.free_shipping_above"
-          value={formData.shipping.free_shipping_above}
-          onChange={handleNestedChange}
-        />
+        <input type="number" name="shipping.free_shipping_above" value={formData.shipping.free_shipping_above} onChange={handleNestedChange} />
 
         <label>Shipping Cost:</label>
-        <input
-          type="number"
-          name="shipping.cost"
-          value={formData.shipping.cost}
-          onChange={handleNestedChange}
-          required
-        />
+        <input type="number" name="shipping.cost" value={formData.shipping.cost} onChange={handleNestedChange} required />
 
         <label>Featured:</label>
-        <input
-          type="checkbox"
-          name="isFeatured"
-          checked={formData.isFeatured}
-          onChange={handleChange}
-        />
+        <input type="checkbox" name="isFeatured" checked={formData.isFeatured} onChange={handleChange} />
 
         <button type="submit">Add Item</button>
       </form>

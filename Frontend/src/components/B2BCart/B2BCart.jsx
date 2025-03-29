@@ -4,7 +4,7 @@ import { StoreContext } from "../../components/context/StoreProvider";
 import axios from "axios";
 
 function B2BCart() {
-  const { cartitem = {}, removeFromcart, isLoading } = useContext(StoreContext);
+  const { cartitem ={}, removeFromcart, isLoading } = useContext(StoreContext);
   const [cartItems, setCartItems] = useState([]); // State to store fetched items
   const [loadingItems, setLoadingItems] = useState(false); // Loading state for fetching items
   const [error, setError] = useState(null); // Error state for fetching items
@@ -104,7 +104,7 @@ function B2BCart() {
                 <div key={itemId} className="cart-item">
                   <div className="item-image">
                     <img
-                      src={product.images?.[0] || "https://via.placeholder.com/150"}
+                      src={`${product.images?.[0]} || https://via.placeholder.com/150`}
                       alt={product.name || "Product Image"}
                       onError={(e) => {
                         e.target.src = "https://via.placeholder.com/150";
