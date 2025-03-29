@@ -16,6 +16,8 @@ function ShoppingProduct() {
   const [selectedSort, setSelectedSort] = useState(""); // Sorting state
 
   useEffect(() => {
+    if (!selectedCategory) return; // Avoid unnecessary API calls
+
     const fetchProducts = async () => {
       try {
         setLoading(true);
@@ -38,35 +40,30 @@ function ShoppingProduct() {
       }
     };
 
-    if (selectedCategory) {
-      fetchProducts();
-    }
+    fetchProducts();
   }, [selectedCategory]);
 
-  const handleCategoryClick = (id) => {
+  const handleProductClick = (id) => {
     navigate(`/buy_b2c?id=${id}`);
   };
 
-  // **Extract Unique Subcategories**
+  // Extract Unique Subcategories
   const uniqueSubcategories = [
     ...new Set(products.map((item) => item.subcategory || item.category)),
   ];
 
-  // **Filtering and Sorting Logic**
-  let filteredProducts = products;
-
-  if (shopCategory !== "all") {
-    filteredProducts = filteredProducts.filter(
-      (item) => item.subcategory === shopCategory
-    );
-  }
+  // Filtering and Sorting Logic
+  let filteredProducts =
+    shopCategory !== "all"
+      ? products.filter((item) => item.subcategory === shopCategory)
+      : products;
 
   if (selectedSort === "price_low") {
-    filteredProducts = [...filteredProducts].sort((a, b) => a.price - b.price);
+    filteredProducts.sort((a, b) => a.price - b.price);
   } else if (selectedSort === "price_high") {
-    filteredProducts = [...filteredProducts].sort((a, b) => b.price - a.price);
+    filteredProducts.sort((a, b) => b.price - a.price);
   } else if (selectedSort === "rating") {
-    filteredProducts = [...filteredProducts].sort((a, b) => b.rating - a.rating);
+    filteredProducts.sort((a, b) => (b.rating || 0) - (a.rating || 0));
   }
 
   return (
@@ -77,7 +74,10 @@ function ShoppingProduct() {
       {uniqueSubcategories.length > 0 && (
         <div className="filter-section">
           <label>Subcategory: </label>
-          <select value={shopCategory} onChange={(e) => setShopCategory(e.target.value)}>
+          <select
+            value={shopCategory}
+            onChange={(e) => setShopCategory(e.target.value)}
+          >
             <option value="all">All</option>
             {uniqueSubcategories.map((subcategory, index) => (
               <option key={index} value={subcategory}>
@@ -91,7 +91,10 @@ function ShoppingProduct() {
       {/* Sorting Dropdown */}
       <div className="filter-section">
         <label>Sort By: </label>
-        <select value={selectedSort} onChange={(e) => setSelectedSort(e.target.value)}>
+        <select
+          value={selectedSort}
+          onChange={(e) => setSelectedSort(e.target.value)}
+        >
           <option value="">Default</option>
           <option value="price_low">Price: Low to High</option>
           <option value="price_high">Price: High to Low</option>
@@ -103,7 +106,10 @@ function ShoppingProduct() {
       {loading ? (
         <p>Loading products...</p>
       ) : error ? (
-        <p className="error">{error}</p>
+        <div className="error">
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>Retry</button>
+        </div>
       ) : (
         <div className="product-list">
           {filteredProducts.length > 0 ? (
@@ -111,7 +117,7 @@ function ShoppingProduct() {
               <div key={product._id} className="product-card">
                 <img
                   src={product.images[0] || "/fallback-image.jpg"}
-                  alt={product.name}
+                  alt={product.name || "Product Image"}
                   className="product-image"
                   onError={(e) => (e.target.src = "/fallback-image.jpg")}
                 />
@@ -119,7 +125,7 @@ function ShoppingProduct() {
                 <p>{product.description || "No description available."}</p>
                 <p>Price: ₹{product.price}</p>
                 <p>Rating: {product.rating || "N/A"} / 5</p>
-                <button onClick={() => handleCategoryClick(product._id)}>
+                <button onClick={() => handleProductClick(product._id)}>
                   View Details
                 </button>
               </div>
