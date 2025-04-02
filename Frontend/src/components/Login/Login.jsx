@@ -1,134 +1,86 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Login.css"; // Assuming the CSS file is still named Login.css
+import "./Login.css";
 
-function Register() {
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [otp, setOtp] = useState("");
-  const [category, setCategory] = useState("");
-  const [shopName, setShopName] = useState("");
-  const [businessType, setBusinessType] = useState("");
-  const [pincode, setPincode] = useState("");
+function Login({ setShowLogin }) {
+  const [currstate, setCurrstate] = useState("Login");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
   const navigate = useNavigate();
 
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // Basic validation
-    if (!mobileNumber || !otp || !category || !shopName || !businessType || !pincode) {
-      alert("Please fill in all fields.");
-      return;
-    }
-
-    // Mock OTP verification (replace with actual logic if needed)
-    if (otp !== "123456") {
-      alert("Invalid OTP. Please enter 123456 for this demo.");
-      return;
-    }
-
-    // Collect all data
-    const shopDetails = {
-      mobileNumber,
-      otp, // Optional: You might not need to include OTP in the final data
-      category,
-      shopName,
-      businessType,
-      pincode,
-    };
-
-    console.log("Shop Registered:", shopDetails);
-    alert("Shop registration successful!");
-
-    // Navigate to home page after successful registration
-    navigate("/");
-
-    // Reset the form (optional)
-    setMobileNumber("");
-    setOtp("");
-    setCategory("");
-    setShopName("");
-    setBusinessType("");
-    setPincode("");
+const handleClose=() => {
+    setShowLogin(false);
+    navigate("/"); // Redirect to home when closing the login modal
+  }
+  // Handle input changes
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
-    <div className="shop-registration">
-      <h1>Shop Registration</h1>
-      <form onSubmit={handleSubmit} className="registration-form">
-        {/* Mobile Number */}
-        <label htmlFor="mobileNumber">Mobile Number</label>
+    <div className="login-container">
+      <form action="">
+        <h1>{currstate}</h1>
+        <h2 className="back " onClick={handleClose}>---</h2>
+        {currstate !== "Login" && (
+          <input
+            type="text"
+            placeholder="Your name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+            autoComplete="off"
+          />
+        )}
+        
         <input
-          type="tel"
-          id="mobileNumber"
-          value={mobileNumber}
-          onChange={(e) => setMobileNumber(e.target.value)}
-          placeholder="Enter your mobile number"
+          type="email"
+          placeholder="Email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
           required
+          autoComplete="off"
         />
-
-        {/* OTP */}
-        <label htmlFor="otp">OTP</label>
+        
         <input
-          type="text"
-          id="otp"
-          value={otp}
-          onChange={(e) => setOtp(e.target.value)}
-          placeholder="Enter OTP (use 123456 for demo)"
+          type="password"
+          placeholder="Password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
           required
+          autoComplete="new-password"
         />
+        
+        <button type="submit" className="login-btn">
+          {currstate === "Signup" ? "Create Account" : "Login"}
+        </button>
 
-        {/* Category */}
-        <label htmlFor="category">Select Category</label>
-        <select
-          id="category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          required
-        >
-          <option value="">Select</option>
-          <option value="B2B">B2B</option>
-          <option value="B2C">B2C</option>
-        </select>
+        <div className="login-popup-condition">
+          <input type="checkbox" required />
+          <p>By continuing, I agree to the terms of use & privacy policy</p>
 
-        {/* Shop Name */}
-        <label htmlFor="shopName">Shop Name</label>
-        <input
-          type="text"
-          id="shopName"
-          value={shopName}
-          onChange={(e) => setShopName(e.target.value)}
-          placeholder="Enter shop name"
-          required
-        />
-
-        {/* Business Type */}
-        <label htmlFor="businessType">Business Type</label>
-        <input
-          type="text"
-          id="businessType"
-          value={businessType}
-          onChange={(e) => setBusinessType(e.target.value)}
-          placeholder="Enter business type"
-          required
-        />
-
-        {/* Pincode */}
-        <label htmlFor="pincode">Pincode</label>
-        <input
-          type="text"
-          id="pincode"
-          value={pincode}
-          onChange={(e) => setPincode(e.target.value)}
-          placeholder="Enter pincode"
-          required
-        />
-
-        {/* Submit Button */}
-        <button type="submit">Register Shop</button>
+          {currstate === "Login" ? (
+            <p>
+              Create a new account?{" "}
+              <span onClick={() => setCurrstate("Signup")}>Click here</span>
+            </p>
+          ) : (
+            <p>
+              Already have an account?{" "}
+              <span onClick={() => setCurrstate("Login")}>Login here</span>
+            </p>
+          )}
+         
+        </div>
       </form>
     </div>
   );
 }
 
-export default Register;
+export default Login;

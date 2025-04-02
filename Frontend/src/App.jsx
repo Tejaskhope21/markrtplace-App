@@ -9,7 +9,8 @@ import ShoppingProduct from "./Pages/ShoppingProduct/ShoppingProduct";
 import BuyNow from "./Pages/BuyNow/BuyNow";
 import Buy_B2C from "./Pages/Buy_B2C/Buy_B2C";
 import PlaceOrder from "./Pages/PlaceOrder/PlaceOrder";
-import Register from "./Pages/Register/Register"; // Updated to match your import
+import Register from "./Pages/Register/Register";
+
 import "./App.css";
 
 function App() {
@@ -18,7 +19,9 @@ function App() {
 
   useEffect(() => {
     if (showLogin) {
-      navigate("/register"); // Navigate to the /register route when showLogin is true
+      navigate("/register"); // Navigate to Register page when showLogin is true
+    } else {
+      navigate("/"); // Redirect to Home page when showLogin is false
     }
   }, [showLogin, navigate]);
 
@@ -34,7 +37,7 @@ function App() {
           <Route path="/buy" element={<BuyNow />} />
           <Route path="/buy_b2c" element={<Buy_B2C />} />
           <Route path="/placeorder" element={<PlaceOrder />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/register" element={<Register setShowLogin={setShowLogin} />} />
         </Routes>
         <Footer />
       </div>

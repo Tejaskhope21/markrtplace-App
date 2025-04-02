@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import "./Navbar.css";
 import { TiShoppingCart } from "react-icons/ti";
+
 function Navbar({ setShowLogin }) {
   // Correct prop name
   const [menuOpen, setMenuOpen] = useState(false);
@@ -48,23 +49,15 @@ function Navbar({ setShowLogin }) {
 
       {/* Navigation Links */}
       <div className={`nav-links ${menuOpen ? "show" : ""}`}>
-        <Link className="link" to="/seller" onClick={handleLinkClick}>
-          Seller
-        </Link>
-        <Link className="link" to="/bulkproducts" onClick={handleLinkClick}>
-          Bulk products
-        </Link>
-        <Link className="link" to="/shopping" onClick={handleLinkClick}>
-          Shopping
-        </Link>
+      
         <Link className="link" to="/placeorder" onClick={handleLinkClick}>
           <TiShoppingCart />
         </Link>
-        <div className="link" to="/signin">
+        <Link className="link" to="/register">
           <button className="sign" onClick={() => setShowLogin(true)}>
             Sign in
           </button>
-        </div>
+        </Link>
       </div>
     </nav>
   );
