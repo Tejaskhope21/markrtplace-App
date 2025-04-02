@@ -67,6 +67,7 @@ function ProductAdmin({ setShowLogin }) {
           placeholder="Enter OTP (use 123456 for demo)"
           required
         />
+        
 
         <label htmlFor="category">Select Category</label>
         <select
