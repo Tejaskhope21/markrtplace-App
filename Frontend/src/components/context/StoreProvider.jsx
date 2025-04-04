@@ -13,7 +13,7 @@ const StoreContextProvider = ({ children }) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
-
+ const[token, setToken] = useState(null);
   // Save cart to localStorage when it updates
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartitem));
@@ -67,6 +67,8 @@ const StoreContextProvider = ({ children }) => {
     selectedOption,
     setSelectedOption,
     setIsLoading,
+    token,
+    setToken,
   };
 
   return (

@@ -10,7 +10,7 @@ import itemRoutes from "./routes/itemRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import itemb2cRoutes from "./routes/itemb2cRoutes.js";
 import categoryb2cRoutes from "./routes/categoryb2cRoutes.js";
-// import userRoutes from "./routes/userRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -38,7 +38,7 @@ app.use("/api/items", itemRoutes); // Multer is now applied in itemRoutes.js for
 app.use("/api", categoryRoutes);
 app.use("/api", categoryb2cRoutes);
 app.use("/api/itemsb2c", itemb2cRoutes);
-// app.use("/api/user", userRoutes);
+app.use("/api/user", userRoutes);
 // MongoDB connection
 mongoose.connect(process.env.MONGO)
   .then(() => console.log("MongoDB connected"))
