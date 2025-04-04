@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { StoreContext } from "../context/StoreProvider"; // Adjust path as needed
-
+import "./Login.css"; // Adjust path as needed
 function Login({ setShowLogin }) {
   const { setSelectedOption } = useContext(StoreContext);
   const [email, setEmail] = useState("");

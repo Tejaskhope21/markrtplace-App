@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const shopSchema = new mongoose.Schema({
+const Productadmin = new mongoose.Schema({
   mobileNumber: {
     type: String,
     required: true,
@@ -39,6 +39,6 @@ const shopSchema = new mongoose.Schema({
   },
 });
 
-const Shop = mongoose.model('Shop', shopSchema);
+const ListProduct = mongoose.model('ListProduct', Productadmin);
 
-export default Shop;
+export default ListProduct;

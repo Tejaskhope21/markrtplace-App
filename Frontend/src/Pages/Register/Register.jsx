@@ -86,7 +86,7 @@ function Register({ setShowLogin }) {
           <button className="back-button" onClick={handleBackClick}>
             ⬅ Back
           </button>
-          <h1 className="register-title">Select an Option</h1>
+          {/* <h1 className="register-title">Select an Option</h1> */}
           <div className="option-container">
             <div
               className="option-box"

@@ -1,0 +1,121 @@
+.shop-registration {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  margin-top: 5rem;
+}
+
+.shop-registration h1 {
+  font-size: 1.8rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.back {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.back:hover {
+  color: #ff0000;
+}
+
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.registration-form label {
+  font-size: 1rem;
+  color: #333;
+}
+
+.registration-form input,
+.registration-form select {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.registration-form button {
+  background-color: #ff6200;
+  color: #fff;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.registration-form button:hover {
+  background-color: #e55a00;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .shop-registration {
+    max-width: 90%;
+    padding: 1.5rem;
+    margin-top: 4rem;
+  }
+
+  .shop-registration h1 {
+    font-size: 1.5rem;
+  }
+
+  .back {
+    font-size: 1.2rem;
+  }
+
+  .registration-form input,
+  .registration-form select {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .registration-form button {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .shop-registration {
+    padding: 1rem;
+    margin-top: 3rem;
+  }
+
+  .shop-registration h1 {
+    font-size: 1.2rem;
+  }
+
+  .registration-form label {
+    font-size: 0.9rem;
+  }
+
+  .registration-form input,
+  .registration-form select {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .registration-form button {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+}
