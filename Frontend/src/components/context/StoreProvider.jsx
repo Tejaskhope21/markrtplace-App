@@ -7,7 +7,7 @@ export const StoreContext = createContext(null);
 const StoreContextProvider = ({ children }) => {
   const [cartitem, setCartitem] = useState({});
   const [isLoading, setIsLoading] = useState(false); // Add loading state
-
+  const [selectedOption, setSelectedOption] = useState(null);
   const addToCart = (itemId, quantity = 1, price = 0) => {
     if (!itemId || quantity <= 0 || price <= 0) return;
 
@@ -43,6 +43,10 @@ const StoreContextProvider = ({ children }) => {
     removeFromcart,
     cartitem,
     isLoading,
+    selectedOption,
+    setSelectedOption,
+    setIsLoading
+    
   };
 
   return (

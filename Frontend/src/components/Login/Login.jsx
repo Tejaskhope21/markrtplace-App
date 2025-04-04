@@ -1,83 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Login.css";
+import { StoreContext } from "../context/StoreProvider"; // Adjust path as needed
 
 function Login({ setShowLogin }) {
-  const [currstate, setCurrstate] = useState("Login");
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+  const { setSelectedOption } = useContext(StoreContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-const handleClose=() => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Add login logic here
+    console.log("Login submitted:", { email, password });
     setShowLogin(false);
-    navigate("/"); // Redirect to home when closing the login modal
-  }
-  // Handle input changes
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setSelectedOption(null);
+    navigate("/");
+  };
+
+  const handleClose = () => {
+    setShowLogin(false);
+    setSelectedOption(null);
+    navigate("/");
   };
 
   return (
     <div className="login-container">
-      <form action="">
-        <h1>{currstate}</h1>
-        <h2 className="back " onClick={handleClose}>---</h2>
-        {currstate !== "Login" && (
-          <input
-            type="text"
-            placeholder="Your name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            autoComplete="off"
-          />
-        )}
-        
+      <h1>Login</h1>
+      <button
+        className="back"
+        onClick={handleClose}
+        style={{ cursor: "pointer", border: "none", background: "none" }}
+      >
+        X
+      </button>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="email">Email</label>
         <input
           type="email"
-          placeholder="Email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
+          id="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter your email"
           required
-          autoComplete="off"
         />
-        
+        <label htmlFor="password">Password</label>
         <input
           type="password"
-          placeholder="Password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Enter your password"
           required
-          autoComplete="new-password"
         />
-        
-        <button type="submit" className="login-btn">
-          {currstate === "Signup" ? "Create Account" : "Login"}
-        </button>
-
-        <div className="login-popup-condition">
-          <input type="checkbox" required />
-          <p>By continuing, I agree to the terms of use & privacy policy</p>
-
-          {currstate === "Login" ? (
-            <p>
-              Create a new account?{" "}
-              <span onClick={() => setCurrstate("Signup")}>Click here</span>
-            </p>
-          ) : (
-            <p>
-              Already have an account?{" "}
-              <span onClick={() => setCurrstate("Login")}>Login here</span>
-            </p>
-          )}
-         
-        </div>
+        <button type="submit">Login</button>
       </form>
     </div>
   );

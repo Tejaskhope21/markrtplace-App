@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 import "./Navbar.css";
 import { TiShoppingCart } from "react-icons/ti";
+import { useContext } from "react";
+import { StoreContext } from "../context/StoreProvider";
 
 function Navbar({ setShowLogin }) {
-  // Correct prop name
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
+  const { setSelectedOption, selectedOption } = useContext(StoreContext);
 
-  // Toggle menu function
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
-  // Close menu when a link is clicked (only in mobile view)
   const handleLinkClick = () => {
     if (window.innerWidth <= 768) {
       setMenuOpen(false);
     }
   };
 
-  // Change background on scroll
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -33,6 +33,17 @@ function Navbar({ setShowLogin }) {
     };
   }, []);
 
+  const handleSignInClick = () => {
+    setShowLogin(true);
+    if (selectedOption === "user") {
+      navigate("/login");
+    } else if (selectedOption === "admin") {
+      navigate("/productadmin"); // Navigate to /productadmin
+    } else {
+      navigate("/register"); // Default to /register to show selection screen
+    }
+  };
+
   return (
     <nav className={`navbar ${isScrolled ? "scrolled" : ""}`}>
       <div className="logo">
@@ -42,22 +53,17 @@ function Navbar({ setShowLogin }) {
         </Link>
       </div>
 
-      {/* Mobile Menu Button */}
       <div className="menu-toggle" onClick={toggleMenu}>
         {menuOpen ? <FaTimes /> : <FaBars />}
       </div>
 
-      {/* Navigation Links */}
       <div className={`nav-links ${menuOpen ? "show" : ""}`}>
-      
         <Link className="link" to="/placeorder" onClick={handleLinkClick}>
           <TiShoppingCart />
         </Link>
-        <Link className="link" to="/register">
-          <button className="sign" onClick={() => setShowLogin(true)}>
-            Sign in
-          </button>
-        </Link>
+        <button className="sign" onClick={handleSignInClick}>
+          Sign in
+        </button>
       </div>
     </nav>
   );

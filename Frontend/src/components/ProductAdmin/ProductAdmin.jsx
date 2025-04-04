@@ -1,13 +1,10 @@
-
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import "./ProductAdmin.css";
+import { StoreContext } from "../context/StoreProvider";
 
-import "./ProductAdmin.css"; 
-
-
-
-  
 function ProductAdmin({ setShowLogin }) {
+  const { setSelectedOption } = useContext(StoreContext);
   const [mobileNumber, setMobileNumber] = useState("");
   const [otp, setOtp] = useState("");
   const [category, setCategory] = useState("");
@@ -33,90 +30,96 @@ function ProductAdmin({ setShowLogin }) {
     console.log("Shop Registered:", shopDetails);
     alert("Shop registration successful!");
 
-    setShowLogin(false); // Close login form
-    navigate("/"); // Redirect to home page
+    setShowLogin(false);
+    setSelectedOption(null); // Reset selectedOption
+    navigate("/"); // Redirect to home page after successful registration
   };
 
   const handleClose = () => {
     setShowLogin(false);
-    navigate("/"); // Redirect to home when closing the login modal
+    setSelectedOption(null); // Reset selectedOption to show selection screen
+    navigate("/"); // Redirect to home page
   };
+
   return (
     <>
-    
-    <div className="shop-registration">
-      <h1>Shop Registration</h1>
-      <h3 className="back" onClick={handleClose} style={{ cursor: "pointer" }}>X</h3>
-      <form onSubmit={handleSubmit} className="registration-form">
-        <label htmlFor="mobileNumber">Mobile Number</label>
-        <input
-          type="tel"
-          id="mobileNumber"
-          value={mobileNumber}
-          onChange={(e) => setMobileNumber(e.target.value)}
-          placeholder="Enter your mobile number"
-          required
-        />
-
-        <label htmlFor="otp">OTP</label>
-        <input
-          type="text"
-          id="otp"
-          value={otp}
-          onChange={(e) => setOtp(e.target.value)}
-          placeholder="Enter OTP (use 123456 for demo)"
-          required
-        />
-        
-
-        <label htmlFor="category">Select Category</label>
-        <select
-          id="category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          required
+      <div className="shop-registration">
+        <h1>Shop Registration</h1>
+        <button
+          className="back"
+          onClick={handleClose}
+          style={{ cursor: "pointer", border: "none", background: "none" }}
         >
-          <option value="">Select</option>
-          <option value="B2B">B2B</option>
-          <option value="B2C">B2C</option>
-        </select>
+          X
+        </button>
+        <form onSubmit={handleSubmit} className="registration-form">
+          <label htmlFor="mobileNumber">Mobile Number</label>
+          <input
+            type="tel"
+            id="mobileNumber"
+            value={mobileNumber}
+            onChange={(e) => setMobileNumber(e.target.value)}
+            placeholder="Enter your mobile number"
+            required
+          />
 
-        <label htmlFor="shopName">Shop Name</label>
-        <input
-          type="text"
-          id="shopName"
-          value={shopName}
-          onChange={(e) => setShopName(e.target.value)}
-          placeholder="Enter shop name"
-          required
-        />
+          <label htmlFor="otp">OTP</label>
+          <input
+            type="text"
+            id="otp"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            placeholder="Enter OTP (use 123456 for demo)"
+            required
+          />
 
-        <label htmlFor="businessType">Business Type</label>
-        <input
-          type="text"
-          id="businessType"
-          value={businessType}
-          onChange={(e) => setBusinessType(e.target.value)}
-          placeholder="Enter business type"
-          required
-        />
+          <label htmlFor="category">Select Category</label>
+          <select
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+          >
+            <option value="">Select</option>
+            <option value="B2B">B2B</option>
+            <option value="B2C">B2C</option>
+          </select>
 
-        <label htmlFor="pincode">Pincode</label>
-        <input
-          type="text"
-          id="pincode"
-          value={pincode}
-          onChange={(e) => setPincode(e.target.value)}
-          placeholder="Enter pincode"
-          required
-        />
+          <label htmlFor="shopName">Shop Name</label>
+          <input
+            type="text"
+            id="shopName"
+            value={shopName}
+            onChange={(e) => setShopName(e.target.value)}
+            placeholder="Enter shop name"
+            required
+          />
 
-        <button type="submit">Register Shop</button>
-      </form>
-    </div>
-  );
+          <label htmlFor="businessType">Business Type</label>
+          <input
+            type="text"
+            id="businessType"
+            value={businessType}
+            onChange={(e) => setBusinessType(e.target.value)}
+            placeholder="Enter business type"
+            required
+          />
+
+          <label htmlFor="pincode">Pincode</label>
+          <input
+            type="text"
+            id="pincode"
+            value={pincode}
+            onChange={(e) => setPincode(e.target.value)}
+            placeholder="Enter pincode"
+            required
+          />
+
+          <button type="submit">Register Shop</button>
+        </form>
+      </div>
     </>
-  )
+  );
 }
 
-export default ProductAdmin
+export default ProductAdmin;
