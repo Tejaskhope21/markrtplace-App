@@ -143,7 +143,7 @@ function B2CCart() {
           return;
         }
 
-        const response = await axios.get("http://localhost:5000/api/items", {
+        const response = await axios.get("http://localhost:5000/api/itemsb2c", {
           params: { ids: itemIds.join(",") },
         });
 

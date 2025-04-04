@@ -1,8 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
-import "./BuyNow.css";
 import { useLocation } from "react-router-dom";
-import { StoreContext } from "../../components/context/StoreProvider";
 import axios from "axios";
+import { StoreContext } from "../../components/context/StoreProvider";
+import "./BuyNow.css";
 
 function BuyNow() {
   const { cartitem, addToCart, removeFromcart } = useContext(StoreContext);
@@ -14,27 +14,22 @@ function BuyNow() {
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const productId = queryParams.get("id"); // Renamed for clarity (it's an ID, not a category)
+  const productId = queryParams.get("id");
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         if (!productId) throw new Error("No product ID specified in URL");
 
-        const url = `http://localhost:5000/api/items/${productId}`;
-        const response = await axios.get(url);
-
-        if (!response.data || !response.data.images)
-          throw new Error("No product images found");
+        const response = await axios.get(
+          `http://localhost:5000/api/items/${productId}`
+        );
+        if (!response.data) throw new Error("No product data found");
 
         setProduct(response.data);
       } catch (err) {
         console.error("Error fetching product:", err);
-        setError(
-          err.response?.data?.message ||
-            err.message ||
-            "Failed to load product."
-        );
+        setError(err.response?.data?.message || "Failed to load product.");
       } finally {
         setLoading(false);
       }
@@ -43,9 +38,7 @@ function BuyNow() {
     fetchProduct();
   }, [productId]);
 
-  const handleThumbnailClick = (index) => {
-    setSelectedImageIndex(index);
-  };
+  const handleThumbnailClick = (index) => setSelectedImageIndex(index);
 
   const handleQuantityChange = (e) => {
     const value =
@@ -55,55 +48,40 @@ function BuyNow() {
     setQuantity(value);
   };
 
-  if (loading) {
+  if (loading)
     return (
       <div className="no-product">
         <p>Loading...</p>
       </div>
     );
-  }
 
-  if (error || !product) {
+  if (error || !product)
     return (
       <div className="no-product">
-        <p>
-          {error || `No product found with ID: ${productId || "Not specified"}`}
-        </p>
+        <p>{error || "Product not found"}</p>
       </div>
     );
-  }
 
   const getPricePerPiece = () => {
     if (
       !product?.price_per_piece ||
       typeof product.price_per_piece !== "object"
-    ) {
-      return product?.price ?? undefined; // Fallback to price field
-    }
-    const priceRanges = Object.values(product.price_per_piece);
-    return priceRanges.length > 0
-      ? Number(priceRanges[0])
-      : product?.price ?? undefined;
+    )
+      return product?.price ?? undefined;
+    return Object.values(product.price_per_piece)[0] || product?.price;
   };
 
   const calculateTotalPrice = () => {
     const pricePerPiece = getPricePerPiece();
-    if (pricePerPiece !== undefined && quantity !== "") {
-      return (pricePerPiece * Number(quantity)).toFixed(2);
-    }
-    return "0.00";
+    return pricePerPiece && quantity !== ""
+      ? (pricePerPiece * Number(quantity)).toFixed(2)
+      : "0.00";
   };
 
   const handleBuyNow = () => {
     const totalPrice = calculateTotalPrice();
     if (quantity && totalPrice > 0) {
-      console.log("Adding to cart:", product._id, quantity, totalPrice);
       addToCart(product._id, Number(quantity), Number(totalPrice));
-    } else {
-      console.warn("Invalid quantity or total price:", {
-        quantity,
-        totalPrice,
-      });
     }
   };
 
@@ -138,7 +116,7 @@ function BuyNow() {
                     ? product.images[selectedImageIndex]
                     : `http://localhost:5000/uploads/${product.images[selectedImageIndex]}`
                 }
-                alt={`Main image`}
+                alt={`Main product`}
                 className="main-image"
                 onError={(e) => (e.target.src = "/fallback-image.jpg")}
               />
@@ -162,10 +140,7 @@ function BuyNow() {
           <p className="reviews">No reviews yet</p>
 
           <p className="price">
-            ₹
-            {getPricePerPiece() !== undefined
-              ? getPricePerPiece().toFixed(2)
-              : "N/A"}
+            ₹{getPricePerPiece()?.toFixed(2) || "N/A"}
             <span> per piece</span>
           </p>
           <p className="moq">MOQ: {product?.MOQ || 1} pieces</p>
@@ -210,12 +185,12 @@ function BuyNow() {
           <div className="actions">
             <button className="send-inquiry">Send Inquiry</button>
             {!cartitem[product._id] ? (
-              <button className="send-inquiry" onClick={handleBuyNow}>
+              <button className="buy-button" onClick={handleBuyNow}>
                 Buy Now
               </button>
             ) : (
               <button
-                className="send-inquiry"
+                className="cancel-button"
                 onClick={() => removeFromcart(product._id)}
               >
                 Cancel
@@ -224,12 +199,9 @@ function BuyNow() {
           </div>
 
           <div className="protections">
-            <h3>Protections for this product</h3>
+            <h3>Buyer Protections</h3>
             <p>✔ Secure payments</p>
-            <p>
-              Every payment you make on this site is secured with strict SSL
-              encryption and PCI DSS data.
-            </p>
+            <p>All transactions are encrypted with SSL & PCI DSS standards.</p>
           </div>
         </div>
       </div>
