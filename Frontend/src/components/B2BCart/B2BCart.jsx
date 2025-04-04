@@ -4,12 +4,12 @@ import { StoreContext } from "../../components/context/StoreProvider";
 import axios from "axios";
 
 function B2BCart() {
-  const { cartitem ={}, removeFromcart, isLoading } = useContext(StoreContext);
-  const [cartItems, setCartItems] = useState([]); // State to store fetched items
-  const [loadingItems, setLoadingItems] = useState(false); // Loading state for fetching items
-  const [error, setError] = useState(null); // Error state for fetching items
+  const { cartitem = {}, removeFromcart, isLoading } = useContext(StoreContext);
+  const [cartItems, setCartItems] = useState([]);
+  const [loadingItems, setLoadingItems] = useState(false);
+  const [error, setError] = useState(null);
+  const defaultImage = "/default-product-image.png"; // Ensure this image is available in your public folder
 
-  // Fetch cart items from the backend based on cartitem IDs
   useEffect(() => {
     const fetchCartItems = async () => {
       if (Object.keys(cartitem).length === 0) {
@@ -21,7 +21,6 @@ function B2BCart() {
       setError(null);
 
       try {
-        // Get the list of item IDs from cartitem
         const itemIds = Object.keys(cartitem).filter(
           (itemId) => cartitem[itemId]?.quantity > 0
         );
@@ -32,15 +31,11 @@ function B2BCart() {
           return;
         }
 
-        // Fetch all items in a single request (assuming the backend supports this)
         const response = await axios.get("http://localhost:5000/api/items", {
-          params: {
-            ids: itemIds.join(","), // Send item IDs as a comma-separated string
-          },
+          params: { ids: itemIds.join(",") },
         });
 
-        console.log("Fetched cart items:", response.data);
-        setCartItems(response.data);
+        setCartItems(Array.isArray(response.data) ? response.data : []);
       } catch (err) {
         console.error("Error fetching cart items:", err);
         setError(err.response?.data?.message || "Failed to load cart items.");
@@ -50,9 +45,8 @@ function B2BCart() {
     };
 
     fetchCartItems();
-  }, [cartitem]); // Re-fetch when cartitem changes
+  }, [cartitem]);
 
-  // Calculate total amount
   const calculateTotalAmount = () => {
     let total = 0;
     for (const itemId in cartitem) {
@@ -63,10 +57,8 @@ function B2BCart() {
     return total.toFixed(2);
   };
 
-  // Handle checkout
   const handleCheckout = () => {
     console.log("Proceeding to checkout...");
-    // Implement your checkout logic here
   };
 
   if (isLoading || loadingItems) {
@@ -78,7 +70,7 @@ function B2BCart() {
       <div className="placeorder">
         <div className="placeorder-content">
           <h1>Your Cart</h1>
-          <p>{error}</p>
+          <p className="error-message">{error}</p>
         </div>
       </div>
     );
@@ -96,28 +88,32 @@ function B2BCart() {
         ) : (
           <div className="cart-items">
             {Object.keys(cartitem).map((itemId) => {
-              // Find the product in the fetched cart items
-              const product = cartItems.find((item) => item._id === itemId);
+              const product = (Array.isArray(cartItems) ? cartItems : []).find(
+                (item) => item._id === itemId
+              );
               if (!product || cartitem[itemId].quantity === 0) return null;
 
               return (
                 <div key={itemId} className="cart-item">
                   <div className="item-image">
                     <img
-                      src={`${product.images?.[0]} || https://via.placeholder.com/150`}
+                      src={product.images?.[0] || defaultImage}
                       alt={product.name || "Product Image"}
                       onError={(e) => {
-                        e.target.src = "https://via.placeholder.com/150";
+                        e.target.onerror = null;
+                        e.target.src = defaultImage;
                       }}
                     />
                   </div>
                   <div className="item-details">
                     <h2>{product.name}</h2>
-                    {/* Display price based on product type */}
                     {product.price_per_piece ? (
                       <p>
                         Price: ₹
-                        {Object.values(product.price_per_piece)[0]?.toFixed(2) || "N/A"} per piece
+                        {Object.values(product.price_per_piece)[0]?.toFixed(
+                          2
+                        ) || "N/A"}{" "}
+                        per piece
                       </p>
                     ) : (
                       <p>Price: ₹{product.price?.toFixed(2) || "N/A"}</p>
@@ -128,7 +124,11 @@ function B2BCart() {
                   <button
                     className="remove-button"
                     onClick={() => {
-                      if (window.confirm(`Are you sure you want to remove ${product.name} from your cart?`)) {
+                      if (
+                        window.confirm(
+                          `Are you sure you want to remove ${product.name} from your cart?`
+                        )
+                      ) {
                         removeFromcart(itemId);
                       }
                     }}

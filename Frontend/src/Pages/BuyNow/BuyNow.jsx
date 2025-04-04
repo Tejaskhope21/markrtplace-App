@@ -24,14 +24,17 @@ function BuyNow() {
         const url = `http://localhost:5000/api/items/${productId}`;
         const response = await axios.get(url);
 
-        
-        if (!response.data || !response.data.images) throw new Error("No product images found");
-        
-        setProduct(response.data);
+        if (!response.data || !response.data.images)
+          throw new Error("No product images found");
 
+        setProduct(response.data);
       } catch (err) {
         console.error("Error fetching product:", err);
-        setError(err.response?.data?.message || err.message || "Failed to load product.");
+        setError(
+          err.response?.data?.message ||
+            err.message ||
+            "Failed to load product."
+        );
       } finally {
         setLoading(false);
       }
@@ -39,7 +42,6 @@ function BuyNow() {
 
     fetchProduct();
   }, [productId]);
-
 
   const handleThumbnailClick = (index) => {
     setSelectedImageIndex(index);
@@ -95,6 +97,7 @@ function BuyNow() {
   const handleBuyNow = () => {
     const totalPrice = calculateTotalPrice();
     if (quantity && totalPrice > 0) {
+      console.log("Adding to cart:", product._id, quantity, totalPrice);
       addToCart(product._id, Number(quantity), Number(totalPrice));
     } else {
       console.warn("Invalid quantity or total price:", {
@@ -109,15 +112,19 @@ function BuyNow() {
       <div className="buynow-content">
         {/* Left Section: Images */}
         <div className="buynow-images">
-        <div className="thumbnail-gallery">
+          <div className="thumbnail-gallery">
             {product?.images?.map((img, index) => (
               <img
                 key={index}
-
-                src={img.startsWith("http") ? img : `http://localhost:5000/uploads/${img}`}
+                src={
+                  img.startsWith("http")
+                    ? img
+                    : `http://localhost:5000/uploads/${img}`
+                }
                 alt={`Thumbnail ${index + 1}`}
-                className={`thumbnail ${selectedImageIndex === index ? "active" : ""}`}
-
+                className={`thumbnail ${
+                  selectedImageIndex === index ? "active" : ""
+                }`}
                 onClick={() => handleThumbnailClick(index)}
                 onError={(e) => (e.target.src = "/fallback-image.jpg")}
               />
@@ -126,16 +133,18 @@ function BuyNow() {
           <div className="main-image-container">
             {product?.images?.length > 0 ? (
               <img
-                src={product.images[selectedImageIndex].startsWith("http") 
-                  ? product.images[selectedImageIndex] 
-                  : `http://localhost:5000/uploads/${product.images[selectedImageIndex]}`}
+                src={
+                  product.images[selectedImageIndex].startsWith("http")
+                    ? product.images[selectedImageIndex]
+                    : `http://localhost:5000/uploads/${product.images[selectedImageIndex]}`
+                }
                 alt={`Main image`}
                 className="main-image"
-
                 onError={(e) => (e.target.src = "/fallback-image.jpg")}
-
               />
-            ) : (<p>No image available</p>)}
+            ) : (
+              <p>No image available</p>
+            )}
           </div>
         </div>
 
