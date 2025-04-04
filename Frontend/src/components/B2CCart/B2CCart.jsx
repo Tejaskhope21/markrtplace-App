@@ -118,7 +118,7 @@ import axios from "axios";
 
 function B2CCart() {
   const { cartitem = {}, removeFromcart, isLoading } = useContext(StoreContext);
-  const [cartItems, setCartItems] = useState([]); 
+  const [cartItems, setCartItems] = useState([]);
   const [loadingItems, setLoadingItems] = useState(false);
   const [error, setError] = useState(null);
 
@@ -143,12 +143,14 @@ function B2CCart() {
           return;
         }
 
-        const response = await axios.get("http://localhost:5000/api/itemsb2c", {
+        const response = await axios.get("http://localhost:5000/api/items", {
           params: { ids: itemIds.join(",") },
         });
 
-        setCartItems(response.data);
+        console.log("Fetched cart items:", response.data);
+        setCartItems(Array.isArray(response.data) ? response.data : []);
       } catch (err) {
+        console.error("Error fetching cart items:", err);
         setError(err.response?.data?.message || "Failed to load cart items.");
       } finally {
         setLoadingItems(false);
@@ -185,12 +187,18 @@ function B2CCart() {
 
             return (
               <div key={itemId} className="cart-item">
-                <img src={product.image || "https://via.placeholder.com/150"} alt={product.name || "Product"} />
+                <img
+                  src={product.image || "https://via.placeholder.com/150"}
+                  alt={product.name || "Product"}
+                />
                 <div>
                   <h2>{product.name || "Unnamed Product"}</h2>
                   <p>Price: ₹{(product.price || 0).toFixed(2)}</p>
                   <p>Quantity: {cartitem[itemId].quantity}</p>
-                  <p>Total: ₹{(product.price * cartitem[itemId].quantity).toFixed(2)}</p>
+                  <p>
+                    Total: ₹
+                    {(product.price * cartitem[itemId].quantity).toFixed(2)}
+                  </p>
                 </div>
                 <button onClick={() => removeFromcart(itemId)}>Remove</button>
               </div>
@@ -201,7 +209,9 @@ function B2CCart() {
 
       <div className="cart-summary">
         <p>Total Amount: ₹{calculateTotalAmount()}</p>
-        <button onClick={() => console.log("Proceed to B2B Checkout")}>Checkout</button>
+        <button onClick={() => console.log("Proceed to B2B Checkout")}>
+          Checkout
+        </button>
       </div>
     </div>
   );
