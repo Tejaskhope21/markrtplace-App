@@ -1,145 +1,153 @@
 /* Buy_B2C.css */
-.buy-b2c-container {
-  display: flex;
-  justify-content: center;
-  padding: 20px;
-}
-
-.buy-b2c-content {
-  display: flex;
+.buy-b2c {
   max-width: 1200px;
-  width: 100%;
-  gap: 20px; /* Add gap between image and details sections */
+  margin: 0 auto;
+  padding: 40px;
+  font-family: Arial, sans-serif;
 }
 
-.buy-b2c-images {
+.buy-b2c h1 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.product-details {
   display: flex;
-  flex-direction: row; /* Change to row for horizontal layout */
-  gap: 10px; /* Add gap between main image and thumbnails */
-  width: 60%; /* Adjust width as needed */
+  gap: 40px;
 }
 
-.thumbnail-gallery {
-  display: flex;
-  flex-direction: column; /* Thumbnails in a vertical column */
-  gap: 10px; /* Add gap between thumbnails */
-}
-
-.thumbnail {
-  width: 80px; /* Adjust thumbnail size */
-  height: 80px;
-  cursor: pointer;
-  border: 2px solid #ddd;
-  border-radius: 5px;
-  object-fit: cover; /* Ensure images fit properly */
-}
-
-.thumbnail.active {
-  border-color: #007bff; /* Highlight selected thumbnail */
-}
-
-.main-image-container {
-  flex: 1; /* Take remaining space */
+.product-images {
+  flex: 1;
 }
 
 .main-image {
   width: 100%;
-  max-width: 500px; /* Adjust main image size */
+  max-width: 400px;
   height: auto;
-  border-radius: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-.buy-b2c-details {
-  width: 40%; /* Adjust width as needed */
-  padding-left: 20px;
+.product-info {
+  flex: 1;
+  padding: 20px;
 }
 
-.buy-b2c-title {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.supplier-info {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.supplier-name {
-  font-weight: bold;
-}
-
-.location {
+.description {
+  font-size: 1rem;
   color: #666;
-}
-
-.reviews {
-  color: #666;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .price {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 1.6rem;
+  color: #e67e22;
   margin-bottom: 10px;
 }
 
-.moq {
-  color: #666;
+.rating {
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.category {
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.subcategory {
+  font-size: 0.9rem;
+  color: #333;
   margin-bottom: 20px;
 }
 
-.specifications h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
+.quantity-section {
+  margin: 20px 0;
 }
 
-.specifications ul {
-  list-style-type: none;
-  padding: 0;
+.quantity-section label {
+  font-size: 1rem;
+  color: #333;
+  margin-right: 10px;
 }
 
-.specifications li {
-  margin-bottom: 5px;
+.quantity-section input {
+  padding: 8px;
+  width: 80px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
 }
 
-.shipping-info h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
+.total-price {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  color: #333;
 }
 
-.actions {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.send-inquiry {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+.buy-button {
+  background: #e67e22;
+  color: #fff;
   border: none;
-  border-radius: 5px;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 1rem;
   cursor: pointer;
 }
 
-.send-inquiry:hover {
-  background-color: #0056b3;
+.buy-button:hover {
+  background: #d35400;
 }
 
-.protections h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.protections p {
-  color: #666;
-  margin-bottom: 10px;
-}
-
-.no-product {
+.error {
+  font-size: 1.2rem;
+  color: #d32f2f;
   text-align: center;
-  padding: 20px;
-  font-size: 18px;
-  color: #666;
+  margin-bottom: 20px;
+}
+
+.buy-b2c button {
+  background: #e67e22;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.buy-b2c button:hover {
+  background: #d35400;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .buy-b2c {
+    padding: 20px;
+  }
+
+  .product-details {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .main-image {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .product-info {
+    padding: 10px;
+  }
+
+  .buy-b2c h1 {
+    font-size: 1.5rem;
+  }
+
+  .price {
+    font-size: 1.4rem;
+  }
 }
