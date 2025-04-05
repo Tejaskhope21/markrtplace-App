@@ -1,0 +1,50 @@
+.list-table-row {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.list-table-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.item-image {
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: contain;
+}
+
+.remove-button {
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.remove-button:hover {
+  background-color: #cc0000;
+}
+
+@media (max-width: 768px) {
+  .list-table-row {
+    grid-template-columns: 1fr;
+    text-align: left;
+  }
+
+  .list-table-column {
+    margin-bottom: 1rem;
+  }
+
+  .item-image {
+    max-width: 80px;
+    max-height: 80px;
+  }
+}

@@ -97,7 +97,7 @@ function B2BCart() {
                 <div key={itemId} className="cart-item">
                   <div className="item-image">
                     <img
-                      src={product.images?.[0] || defaultImage}
+                      src={`http://localhost:5000/uploads/${product.images?.[0]}` }
                       alt={product.name || "Product Image"}
                       onError={(e) => {
                         e.target.onerror = null;

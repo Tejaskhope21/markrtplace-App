@@ -23,15 +23,23 @@ export const getItems = async (req, res) => {
       res.status(500).json({ success: false, message: "Failed to fetch item", error: error.message });
     }
   }
+// export const getItem = async (req, res) => {
+//  try {
+//   const item= await Item.find({}).exec();
+//   res.status(200).json(item);
+//  } catch (error) {
+//   console.error("Error fetching item:", error);
+//   res.status(500).json({ success: false, message: "Failed to fetch item", error: error.message });
+//  }
+// }
 export const getItem = async (req, res) => {
- try {
-  const item= await Item.find({}).exec();
-  res.status(200).json(item);
- } catch (error) {
-  console.error("Error fetching item:", error);
-  res.status(500).json({ success: false, message: "Failed to fetch item", error: error.message });
- }
-}
+  try {
+    const items = await Item.find().sort({ createdAt: -1 });
+    res.status(200).json({ success: true, data: items });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Failed to fetch items" });
+  }
+};
 
   export const addItem = async (req, res) => {
     try {
