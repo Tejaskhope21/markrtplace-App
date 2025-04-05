@@ -2,27 +2,27 @@ import { exec } from "child_process";
 import Item from "../models/Item.js";
 import fs from "fs";
 // ✅ Add New Item with Image Upload
-// export const getItem = async (req, res) => {
+export const getItems = async (req, res) => {
  
-//     try {
-//       const { id } = req.params;
+    try {
+      const { id } = req.params;
   
-//       if (!id) {
-//         return res.status(400).json({ success: false, message: "Item ID is required" });
-//       }
+      if (!id) {
+        return res.status(400).json({ success: false, message: "Item ID is required" });
+      }
   
-//       const item = await Item.findById(id).exec();
+      const item = await Item.findById(id).exec();
   
-//       if (!item) {
-//         return res.status(404).json({ success: false, message: `No item found with ID: ${id}` });
-//       }
+      if (!item) {
+        return res.status(404).json({ success: false, message: `No item found with ID: ${id}` });
+      }
   
-//       res.status(200).json(item);
-//     } catch (error) {
-//       console.error("Error fetching item:", error);
-//       res.status(500).json({ success: false, message: "Failed to fetch item", error: error.message });
-//     }
-//   }
+      res.status(200).json(item);
+    } catch (error) {
+      console.error("Error fetching item:", error);
+      res.status(500).json({ success: false, message: "Failed to fetch item", error: error.message });
+    }
+  }
 export const getItem = async (req, res) => {
  try {
   const item= await Item.find({}).exec();
