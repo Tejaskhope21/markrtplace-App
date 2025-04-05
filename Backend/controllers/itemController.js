@@ -1,28 +1,37 @@
+import { exec } from "child_process";
 import Item from "../models/Item.js";
-
+import fs from "fs";
 // ✅ Add New Item with Image Upload
-export const getItem = async (req, res) => {
+// export const getItem = async (req, res) => {
  
-    try {
-      const { id } = req.params;
+//     try {
+//       const { id } = req.params;
   
-      if (!id) {
-        return res.status(400).json({ success: false, message: "Item ID is required" });
-      }
+//       if (!id) {
+//         return res.status(400).json({ success: false, message: "Item ID is required" });
+//       }
   
-      const item = await Item.findById(id).exec();
+//       const item = await Item.findById(id).exec();
   
-      if (!item) {
-        return res.status(404).json({ success: false, message: `No item found with ID: ${id}` });
-      }
+//       if (!item) {
+//         return res.status(404).json({ success: false, message: `No item found with ID: ${id}` });
+//       }
   
-      res.status(200).json(item);
-    } catch (error) {
-      console.error("Error fetching item:", error);
-      res.status(500).json({ success: false, message: "Failed to fetch item", error: error.message });
-    }
-  }
-
+//       res.status(200).json(item);
+//     } catch (error) {
+//       console.error("Error fetching item:", error);
+//       res.status(500).json({ success: false, message: "Failed to fetch item", error: error.message });
+//     }
+//   }
+export const getItem = async (req, res) => {
+ try {
+  const item= await Item.find({}).exec();
+  res.status(200).json(item);
+ } catch (error) {
+  console.error("Error fetching item:", error);
+  res.status(500).json({ success: false, message: "Failed to fetch item", error: error.message });
+ }
+}
 
   export const addItem = async (req, res) => {
     try {
@@ -140,5 +149,116 @@ export const getallItems = async (req, res) => {
   } catch (error) {
     console.error("Error fetching items:", error);
     res.status(500).json({ success: false, message: "Failed to fetch items", error: error.message });
+  }
+};
+
+export const removeitem = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ success: false, message: "Item ID is required" });
+    }
+
+    const item = await Item.findByIdAndDelete(id);
+
+    if (!item) {
+      return res.status(404).json({ success: false, message: `No item found with ID: ${id}` });
+    }
+
+    // If item has images, delete each file
+    if (item.images && Array.isArray(item.images)) {
+      item.images.forEach((filename) => {
+        const filePath = `./uploads/${filename}`;
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error(`Error deleting file ${filePath}:`, err);
+          } else {
+            console.log(`Deleted file: ${filePath}`);
+          }
+        });
+      });
+    }
+
+    res.status(200).json({ success: true, message: "Item deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting item:", error);
+    res.status(500).json({ success: false, message: "Failed to delete item", error: error.message });
+  }
+};
+
+
+// Update Item
+export const updateItem = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const existingItem = await Item.findById(id);
+    if (!existingItem) {
+      return res.status(404).json({ success: false, message: "Item not found" });
+    }
+
+    // Parse incoming nested JSON fields
+    const price_per_piece = JSON.parse(req.body.price_per_piece || "{}");
+    const specifications = JSON.parse(req.body.specifications || "{}");
+    const supplier = JSON.parse(req.body.supplier || "{}");
+    const shipping = JSON.parse(req.body.shipping || "{}");
+
+    const {
+      name,
+      category,
+      product_category,
+      description,
+      MOQ,
+      b2b_menu,
+    } = req.body;
+
+    const updatedFields = {
+      name,
+      category,
+      product_category,
+      description,
+      MOQ: Number(MOQ),
+      b2b_menu,
+      price_per_piece: {
+        "20-199": Number(price_per_piece["20-199"]),
+        "200-999": Number(price_per_piece["200-999"]),
+        "1000+": Number(price_per_piece["1000+"]),
+      },
+      specifications: {
+        color: specifications.color || "",
+        weight: specifications.weight || "",
+        battery: specifications.battery || "",
+      },
+      supplier: {
+        name: supplier.name || "",
+        location: supplier.location || "",
+      },
+      shipping: {
+        free_shipping_above: Number(shipping.free_shipping_above || 0),
+        cost: Number(shipping.cost),
+      },
+    };
+
+    // Handle new image upload (if any)
+    if (req.files && req.files.length > 0) {
+      // Delete old images
+      existingItem.images.forEach((filename) => {
+        const filePath = `./uploads/${filename}`;
+        fs.unlink(filePath, (err) => {
+          if (err) console.error(`Error deleting file ${filePath}:`, err);
+        });
+      });
+
+      // Add new images
+      updatedFields.images = req.files.map((file) => file.filename);
+    }
+
+    const updatedItem = await Item.findByIdAndUpdate(id, updatedFields, { new: true });
+
+    res.status(200).json({ success: true, message: "Item updated successfully", data: updatedItem });
+  } catch (error) {
+    console.error("Error updating item:", error);
+    res.status(500).json({ success: false, message: "Failed to update item", error: error.message });
   }
 };
