@@ -1,4 +1,4 @@
-import CategoryB2C from '../models/categoryb2c.js';
+import CategoryB2C from '../models/Categoryb2c.js';
 
 
 export const createCategoryb2c = async (req, res) => {
