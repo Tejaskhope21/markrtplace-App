@@ -1,118 +1,149 @@
-.login-container {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 2rem;
+/* Login.css */
+.login-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.login-popup-container {
   background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  position: relative;
-  margin-top: 5rem;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 400px;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-.login-container h1 {
-  font-size: 1.8rem;
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: #333;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.login-container .back {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  font-size: 1.5rem;
+.login-popup-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.login-popup-title h1 {
+  font-size: 24px;
+  font-weight: 600;
   color: #333;
+  margin: 0;
+}
+
+.login-popup-title h1:last-child {
+  font-size: 20px;
   cursor: pointer;
-  z-index: 10;
+  color: #888;
+  transition: color 0.3s ease;
 }
 
-.login-container .back:hover {
-  color: #ff0000;
+.login-popup-title h1:last-child:hover {
+  color: #ff4444; /* Red color on hover for close button */
 }
 
-.login-container form {
+.login-popup-inputs {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 15px;
+  margin-bottom: 20px;
 }
 
-.login-container label {
-  font-size: 1rem;
-  color: #333;
-}
-
-.login-container input {
-  width: 100%;
-  padding: 0.8rem;
+.login-popup-inputs input {
+  padding: 12px 15px;
+  font-size: 16px;
   border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 1rem;
-  box-sizing: border-box;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.login-container button {
-  background-color: #ff6200;
+.login-popup-inputs input:focus {
+  border-color: #E55A00;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.login-btn {
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 500;
   color: #fff;
+  background-color: #E55A00;
   border: none;
-  padding: 0.8rem;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.login-container button:hover {
-  background-color: #e55a00;
+.login-btn:hover {
+  background-color: #E55A00;
+  transform: translateY(-2px);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.login-popup-condition {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #666;
+}
+
+.login-popup-condition input {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.login-popup-condition p {
+  margin: 5px 0;
+}
+
+.login-popup-condition span {
+  color: #E55A00;
+  cursor: pointer;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.login-popup-condition span:hover {
+  color: #E55A00;
+  text-decoration: underline;
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .login-container {
-    max-width: 90%;
-    padding: 1.5rem;
-    margin-top: 4rem;
-  }
-
-  .login-container h1 {
-    font-size: 1.5rem;
-  }
-
-  .login-container .back {
-    font-size: 1.2rem;
-  }
-
-  .login-container input {
-    padding: 0.6rem;
-    font-size: 0.9rem;
-  }
-
-  .login-container button {
-    padding: 0.6rem;
-    font-size: 0.9rem;
-  }
-}
-
 @media (max-width: 480px) {
-  .login-container {
-    padding: 1rem;
-    margin-top: 3rem;
+  .login-popup-container {
+    width: 90%;
+    padding: 20px;
   }
 
-  .login-container h1 {
-    font-size: 1.2rem;
+  .login-popup-title h1 {
+    font-size: 20px;
   }
 
-  .login-container label {
-    font-size: 0.9rem;
+  .login-btn {
+    font-size: 14px;
   }
 
-  .login-container input {
-    padding: 0.5rem;
-    font-size: 0.8rem;
-  }
-
-  .login-container button {
-    padding: 0.5rem;
-    font-size: 0.8rem;
+  .login-popup-inputs input {
+    font-size: 14px;
+    padding: 10px;
   }
 }
