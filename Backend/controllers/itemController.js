@@ -1,6 +1,11 @@
 import { exec } from "child_process";
 import Item from "../models/Item.js";
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 // ✅ Add New Item with Image Upload
 export const getItems = async (req, res) => {
  
@@ -196,7 +201,8 @@ export const removeitem = async (req, res) => {
 };
 
 
-// Update Item
+
+
 export const updateItem = async (req, res) => {
   try {
     const { id } = req.params;
@@ -206,7 +212,7 @@ export const updateItem = async (req, res) => {
       return res.status(404).json({ success: false, message: "Item not found" });
     }
 
-    // Parse incoming nested JSON fields
+    // Parse nested fields
     const price_per_piece = JSON.parse(req.body.price_per_piece || "{}");
     const specifications = JSON.parse(req.body.specifications || "{}");
     const supplier = JSON.parse(req.body.supplier || "{}");
@@ -248,25 +254,37 @@ export const updateItem = async (req, res) => {
       },
     };
 
-    // Handle new image upload (if any)
+    // 📂 Delete old images if new ones are uploaded
     if (req.files && req.files.length > 0) {
-      // Delete old images
       existingItem.images.forEach((filename) => {
-        const filePath = `./uploads/${filename}`;
+        const filePath = path.join(__dirname, "../uploads", filename);
         fs.unlink(filePath, (err) => {
-          if (err) console.error(`Error deleting file ${filePath}:`, err);
+          if (err && err.code !== "ENOENT") {
+            console.error(`⚠️ Failed to delete file ${filePath}:`, err);
+          } else if (err && err.code === "ENOENT") {
+            console.warn(`⚠️ Skipping deletion: file not found ${filePath}`);
+          }
         });
       });
 
-      // Add new images
+      // 💾 Add new image filenames
       updatedFields.images = req.files.map((file) => file.filename);
     }
 
     const updatedItem = await Item.findByIdAndUpdate(id, updatedFields, { new: true });
 
-    res.status(200).json({ success: true, message: "Item updated successfully", data: updatedItem });
+    res.status(200).json({
+      success: true,
+      message: "Item updated successfully",
+      data: updatedItem,
+    });
   } catch (error) {
-    console.error("Error updating item:", error);
-    res.status(500).json({ success: false, message: "Failed to update item", error: error.message });
+    console.error("❌ Error updating item:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update item",
+      error: error.message,
+    });
   }
 };
+
