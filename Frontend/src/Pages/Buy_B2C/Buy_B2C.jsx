@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import "./Buy_B2C.css"; // You'll need to create this CSS file
+import { StoreContext } from "../../components/context/StoreProvider";
+import "./Buy_B2C.css";
 
 function Buy_B2C() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const productId = queryParams.get("id");
 
+  const { addToCart } = useContext(StoreContext);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -47,32 +49,34 @@ function Buy_B2C() {
   };
 
   const handleBuyNow = () => {
-    // Add your purchase logic here
-    console.log(`Buying ${quantity} of ${product?.name}`);
-    // You might want to redirect to a checkout page or show a confirmation
+    if (product) {
+      addToCart(product, quantity);
+      alert(`${quantity} ${product.name} added to cart!`);
+    }
   };
 
-  if (loading) {
-    return <div className="buy-b2c"><p>Loading product details...</p></div>;
-  }
-
-  if (error) {
+  if (loading)
+    return (
+      <div className="buy-b2c">
+        <p>Loading product details...</p>
+      </div>
+    );
+  if (error)
     return (
       <div className="buy-b2c">
         <p className="error">{error}</p>
-        <button onClick={() => window.location.reload()}>Retry</button>
       </div>
     );
-  }
-
-  if (!product) {
-    return <div className="buy-b2c"><p>No product found.</p></div>;
-  }
+  if (!product)
+    return (
+      <div className="buy-b2c">
+        <p>No product found.</p>
+      </div>
+    );
 
   return (
     <div className="buy-b2c">
       <h1>{product.name}</h1>
-      
       <div className="product-details">
         <div className="product-images">
           {product.images && product.images.length > 0 ? (
@@ -92,14 +96,16 @@ function Buy_B2C() {
         </div>
 
         <div className="product-info">
-          <p className="description">{product.description || "No description available."}</p>
+          <p className="description">
+            {product.description || "No description available."}
+          </p>
           <p className="price">Price: ₹{product.price}</p>
           <p className="rating">Rating: {product.rating || "N/A"} / 5</p>
           <p className="category">Category: {product.category}</p>
           {product.subcategory && (
             <p className="subcategory">Subcategory: {product.subcategory}</p>
           )}
-          
+
           <div className="quantity-section">
             <label htmlFor="quantity">Quantity:</label>
             <input

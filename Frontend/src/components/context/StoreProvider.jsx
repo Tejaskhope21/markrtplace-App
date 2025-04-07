@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import axios from "axios";
 import { item_list, menu_list } from "../../assets/data";
 import { product, productcategory } from "../../assets/b_to_c_data";
 
@@ -6,17 +7,46 @@ export const StoreContext = createContext(null);
 
 const StoreContextProvider = ({ children }) => {
   const [cartitem, setCartitem] = useState(() => {
-    // Load cart from localStorage if available
     const savedCart = localStorage.getItem("cart");
     return savedCart ? JSON.parse(savedCart) : {};
   });
 
+  const [cartDetails, setCartDetails] = useState([]); // Holds detailed product data
   const [isLoading, setIsLoading] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
- const[token, setToken] = useState(null);
-  // Save cart to localStorage when it updates
+  const [token, setToken] = useState(null);
+
+  // Save cart to localStorage when updated
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cartitem));
+  }, [cartitem]);
+
+  // Fetch cart item details from API
+  useEffect(() => {
+    const fetchCartDetails = async () => {
+      const itemIds = Object.keys(cartitem);
+      if (itemIds.length === 0) {
+        setCartDetails([]);
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        const response = await axios.get("http://localhost:5000/api/itemsb2c", {
+          params: { ids: itemIds.join(",") },
+        });
+
+        if (response.data) {
+          setCartDetails(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching cart item details:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCartDetails();
   }, [cartitem]);
 
   const addToCart = (itemId, quantity = 1, price = 0) => {
@@ -51,6 +81,7 @@ const StoreContextProvider = ({ children }) => {
   const clearCart = () => {
     setCartitem({});
     localStorage.removeItem("cart");
+    setCartDetails([]);
   };
 
   const contextValue = {
@@ -63,6 +94,7 @@ const StoreContextProvider = ({ children }) => {
     removeFromcart,
     clearCart,
     cartitem,
+    cartDetails, // Provides detailed product data
     isLoading,
     selectedOption,
     setSelectedOption,
