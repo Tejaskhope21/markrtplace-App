@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "./List.css";
@@ -9,7 +9,8 @@ function List() {
   const [loading, setLoading] = useState(true);
   const [editingItemId, setEditingItemId] = useState(null);
   const [updatedData, setUpdatedData] = useState({});
-  const [newImage, setNewImage] = useState(null);
+  const [updatedImages, setUpdatedImages] = useState({});
+  const imageRefs = useRef({});
 
   const fetchItems = async () => {
     try {
@@ -43,30 +44,28 @@ function List() {
       const formData = new FormData();
 
       for (const key in updatedData) {
-        if (
-          ["price_per_piece", "specifications", "supplier", "shipping"].includes(key)
-        ) {
+        if (["price_per_piece", "specifications", "supplier", "shipping"].includes(key)) {
           formData.append(key, JSON.stringify(updatedData[key]));
         } else {
           formData.append(key, updatedData[key]);
         }
       }
 
-      if (newImage) {
-        formData.append("images", newImage);
-      }
+      // Fixed image upload with index tracking
+      Object.entries(updatedImages).forEach(([index, file]) => {
+        formData.append("images", file); // Image file
+        formData.append("imageIndexes", index); // Corresponding index
+      });
 
       const response = await axios.put(`${url}/api/items/update/${itemId}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       if (response.data.success) {
         toast.success("Item updated.");
         fetchItems();
         setEditingItemId(null);
-        setNewImage(null);
+        setUpdatedImages({});
       } else {
         toast.error("Update failed.");
       }
@@ -89,7 +88,7 @@ function List() {
       supplier: item.supplier,
       shipping: item.shipping,
     });
-    setNewImage(null);
+    setUpdatedImages({});
   };
 
   const handleChange = (e, parentKey = null) => {
@@ -110,10 +109,19 @@ function List() {
     }
   };
 
-  const handleImageChange = (e) => {
+  const handleImageClick = (index) => {
+    if (imageRefs.current[index]) {
+      imageRefs.current[index].click();
+    }
+  };
+
+  const handleImageChange = (e, index) => {
     const file = e.target.files[0];
     if (file) {
-      setNewImage(file);
+      setUpdatedImages((prev) => ({
+        ...prev,
+        [index]: file,
+      }));
     }
   };
 
@@ -127,74 +135,42 @@ function List() {
     <div className="list-container">
       {items.map((item) => (
         <div key={item._id} className="list-card">
-          <img
-            src={
-              newImage
-                ? URL.createObjectURL(newImage)
-                : `${url}/uploads/${item.images?.[0]}`
-            }
-            onError={(e) => (e.target.src = "https://via.placeholder.com/150")}
-            alt={item.name}
-            className="item-image"
-          />
+          <div className="images-grid">
+            {[0, 1, 2, 3, 4].map((i) => (
+              <div key={i} className="image-wrapper">
+                <img
+                  src={
+                    updatedImages[i]
+                      ? URL.createObjectURL(updatedImages[i])
+                      : `${url}/uploads/${item.images?.[i] || "placeholder.jpg"}`
+                  }
+                  alt={`Product ${i}`}
+                  onClick={() => handleImageClick(i)}
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  ref={(el) => (imageRefs.current[i] = el)}
+                  style={{ display: "none" }}
+                  onChange={(e) => handleImageChange(e, i)}
+                />
+              </div>
+            ))}
+          </div>
 
           {editingItemId === item._id ? (
             <div className="item-details">
-              <input
-                name="name"
-                value={updatedData.name}
-                onChange={handleChange}
-                placeholder="Name"
-              />
-              <input
-                name="category"
-                value={updatedData.category}
-                onChange={handleChange}
-                placeholder="Category"
-              />
-              <input
-                name="product_category"
-                value={updatedData.product_category}
-                onChange={handleChange}
-                placeholder="Product Category"
-              />
-              <textarea
-                name="description"
-                value={updatedData.description}
-                onChange={handleChange}
-                placeholder="Description"
-              />
-              <input
-                name="MOQ"
-                value={updatedData.MOQ}
-                onChange={handleChange}
-                placeholder="MOQ"
-              />
-              <input
-                name="b2b_menu"
-                value={updatedData.b2b_menu}
-                onChange={handleChange}
-                placeholder="B2B Menu"
-              />
-              <input
-                name="20-199"
-                value={updatedData.price_per_piece["20-199"]}
-                onChange={(e) => handleChange(e, "price_per_piece")}
-                placeholder="Price 20-199"
-              />
-              <input
-                name="200-999"
-                value={updatedData.price_per_piece["200-999"]}
-                onChange={(e) => handleChange(e, "price_per_piece")}
-                placeholder="Price 200-999"
-              />
-              <input
-                name="1000+"
-                value={updatedData.price_per_piece["1000+"]}
-                onChange={(e) => handleChange(e, "price_per_piece")}
-                placeholder="Price 1000+"
-              />
-              <input type="file" onChange={handleImageChange} accept="image/*" />
+              <input name="name" value={updatedData.name} onChange={handleChange} placeholder="Name" />
+              <input name="category" value={updatedData.category} onChange={handleChange} placeholder="Category" />
+              <input name="product_category" value={updatedData.product_category} onChange={handleChange} placeholder="Product Category" />
+              <textarea name="description" value={updatedData.description} onChange={handleChange} placeholder="Description" />
+              <input name="MOQ" value={updatedData.MOQ} onChange={handleChange} placeholder="MOQ" />
+              <input name="b2b_menu" value={updatedData.b2b_menu} onChange={handleChange} placeholder="B2B Menu" />
+
+              <input name="20-199" value={updatedData.price_per_piece["20-199"]} onChange={(e) => handleChange(e, "price_per_piece")} placeholder="Price 20-199" />
+              <input name="200-999" value={updatedData.price_per_piece["200-999"]} onChange={(e) => handleChange(e, "price_per_piece")} placeholder="Price 200-999" />
+              <input name="1000+" value={updatedData.price_per_piece["1000+"]} onChange={(e) => handleChange(e, "price_per_piece")} placeholder="Price 1000+" />
+
               <button onClick={() => updateItem(item._id)}>Save</button>
               <button onClick={() => setEditingItemId(null)}>Cancel</button>
             </div>
