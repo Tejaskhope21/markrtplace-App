@@ -78,23 +78,28 @@ function Buy_B2C() {
     <div className="buy-b2c">
       <h1>{product.name}</h1>
       <div className="product-details">
-        <div className="product-images">
+        {/* Image Gallery */}
+        <div className="image-gallery">
           {product.images && product.images.length > 0 ? (
-            <img
-              src={`http://localhost:5000/uploads/${product.images[0]}`}
-              alt={product.name}
-              className="main-image"
-              onError={(e) => (e.target.src = "/fallback-image.jpg")}
-            />
+            product.images.map((img, index) => (
+              <img
+                key={index}
+                src={`http://localhost:5000/uploads/${img}`}
+                alt={product.name}
+                className="product-image"
+                onError={(e) => (e.target.src = "/fallback-image.jpg")}
+              />
+            ))
           ) : (
             <img
               src="/fallback-image.jpg"
               alt="No image available"
-              className="main-image"
+              className="product-image"
             />
           )}
         </div>
 
+        {/* Product Information */}
         <div className="product-info">
           <p className="description">
             {product.description || "No description available."}
@@ -106,6 +111,7 @@ function Buy_B2C() {
             <p className="subcategory">Subcategory: {product.subcategory}</p>
           )}
 
+          {/* Quantity Selector */}
           <div className="quantity-section">
             <label htmlFor="quantity">Quantity:</label>
             <input
