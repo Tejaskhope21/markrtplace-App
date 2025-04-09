@@ -50,8 +50,14 @@ function Buy_B2C() {
 
   const handleBuyNow = () => {
     if (product) {
-      addToCart(product, quantity);
-      alert(`${quantity} ${product.name} added to cart!`);
+      const unitPrice = Number(product.price); // Unit price from product
+      const totalPrice = unitPrice * Number(quantity); // Total price calculation
+      if (quantity > 0 && totalPrice > 0) {
+        addToCart(product._id, Number(quantity), unitPrice); // Pass unit price
+        alert(`${quantity} ${product.name} added to cart!`);
+      } else {
+        alert("Invalid quantity or price. Please try again.");
+      }
     }
   };
 

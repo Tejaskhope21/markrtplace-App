@@ -8,9 +8,10 @@ function B2BCart() {
   const [cartItems, setCartItems] = useState([]);
   const [loadingItems, setLoadingItems] = useState(false);
   const [error, setError] = useState(null);
-  const defaultImage = "/default-product-image.png"; // Ensure this image is available in your public folder
+  const defaultImage = "/default-product-image.png"; // Ensure this exists in public folder
 
   useEffect(() => {
+    console.log("cartitem:", cartitem); // Debug log
     const fetchCartItems = async () => {
       if (Object.keys(cartitem).length === 0) {
         setCartItems([]);
@@ -31,11 +32,31 @@ function B2BCart() {
           return;
         }
 
-        const response = await axios.get("http://localhost:5000/api/items", {
+        // Fetch B2B products
+        const b2bResponse = await axios.get("http://localhost:5000/api/items", {
           params: { ids: itemIds.join(",") },
         });
+        console.log("B2B Response:", b2bResponse.data); // Debug log
+        const b2bItems = Array.isArray(b2bResponse.data) ? b2bResponse.data : [];
 
-        setCartItems(Array.isArray(response.data) ? response.data : []);
+        // Fetch B2C products
+        const b2cResponse = await axios.get(
+          "http://localhost:5000/api/itemsb2c",
+          {
+            params: { ids: itemIds.join(",") },
+          }
+        );
+        console.log("B2C Response:", b2cResponse.data); // Debug log
+        const b2cItems = Array.isArray(b2cResponse.data) ? b2cResponse.data : [];
+
+        // Combine B2B and B2C items without overwriting
+        const combinedItemsMap = new Map();
+        [...b2bItems, ...b2cItems].forEach((item) => {
+          combinedItemsMap.set(item._id, item);
+        });
+        const combinedItems = Array.from(combinedItemsMap.values());
+        console.log("Combined cartItems:", combinedItems); // Debug log
+        setCartItems(combinedItems);
       } catch (err) {
         console.error("Error fetching cart items:", err);
         setError(err.response?.data?.message || "Failed to load cart items.");
@@ -88,16 +109,20 @@ function B2BCart() {
         ) : (
           <div className="cart-items">
             {Object.keys(cartitem).map((itemId) => {
-              const product = (Array.isArray(cartItems) ? cartItems : []).find(
-                (item) => item._id === itemId
-              );
+              const product = cartItems.find((item) => item._id === itemId);
               if (!product || cartitem[itemId].quantity === 0) return null;
+
+              const isB2B = "price_per_piece" in product;
 
               return (
                 <div key={itemId} className="cart-item">
                   <div className="item-image">
                     <img
-                      src={`http://localhost:5000/uploads/${product.images?.[0]}`}
+                      src={
+                        product.images?.[0]
+                          ? `http://localhost:5000/uploads/${product.images[0]}`
+                          : defaultImage
+                      }
                       alt={product.name || "Product Image"}
                       onError={(e) => {
                         e.target.onerror = null;
@@ -106,20 +131,21 @@ function B2BCart() {
                     />
                   </div>
                   <div className="item-details">
-                    <h2>{product.name}</h2>
-                    {product.price_per_piece ? (
+                    <h2>{product.name || "Unnamed Product"}</h2>
+                    {isB2B ? (
                       <p>
                         Price: ₹
-                        {Object.values(product.price_per_piece)[0]?.toFixed(
+                        {Object.values(product.price_per_piece)?.[0]?.toFixed(
                           2
                         ) || "N/A"}{" "}
                         per piece
                       </p>
                     ) : (
-                      <p>Price: ₹{product.price?.toFixed(2) || "N/A"}</p>
+                      <p>Price: ₹{(product.price || 0).toFixed(2)}</p>
                     )}
                     <p>Quantity: {cartitem[itemId].quantity}</p>
                     <p>Total: ₹{cartitem[itemId].totalPrice}</p>
+                    <p>Type: {isB2B ? "B2B" : "B2C"}</p>
                   </div>
                   <button
                     className="remove-button"
