@@ -14,6 +14,7 @@ function Buy_B2C() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [activeImageIndex, setActiveImageIndex] = useState(0); // State to track active thumbnail
 
   useEffect(() => {
     if (!productId) return;
@@ -50,15 +51,19 @@ function Buy_B2C() {
 
   const handleBuyNow = () => {
     if (product) {
-      const unitPrice = Number(product.price); // Unit price from product
-      const totalPrice = unitPrice * Number(quantity); // Total price calculation
+      const unitPrice = Number(product.price);
+      const totalPrice = unitPrice * Number(quantity);
       if (quantity > 0 && totalPrice > 0) {
-        addToCart(product._id, Number(quantity), unitPrice); // Pass unit price
+        addToCart(product._id, Number(quantity), unitPrice);
         alert(`${quantity} ${product.name} added to cart!`);
       } else {
         alert("Invalid quantity or price. Please try again.");
       }
     }
+  };
+
+  const handleThumbnailClick = (index) => {
+    setActiveImageIndex(index); // Update the active image index when thumbnail is clicked
   };
 
   if (loading)
@@ -82,31 +87,45 @@ function Buy_B2C() {
 
   return (
     <div className="buy-b2c">
-      <h1>{product.name}</h1>
       <div className="product-details">
         {/* Image Gallery */}
         <div className="image-gallery">
-          {product.images && product.images.length > 0 ? (
-            product.images.map((img, index) => (
+          <div className="thumbnail-gallery">
+            {product.images &&
+              product.images.map((img, index) => (
+                <img
+                  key={index}
+                  src={`http://localhost:5000/uploads/${img}`}
+                  alt={`${product.name} thumbnail ${index + 1}`}
+                  className={`thumbnail ${
+                    index === activeImageIndex ? "active" : ""
+                  }`}
+                  onClick={() => handleThumbnailClick(index)}
+                  onError={(e) => (e.target.src = "/fallback-image.jpg")}
+                />
+              ))}
+          </div>
+          <div className="main-image-container">
+            {product.images && product.images.length > 0 ? (
               <img
-                key={index}
-                src={`http://localhost:5000/uploads/${img}`}
+                src={`http://localhost:5000/uploads/${product.images[activeImageIndex]}`}
                 alt={product.name}
-                className="product-image"
+                className="main-image"
                 onError={(e) => (e.target.src = "/fallback-image.jpg")}
               />
-            ))
-          ) : (
-            <img
-              src="/fallback-image.jpg"
-              alt="No image available"
-              className="product-image"
-            />
-          )}
+            ) : (
+              <img
+                src="/fallback-image.jpg"
+                alt="No image available"
+                className="main-image"
+              />
+            )}
+          </div>
         </div>
 
         {/* Product Information */}
         <div className="product-info">
+          <h1>{product.name}</h1>
           <p className="description">
             {product.description || "No description available."}
           </p>
@@ -133,9 +152,11 @@ function Buy_B2C() {
             Total: ₹{(product.price * quantity).toFixed(2)}
           </p>
 
-          <button className="buy-button" onClick={handleBuyNow}>
-            Buy Now
-          </button>
+          <div className="actions">
+            <button className="buy-button" onClick={handleBuyNow}>
+              Buy Now
+            </button>
+          </div>
         </div>
       </div>
     </div>

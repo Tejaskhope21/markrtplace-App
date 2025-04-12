@@ -1,206 +1,91 @@
-/* Reset default margins and padding */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Navbar container */
+/* Navbar Styles */
 nav {
-  background: url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover; /* Background image of trucks */
-  height: 100px; /* Default height */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
-  position: relative;
-  color: #fff;
-  font-family: Arial, sans-serif;
-}
-
-/* Logo styling */
-.logo {
-  font-size: 28px;
-  font-weight: bold;
+  background-color: #1e1e2d;
+  padding: 10px 20px;
+  color: white;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 }
 
 .logo .link {
-  color: #fff;
   text-decoration: none;
-  display: flex;
-  align-items: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #ffcc00;
 }
 
 .M-class {
-  color: #ff6200; /* Orange color for 'M' and 'S' to match the button */
-  margin: 0 2px;
+  color: #ff5733;
 }
 
-/* Navigation Links */
-.nav-links {
-  display: flex;
-  align-items: center;
-}
-
-.nav-links .link {
-  color: #fff;
-  text-decoration: none;
-  margin-left: 20px;
-  font-size: 16px;
-  padding: 8px 15px;
-  transition: color 0.3s ease;
-}
-
-.nav-links .link:hover {
-  color: #ff6200; /* Orange hover effect */
-}
-
-/* Search Bar */
 .search-bar {
   display: flex;
   align-items: center;
-  background: #fff;
-  border-radius: 4px;
-  padding: 5px;
-  width: 300px;
 }
 
 .search-bar input {
+  padding: 8px;
   border: none;
-  outline: none;
-  flex: 1;
-  padding: 5px;
-  font-size: 14px;
+  border-radius: 4px;
+  margin-right: 5px;
 }
 
 .search-bar button {
-  background: #ff6200; /* Orange button */
+  background-color: #ff5733;
+  color: white;
   border: none;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 4px;
+  padding: 8px 12px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  border-radius: 4px;
 }
 
-.search-bar button:hover {
-  background: #e65c00; /* Darker orange on hover */
+.nav-links {
+  display: flex;
+  gap: 20px;
 }
 
-/* Hamburger Menu */
+.nav-links .link {
+  text-decoration: none;
+  color: white;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+.nav-links .link:hover {
+  color: #ffcc00;
+}
+
 .hamburger {
   display: none;
-  font-size: 24px;
+  font-size: 1.8rem;
   cursor: pointer;
-  color: #fff;
 }
 
-/* Ensure the image background doesn't interfere with text readability */
-nav::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
-  z-index: 1;
-}
-
-nav * {
-  position: relative;
-  z-index: 2;
-}
-
-/* Responsive Design */
-
-/* Tablet (768px to 1023px) */
-@media (max-width: 1023px) and (min-width: 768px) {
-  nav {
-    height: 80px; /* Slightly reduced height for tablets */
-    padding: 0 15px;
-  }
-
-  .logo {
-    font-size: 24px; /* Slightly smaller logo */
-  }
-
-  .nav-links .link {
-    font-size: 14px;
-    padding: 6px 12px;
-    margin-left: 15px;
-  }
-
-  .search-bar {
-    width: 250px; /* Reduced width for tablets */
-  }
-
-  .search-bar input {
-    font-size: 12px;
-  }
-
-  .search-bar button {
-    padding: 4px 8px;
-  }
-}
-
-/* Mobile (up to 767px) */
-@media (max-width: 767px) {
-  nav {
-    height: 60px; /* Reduced height for mobile */
-    padding: 0 10px;
-    flex-direction: column;
-    justify-content: space-around;
-  }
-
-  .logo {
-    font-size: 20px; /* Smaller logo for mobile */
-  }
-
+@media (max-width: 768px) {
   .nav-links {
-    display: none; /* Hide by default */
+    display: none;
+    flex-direction: column;
+    background-color: #1e1e2d;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 200px;
+    text-align: center;
+    padding: 10px 0;
+    border-radius: 5px;
   }
 
   .nav-links.show {
     display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    background: rgba(0, 0, 0, 0.9);
-    padding: 15px;
-    text-align: center;
-  }
-
-  .nav-links.show .link {
-    margin: 10px 0;
-    font-size: 16px;
-    padding: 8px 0;
-  }
-
-  .search-bar {
-    width: 100%; /* Full width on mobile */
-    margin: 10px 0;
   }
 
   .hamburger {
     display: block;
-  }
-}
-
-/* Optional: Desktop (1024px and above) - Default styles apply */
-@media (min-width: 1024px) {
-  nav {
-    padding: 0 30px; /* More padding for larger screens */
-  }
-
-  .search-bar {
-    width: 350px; /* Slightly wider search bar */
-  }
-
-  .nav-links .link {
-    font-size: 18px;
-    padding: 10px 20px;
   }
 }
