@@ -15,12 +15,6 @@ function Navbar() {
         </Link>
       </div>
 
-      {/* Search Bar */}
-      <div className="search-bar">
-        <input type="text" placeholder="Search" />
-        <button>Search</button>
-      </div>
-
       {/* Navigation Links */}
       <div className={`nav-links ${menuOpen ? "show" : ""}`}>
         <Link className="link" to="/add">
@@ -37,9 +31,6 @@ function Navbar() {
         </Link>
       </div>
 
-     
-
-    
       <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
         ☰
       </div>
