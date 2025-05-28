@@ -1,31 +1,163 @@
-/* Login.css */
-.login-popup {
-  position: fixed;
+/* Body and background styling */
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(135deg);
+  position: relative;
+  overflow-x: hidden;
+  font-family: Arial, sans-serif;
+}
+
+/* Subtle wave overlay for background */
+body::before {
+  content: '';
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent overlay */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+  height: 100%;
+  background: url('https://img.freepik.com/free-vector/stylish-hexagonal-line-pattern-background_1017-19742.jpg?t=st=1744804692~exp=1744808292~hmac=2d2ee72096151b8c4fb84342fe00e367d91a72b7cb3306aee2a5665176aa9e93&w=1380');
+  background-size: cover;
+  opacity: 0.2;
+  z-index: -1;
 }
 
-.login-popup-container {
-  background-color: #fff;
-  padding: 30px;
+/* Login container styling */
+.login-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  padding: 2rem;
+  max-width: 300px;
+  margin: 2rem auto;
+  position: relative;
+  z-index: 1;
+  animation: fadeIn 0.5s ease-in-out;
+  text-align: center;
+}
+
+/* Header and welcome section */
+.login-header {
+  margin-bottom: 1.5rem;
+}
+
+.login-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #28A745;
+  margin-bottom: 0.5rem;
+}
+
+.login-subtitle {
+  font-size: 0.9rem;
+  color: #666666;
+  margin-bottom: 1.5rem;
+}
+
+/* Input styling */
+.login-input {
   width: 100%;
-  max-width: 400px;
-  animation: fadeIn 0.3s ease-in-out;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 2px solid #28A745;
+  border-radius: 25px;
+  font-size: 1rem;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-input:focus {
+  outline: none;
+  border-color:#28A745;
+  box-shadow: 0 0 8px rgba(107, 72, 255, 0.3);
+}
+
+.login-input::placeholder {
+  color: #999999;
+}
+
+/* Submit button styling */
+.submit-button {
+  width: 100%;
+  padding: 0.75rem;
+  background: linear-gradient(135deg, #6b48ff,#28A745);
+  color: #ffffff;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+
+/* Additional links and text */
+.terms-checkbox {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.terms-text {
+  font-size: 0.75rem;
+  color: #555555;
+}
+
+.toggle-link {
+  color: #6b48ff;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.toggle-link:hover {
+  color: #a700ff;
+}
+
+/* Close button */
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  color: #666666;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.close-button:hover {
+  color: #a700ff;
+}
+
+/* Decorative elements (adjust with images) */
+.decor-left {
+  position: absolute;
+  left: -100px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 200px;
+  height: 200px;
+  background: url('path-to-left-illustration.png') no-repeat;
+  background-size: contain;
+}
+
+.decor-right {
+  position: absolute;
+  right: -100px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 200px;
+  height: 200px;
+  background: url('path-to-right-illustration.png') no-repeat;
+  background-size: contain;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-20px);
+    transform: translateY(-10px);
   }
   to {
     opacity: 1;
@@ -33,117 +165,41 @@
   }
 }
 
-.login-popup-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.login-popup-title h1 {
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
-}
-
-.login-popup-title h1:last-child {
-  font-size: 20px;
-  cursor: pointer;
-  color: #888;
-  transition: color 0.3s ease;
-}
-
-.login-popup-title h1:last-child:hover {
-  color: #ff4444; /* Red color on hover for close button */
-}
-
-.login-popup-inputs {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.login-popup-inputs input {
-  padding: 12px 15px;
-  font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.login-popup-inputs input:focus {
-  border-color: #E55A00;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-.login-btn {
-  padding: 12px;
-  font-size: 16px;
-  font-weight: 500;
-  color: #fff;
-  background-color: #E55A00;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.login-btn:hover {
-  background-color: #E55A00;
-  transform: translateY(-2px);
-}
-
-.login-btn:active {
-  transform: translateY(0);
-}
-
-.login-popup-condition {
-  margin-top: 15px;
-  font-size: 14px;
-  color: #666;
-}
-
-.login-popup-condition input {
-  margin-right: 8px;
-  vertical-align: middle;
-}
-
-.login-popup-condition p {
-  margin: 5px 0;
-}
-
-.login-popup-condition span {
-  color: #E55A00;
-  cursor: pointer;
-  font-weight: 500;
-  transition: color 0.3s ease;
-}
-
-.login-popup-condition span:hover {
-  color: #E55A00;
-  text-decoration: underline;
-}
-
-/* Responsive Design */
-@media (max-width: 480px) {
-  .login-popup-container {
-    width: 90%;
-    padding: 20px;
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .login-container {
+    padding: 1.5rem;
+    margin: 1rem auto;
+    max-width: 90%;
   }
 
-  .login-popup-title h1 {
-    font-size: 20px;
+  .login-title {
+    font-size: 1.5rem;
   }
 
-  .login-btn {
-    font-size: 14px;
+  .decor-left, .decor-right {
+    display: none;
   }
 
-  .login-popup-inputs input {
-    font-size: 14px;
-    padding: 10px;
+  body {
+    background: linear-gradient(135deg, #6b48ff 0%, #a700ff 70%);
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .login-container {
+    max-width: 450px;
+  }
+
+  .decor-left {
+    left: -50px;
+    width: 150px;
+    height: 150px;
+  }
+
+  .decor-right {
+    right: -50px;
+    width: 150px;
+    height: 150px;
   }
 }

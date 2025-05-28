@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Products.css";
@@ -12,7 +12,7 @@ const Products = () => {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedSort, setSelectedSort] = useState(""); // Sorting state
+  const [selectedSort, setSelectedSort] = useState("");
   const [productCategories, setProductCategories] = useState([]);
   const [selectedProductCategory, setSelectedProductCategory] = useState("all");
 
@@ -21,7 +21,9 @@ const Products = () => {
       try {
         if (!selectedCategory) throw new Error("No category selected");
 
-        const url = `http://localhost:5000/api/items?category=${encodeURIComponent(selectedCategory)}`;
+        const url = `http://localhost:5000/api/items?category=${encodeURIComponent(
+          selectedCategory
+        )}`;
         console.log("Fetching from:", url);
 
         const response = await axios.get(url);
@@ -29,7 +31,6 @@ const Products = () => {
         if (Array.isArray(response.data)) {
           setItems(response.data);
 
-          // Extract unique product categories
           const uniqueProductCategories = [
             ...new Set(response.data.map((item) => item.product_category)),
           ];
@@ -56,22 +57,26 @@ const Products = () => {
     fetchItems();
   }, [selectedCategory]);
 
-  // **Filtering and Sorting Logic**
-  let filteredItems = items;
+  // ✅ Sorting and Filtering using useMemo
+  const filteredItems = useMemo(() => {
+    let result = [...items];
 
-  if (selectedProductCategory !== "all") {
-    filteredItems = filteredItems.filter(
-      (item) => item.product_category === selectedProductCategory
-    );
-  }
+    if (selectedProductCategory !== "all") {
+      result = result.filter(
+        (item) => item.product_category === selectedProductCategory
+      );
+    }
 
-  if (selectedSort === "price_low") {
-    filteredItems = [...filteredItems].sort((a, b) => (a.price || 0) - (b.price || 0));
-  } else if (selectedSort === "price_high") {
-    filteredItems = [...filteredItems].sort((a, b) => (b.price || 0) - (a.price || 0));
-  } else if (selectedSort === "rating") {
-    filteredItems = [...filteredItems].sort((a, b) => (b.rating || 0) - (a.rating || 0));
-  }
+    if (selectedSort === "price_low") {
+      result.sort((a, b) => (a.price || 0) - (b.price || 0));
+    } else if (selectedSort === "price_high") {
+      result.sort((a, b) => (b.price || 0) - (a.price || 0));
+    } else if (selectedSort === "rating") {
+      result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    }
+
+    return result;
+  }, [items, selectedProductCategory, selectedSort]);
 
   const handleCategoryClick = (id) => {
     navigate(`/buy?id=${id}`);
@@ -81,37 +86,42 @@ const Products = () => {
     <div className="products-container">
       <h1 className="products-title">{selectedCategory} Items</h1>
 
-      {/* Product Category Filter */}
-      {productCategories.length > 0 && (
+      {/* Combined Filter + Sort Section */}
+      {(productCategories.length > 0 || items.length > 0) && (
         <div className="filter-section">
-          <label>Product Category: </label>
-          <select
-            value={selectedProductCategory}
-            onChange={(e) => setSelectedProductCategory(e.target.value)}
-          >
-            <option value="all">All</option>
-            {productCategories.map((category, index) => (
-              <option key={index} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
+          {/* Product Category Filter */}
+          {productCategories.length > 0 && (
+            <>
+              <label>Product Category: </label>
+              <select
+                value={selectedProductCategory}
+                onChange={(e) => setSelectedProductCategory(e.target.value)}
+              >
+                <option value="all">All</option>
+                {productCategories.map((category, index) => (
+                  <option key={index} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </>
+          )}
+
+          {/* Sorting Dropdown */}
+          <>
+            <label>Sort By: </label>
+            <select
+              value={selectedSort}
+              onChange={(e) => setSelectedSort(e.target.value)}
+            >
+              <option value="">Default</option>
+              <option value="price_low">Price: Low to High</option>
+              <option value="price_high">Price: High to Low</option>
+              <option value="rating">Rating</option>
+            </select>
+          </>
         </div>
       )}
-
-      {/* Sorting Dropdown */}
-      <div className="filter-section">
-        <label>Sort By: </label>
-        <select
-          value={selectedSort}
-          onChange={(e) => setSelectedSort(e.target.value)}
-        >
-          <option value="">Default</option>
-          <option value="price_low">Price: Low to High</option>
-          <option value="price_high">Price: High to Low</option>
-          <option value="rating">Rating</option>
-        </select>
-      </div>
 
       {/* Products Display */}
       {loading ? (
@@ -151,7 +161,9 @@ const Products = () => {
                       : "N/A"}
                   </p>
                   <p>Rating: {item.rating || "N/A"} / 5</p>
-                  <button onClick={() => handleCategoryClick(item._id)}>View Details</button>
+                  <button onClick={() => handleCategoryClick(item._id)}>
+                    View Details
+                  </button>
                 </div>
               );
             })
