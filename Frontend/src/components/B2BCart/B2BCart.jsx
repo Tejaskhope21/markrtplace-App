@@ -10,6 +10,7 @@ function B2BCart() {
   const [error, setError] = useState(null);
   const defaultImage = "/default-product-image.png"; // Ensure this exists in public folder
 
+  
   useEffect(() => {
     console.log("cartitem:", cartitem); // Debug log
     const fetchCartItems = async () => {
